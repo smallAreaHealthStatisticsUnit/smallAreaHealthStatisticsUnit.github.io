@@ -251,8 +251,7 @@ Port specific install notes:
 
 Detailed build instructions for Postgres:
 
-  * [Postgres build process detail](/rifDatabase/Postgres/README.md)
-
+  * [Postgres build process detail](/rifDatabase/Postgres/docs.BUILD.md)
 
 ### 6.1.2 Installing the RIF Postgres Database
 
