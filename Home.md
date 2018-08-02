@@ -274,7 +274,7 @@ See: [Building RIF web services from github and installing securely in Tomcat](h
 
 ### 6.3.1 Taxonomy Services
 
-See: [RIF Taxonomy Services](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/wiki/Taxonmomy-Services)
+See: [RIF Taxonomy Services](/Taxonmomy-Services)
 
 ## 6.4 Data Loading
 
@@ -303,24 +303,24 @@ Currently there are eight manuals:
 
 ## RIF Architecture
 
-![RIF Architecture](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/wiki/RIF_architecture.png)
+![RIF Architecture](/RIF_architecture.png)
 
 This section is a series of links to developer documentation
 
-* [RIF Re-development](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/wiki/The-RIF-re-development)
+* [RIF Re-development](/The-RIF-re-development)
 * [RIF design documentation on Sourceforge](http://rapidinquiryfacility.sourceforge.net/index.html)
-* [Database Design](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/wiki/Database-design)
+* [Database Design](/Database-design)
 * [Database test harness](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/tree/master/rifDatabase/TestHarness/db_test_harness)
-* [General RIF Installation Notes for the Middleware and the Data Loader Tool](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/wiki/General-RIF-Installation-Notes-for-the-Middleware-and-the-Data-Loader-Tool)
-* [Kevs Suggested Road Map with the Middleware](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/wiki/Kevs-Suggested-Road-Map-with-the-Middleware)
-* [Middleware Code Road Map](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/wiki/Kev-Code-Road-Map)
-* [Middleware Handover Notes](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/wiki/Kev-Handover-Notes)
-* [Opening the RIF front end in NetBeans8 for editing and debugging](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/wiki/Opening-the-RIF-front-end-in-NetBeans8-for-editing---debugging)
-* [Opening the RIF repository in Eclipse for editing](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/wiki/Opening-the-RIF-repository-in-Eclipse-for-editing)
-* [Setting up JRI in Eclipse](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/wiki/Setting-up-JRI-in-Eclipse)
-* [RIF Front End Description](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/wiki/RIF-front-end-description)
-* [Creating a new restful web service](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/wiki/Creating-a-new-restful-web-service)
+* [General RIF Installation Notes for the Middleware and the Data Loader Tool](/General-RIF-Installation-Notes-for-the-Middleware-and-the-Data-Loader-Tool)
+* [Kevs Suggested Road Map with the Middleware](/Kevs-Suggested-Road-Map-with-the-Middleware)
+* [Middleware Code Road Map](/Kev-Code-Road-Map)
+* [Middleware Handover Notes](/Kev-Handover-Notes)
+* [Opening the RIF front end in NetBeans8 for editing and debugging](/Opening-the-RIF-front-end-in-NetBeans8-for-editing---debugging)
+* [Opening the RIF repository in Eclipse for editing](/Opening-the-RIF-repository-in-Eclipse-for-editing)
+* [Setting up JRI in Eclipse](/Setting-up-JRI-in-Eclipse)
+* [RIF Front End Description](/RIF-front-end-description)
+* [Creating a new restful web service](/Creating-a-new-restful-web-service)
 
 # 9. TODO list
 
-* [To Do List](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/wiki/TODO)
+* [To Do List](/TODO)
