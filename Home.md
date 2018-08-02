@@ -274,7 +274,7 @@ See: [Building RIF web services from github and installing securely in Tomcat](h
 
 ### 6.3.1 Taxonomy Services
 
-See: [RIF Taxonomy Services](/Taxonmomy-Services)
+See: [RIF Taxonomy Services](/Taxonomy-Services)
 
 ## 6.4 Data Loading
 
