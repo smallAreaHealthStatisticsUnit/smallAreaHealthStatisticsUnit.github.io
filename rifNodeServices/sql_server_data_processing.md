@@ -10,17 +10,17 @@ SQL Server data processing example log
 --
 -- Copyright:
 --
--- The Rapid Inquiry Facility (RIF) is an automated tool devised by SAHSU 
--- that rapidly addresses epidemiological and public health questions using 
--- routinely collected health and population data and generates standardised 
--- rates and relative risks for any given health outcome, for specified age 
+-- The Rapid Inquiry Facility (RIF) is an automated tool devised by SAHSU
+-- that rapidly addresses epidemiological and public health questions using
+-- routinely collected health and population data and generates standardised
+-- rates and relative risks for any given health outcome, for specified age
 -- and year ranges, for any given geographical area.
 --
 -- Copyright 2014 Imperial College London, developed by the Small Area
--- Health Statistics Unit. The work of the Small Area Health Statistics Unit 
--- is funded by the Public Health England as part of the MRC-PHE Centre for 
--- Environment and Health. Funding for this project has also been received 
--- from the Centers for Disease Control and Prevention.  
+-- Health Statistics Unit. The work of the Small Area Health Statistics Unit
+-- is funded by the Public Health England as part of the MRC-PHE Centre for
+-- Environment and Health. Funding for this project has also been received
+-- from the Centers for Disease Control and Prevention.
 --
 -- This file is part of the Rapid Inquiry Facility (RIF) project.
 -- RIF is free software: you can redistribute it and/or modify
@@ -34,8 +34,8 @@ SQL Server data processing example log
 -- GNU Lesser General Public License for more details.
 --
 -- You should have received a copy of the GNU Lesser General Public License
--- along with RIF. If not, see <http://www.gnu.org/licenses/>; or write 
--- to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+-- along with RIF. If not, see <http://www.gnu.org/licenses/>; or write
+-- to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 -- Boston, MA 02110-1301 USA
 --
 -- Author:
@@ -48,27 +48,27 @@ SQL Server data processing example log
 -- Create processed CSV tables created from shapefiles simplification:
 --
 -- a) Shapefile tables, e.g:
---    * cb_2014_us_county_500k                            
---    * cb_2014_us_nation_5m                            
---    * cb_2014_us_state_500k          
--- b) Psuedo control tables copies of RIF40 control tables, e.g:                   
---    * geography_usa_2014                               
---    * geolevels_usa_2014     
--- c) Processed geometry data (partitioned in PostGres), e.g:                          
---    * geometry_usa_2014                                  
+--    * cb_2014_us_county_500k
+--    * cb_2014_us_nation_5m
+--    * cb_2014_us_state_500k
+-- b) Psuedo control tables copies of RIF40 control tables, e.g:
+--    * geography_usa_2014
+--    * geolevels_usa_2014
+-- c) Processed geometry data (partitioned in PostGres), e.g:
+--    * geometry_usa_2014
 -- d) Hierarchy table, e.g:
---    * hierarchy_usa_2014   
+--    * hierarchy_usa_2014
 -- e) Lookup tables, e.g:
---    * lookup_cb_2014_us_county_500k             
---    * lookup_cb_2014_us_nation_5m                    
---    * lookup_cb_2014_us_state_500k             
+--    * lookup_cb_2014_us_county_500k
+--    * lookup_cb_2014_us_nation_5m
+--    * lookup_cb_2014_us_state_500k
 -- f) Tables used to calculate tile interesections
---    * tile_blocks_usa_2014                         
---    * tile_intersects_usa_2014 (partitioned in PostGres) 
---    * tile_limits_usa_2014    
--- g) Tiles table and view               
---    * t_tiles_usa_2014           
---    * tiles_usa_2014    
+--    * tile_blocks_usa_2014
+--    * tile_intersects_usa_2014 (partitioned in PostGres)
+--    * tile_limits_usa_2014
+-- g) Tiles table and view
+--    * t_tiles_usa_2014
+--    * tiles_usa_2014
 --
 
 --
@@ -136,13 +136,13 @@ CREATE TABLE cb_2014_us_county_500k (
 
 -- SQL statement 4: Comment geospatial data table >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_table.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. cb_2014_us_county_500k
- *						2: comment. Usual rules for comment text in SQK - single 
+ *						2: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -150,7 +150,7 @@ DECLARE @tableName   sysname  /*
  * Description:			Comment table
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -163,35 +163,35 @@ IF EXISTS (
            AND [name]     = N'MS_Description'
 		   AND [minor_id] = 0)
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'The County at a scale of 1:500,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'The County at a scale of 1:500,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'The County at a scale of 1:500,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'The County at a scale of 1:500,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k';
 
 
 -- SQL statement 5: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -205,37 +205,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Unique geographic index', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Unique geographic index',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'gid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Unique geographic index', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Unique geographic index',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'gid';
 
 
 -- SQL statement 6: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -249,37 +249,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area ID (COUNTYNS): Current county Geographic Names Information System (GNIS) code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area ID (COUNTYNS): Current county Geographic Names Information System (GNIS) code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'areaid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area ID (COUNTYNS): Current county Geographic Names Information System (GNIS) code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area ID (COUNTYNS): Current county Geographic Names Information System (GNIS) code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'areaid';
 
 
 -- SQL statement 7: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -293,37 +293,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area name (NAME): Current county name', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area name (NAME): Current county name',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'areaname'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area name (NAME): Current county name', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area name (NAME): Current county name',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'areaname';
 
 
 -- SQL statement 8: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -337,37 +337,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area in square km', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area in square km',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'area_km2'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area in square km', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area in square km',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'area_km2';
 
 
 -- SQL statement 9: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -381,37 +381,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for geographic centroid', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for geographic centroid',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'geographic_centroid_wkt'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for geographic centroid', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for geographic centroid',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'geographic_centroid_wkt';
 
 
 -- SQL statement 10: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -425,37 +425,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 6', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 6',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'wkt_6'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 6', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 6',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'wkt_6';
 
 
 -- SQL statement 11: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -469,37 +469,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 7', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 7',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'wkt_7'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 7', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 7',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'wkt_7';
 
 
 -- SQL statement 12: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -513,37 +513,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 8', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 8',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'wkt_8'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 8', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 8',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'wkt_8';
 
 
 -- SQL statement 13: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -557,37 +557,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 9', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 9',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'wkt_9'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 9', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 9',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'wkt_9';
 
 
 -- SQL statement 14: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -601,37 +601,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current state Federal Information Processing Series (FIPS) code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current state Federal Information Processing Series (FIPS) code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'statefp'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current state Federal Information Processing Series (FIPS) code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current state Federal Information Processing Series (FIPS) code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'statefp';
 
 
 -- SQL statement 15: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -645,37 +645,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current county Federal Information Processing Series (FIPS) code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current county Federal Information Processing Series (FIPS) code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'countyfp'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current county Federal Information Processing Series (FIPS) code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current county Federal Information Processing Series (FIPS) code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'countyfp';
 
 
 -- SQL statement 16: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -689,37 +689,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current county Geographic Names Information System (GNIS) code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current county Geographic Names Information System (GNIS) code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'countyns'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current county Geographic Names Information System (GNIS) code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current county Geographic Names Information System (GNIS) code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'countyns';
 
 
 -- SQL statement 17: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -733,37 +733,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'American FactFinder summary level code + geovariant code + ''00US'' + GEOID', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'American FactFinder summary level code + geovariant code + ''00US'' + GEOID',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'affgeoid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'American FactFinder summary level code + geovariant code + ''00US'' + GEOID', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'American FactFinder summary level code + geovariant code + ''00US'' + GEOID',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'affgeoid';
 
 
 -- SQL statement 18: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -777,37 +777,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'County identifier; a concatenation of current state Federal Information Processing Series (FIPS) code and county FIPS code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'County identifier; a concatenation of current state Federal Information Processing Series (FIPS) code and county FIPS code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'geoid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'County identifier; a concatenation of current state Federal Information Processing Series (FIPS) code and county FIPS code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'County identifier; a concatenation of current state Federal Information Processing Series (FIPS) code and county FIPS code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'geoid';
 
 
 -- SQL statement 19: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -821,37 +821,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current county name', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current county name',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'name'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current county name', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current county name',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'name';
 
 
 -- SQL statement 20: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -865,37 +865,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current legal/statistical area description code for county', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current legal/statistical area description code for county',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'lsad'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current legal/statistical area description code for county', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current legal/statistical area description code for county',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'lsad';
 
 
 -- SQL statement 21: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -909,37 +909,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current land area (square meters)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current land area (square meters)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'aland'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current land area (square meters)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current land area (square meters)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'aland';
 
 
 -- SQL statement 22: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_county_500k'
@@ -953,16 +953,16 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current water area (square meters)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current water area (square meters)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'awater'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current water area (square meters)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current water area (square meters)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'awater';
 
@@ -1233,7 +1233,7 @@ WITH a AS (
           CASE WHEN a.area_km2 > 0 THEN CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(21,6))
 				WHEN a.area_km2 = a.area_km2_calc THEN 0
 	        	ELSE NULL
-	   	   END AS pct_km2_diff 
+	   	   END AS pct_km2_diff
   FROM a
 )
 UPDATE cb_2014_us_county_500k
@@ -1271,7 +1271,7 @@ WITH a AS (
           CASE WHEN a.area_km2 > 0 THEN CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(21,6))
 				WHEN a.area_km2 = a.area_km2_calc THEN 0
 	        	ELSE NULL
-	   	   END AS pct_km2_diff 
+	   	   END AS pct_km2_diff
   FROM a
 )
 UPDATE cb_2014_us_county_500k
@@ -1309,7 +1309,7 @@ WITH a AS (
           CASE WHEN a.area_km2 > 0 THEN CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(21,6))
 				WHEN a.area_km2 = a.area_km2_calc THEN 0
 	        	ELSE NULL
-	   	   END AS pct_km2_diff 
+	   	   END AS pct_km2_diff
   FROM a
 )
 UPDATE cb_2014_us_county_500k
@@ -1347,7 +1347,7 @@ WITH a AS (
           CASE WHEN a.area_km2 > 0 THEN CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(21,6))
 				WHEN a.area_km2 = a.area_km2_calc THEN 0
 	        	ELSE NULL
-	   	   END AS pct_km2_diff 
+	   	   END AS pct_km2_diff
   FROM a
 )
 UPDATE cb_2014_us_county_500k
@@ -1391,10 +1391,10 @@ CREATE SPATIAL INDEX cb_2014_us_county_500k_geom_9_gix ON cb_2014_us_county_500k
  *						1: index name;e.g. geometry_cb_2014_us_500k_gix
  *						2: table name; e.g. geometry_cb_2014_us_500k
  *						3: Geometry field name; e.g. geom
- *						4: Xmin (4326); e.g. -179.13729006727 
- *						5: Ymin (4326); e.g. -14.3737802873213 
- *						6: Xmax (4326); e.g.  179.773803959804  
- *						7: Ymax (4326); e.g. 71.352561 
+ *						4: Xmin (4326); e.g. -179.13729006727
+ *						5: Ymin (4326); e.g. -14.3737802873213
+ *						6: Xmax (4326); e.g.  179.773803959804
+ *						7: Ymax (4326); e.g. 71.352561
  *
  * Description:			Create geometry table
  * Note:				% becomes % after substitution
@@ -1439,8 +1439,8 @@ WITH a AS (
 SELECT SUBSTRING(a.areaname, 1, 30) AS areaname,
        a.area_km2,
 	   a.area_km2_calc,
-	   CASE WHEN area_km2 = 0 THEN NULL 
-			ELSE CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(15,2)) 
+	   CASE WHEN area_km2 = 0 THEN NULL
+			ELSE CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(15,2))
 			END AS pct_km2_diff,
 	   a.geographic_centroid,
        a.geographic_centroid_calc,
@@ -1449,108 +1449,108 @@ SELECT SUBSTRING(a.areaname, 1, 30) AS areaname,
  WHERE nrow <= 100
  ORDER BY 1 ;
 
-areaname                       area_km2          area_km2_calc     pct_km2_diff      geographic_centroid                                           geographic_centroid_calc                                      centroid_diff_km              
+areaname                       area_km2          area_km2_calc     pct_km2_diff      geographic_centroid                                           geographic_centroid_calc                                      centroid_diff_km
 ------------------------------ ----------------- ----------------- ----------------- ------------------------------------------------------------- ------------------------------------------------------------- ------------------------------
-A+¦asco                                   103.00            102.73               .26 -67.1329947,18.2847947                                        -67.1325044,18.2847397                                        0.0521983                     
-Abbeville                                1327.00           1324.10               .22 -82.4483699,34.2237069                                        -82.4485584,34.2238219                                        0.0215487                     
-Acadia                                   1709.00           1702.89               .36 -92.5020925,30.2284598                                        -92.5020462,30.2285459                                        0.0105366                     
-Accomack                                 1461.00           1458.80               .15 -75.7415572,37.7658599                                        -75.7416303,37.7647998                                        0.117835                      
-Ada                                      2748.00           2746.39               .06 -116.3414064,43.3947596                                       -116.3414340,43.3948853                                       0.0141505                     
-Adair                                    1070.00           1067.96               .19 -85.2448719,37.2148762                                        -85.2449017,37.2149224                                        0.00575879                    
-Adair                                    1498.00           1494.62               .23 -94.6354092,35.9174646                                        -94.6376589,35.9187746                                        0.249717                      
-Adair                                    1476.00           1474.71               .09 -92.5540582,40.1906338                                        -92.5540548,40.1907776                                        0.0159644                     
-Adair                                    1478.00           1477.05               .06 -94.4793820,41.3765260                                        -94.4794001,41.3766748                                        0.0165864                     
-Adams                                    4997.00           4999.79               .06 -118.3232278,46.8748906                                       -118.3232244,46.8757480                                       0.0953205                     
-Adams                                    1520.00           1517.62               .16 -83.4708273,38.7986072                                        -83.4691456,38.8002377                                        0.232605                      
-Adams                                    1103.00           1102.10               .08 -94.7095814,41.0278368                                        -94.7079140,41.0299683                                        0.27514                       
-Adams                                    1781.00           1780.61               .02 -89.8964030,43.9834049                                        -89.8962307,43.9826015                                        0.0903357                     
-Adams                                    3547.00           3547.12               .00 -116.3207474,44.8697177                                       -116.3205724,44.8699751                                       0.0317713                     
-Adams                                     881.00            880.42               .07 -84.9089406,40.7139760                                        -84.9148901,40.7171251                                        0.612376                      
-Adams                                    3070.00           3065.99               .13 -104.7480496,39.8335661                                       -104.7629220,39.8410512                                       1.52029                       
-Adams                                    1463.00           1461.18               .12 -98.4937693,40.5043052                                        -98.4936511,40.5044656                                        0.0204383                     
-Adams                                    1267.00           1262.64               .34 -91.3981957,31.4291537                                        -91.3982394,31.4289774                                        0.0199768                     
-Adams                                    2260.00           2257.03               .13 -91.2799451,39.9657462                                        -91.2797927,39.9659667                                        0.0277311                     
-Adams                                    1352.00           1350.81               .09 -77.1021873,39.8976988                                        -77.1006942,39.8989300                                        0.18707                       
-Adams                                    2560.00           2561.00               .04 -102.4693626,46.0764149                                       -102.4769747,46.0806508                                       0.753921                      
-Addison                                  2092.00           2091.30               .03 -73.2474021,44.0346002                                        -73.2465437,44.0353366                                        0.106909                      
-Adjuntas                                  175.00            173.78               .70 -66.7567308,18.1820164                                        -66.7566691,18.1822082                                        0.0222091                     
-Aguada                                     81.00             80.66               .42 -67.1744735,18.3620033                                        -67.1744522,18.3617210                                        0.0313217                     
-Aguadilla                                  95.00             95.00               .00 -67.1260072,18.4463241                                        -67.1258806,18.4464678                                        0.0207765                     
-Aguas Buenas                               78.00             77.85               .19 -66.1315273,18.2474611                                        -66.1318908,18.2474641                                        0.0384444                     
-Aibonito                                   82.00             81.07              1.13 -66.2550944,18.1364224                                        -66.2550942,18.1364270                                        0.000499622                   
-Aiken                                    2806.00           2798.87               .25 -81.6527541,33.5438792                                        -81.6517808,33.5444346                                        0.109388                      
-Aitkin                                   5166.00           5168.30               .04 -93.4591356,46.5104239                                        -93.4591257,46.5108517                                        0.0475658                     
-Alachua                                  2518.00           2509.27               .35 -82.3110118,29.6934539                                        -82.3107893,29.6935987                                        0.0268553                     
-Alamance                                 1128.00           1125.88               .19 -79.3433238,36.0429762                                        -79.3437866,36.0437042                                        0.0909051                     
-Alameda                                  1953.00           1949.62               .17 -122.0271504,37.6943623                                       -122.0262002,37.6945374                                       0.0860326                     
-Alamosa                                  1876.00           1872.77               .17 -105.6213150,37.6141980                                       -105.6214487,37.6143913                                       0.0244947                     
-Albany                                   1382.00           1381.12               .06 -73.9152097,42.6427224                                        -73.9158903,42.6436925                                        0.121363                      
-Albany                                  11168.00          11159.34               .08 -105.6434120,41.8968217                                       -105.6439531,41.8973914                                       0.0775917                     
-Albemarle                                1884.00           1880.71               .17 -78.6099674,38.0189443                                        -78.6104536,38.0186137                                        0.0562968                     
-Alcona                                   1799.00           1798.90               .01 -83.4151826,44.6896845                                        -83.4162210,44.6900574                                        0.0921638                     
-Alcorn                                   1042.00           1039.89               .20 -88.5883902,34.8690606                                        -88.5915564,34.8649891                                        0.536495                      
-Aleutians East                          18470.00          18513.75               .24 -161.8646726,55.0633901                                       -161.8816328,55.0790481                                       2.05238                       
-Aleutians West                          11725.00          11746.22               .18 -163.1203838,52.8876488                                       -171.6983768,52.9782835                                       576.539                       
-Alexander                                 656.00            654.29               .26 -89.2861988,37.1677778                                        -89.2861502,37.1678165                                        0.00609513                    
-Alexander                                 684.00            682.84               .17 -81.2132650,35.9048252                                        -81.2127495,35.9049776                                        0.0495098                     
-Alexandria                                 40.00             40.26               .65 -77.0897486,38.8212249                                        -77.0897596,38.8212313                                        0.00118949                    
-Alfalfa                                  2287.00           2282.91               .18 -98.2910872,36.7485304                                        -98.2926952,36.7450536                                        0.411687                      
-Alger                                    2427.00           2427.90               .04 -86.6694124,46.4939090                                        -86.6696400,46.4942169                                        0.0384281                     
-Allamakee                                1707.00           1706.02               .06 -91.3007947,43.3050804                                        -91.2973176,43.3006606                                        0.56631                       
-Allegan                                  2184.00           2182.24               .08 -85.9838968,42.6054525                                        -85.9820538,42.6045543                                        0.181191                      
-Allegany                                 2680.00           2678.84               .04 -78.0523961,42.2850097                                        -78.0525736,42.2876490                                        0.293529                      
-Allegany                                 1115.00           1113.31               .15 -78.6507138,39.5873252                                        -78.6491418,39.5872161                                        0.135589                      
-Alleghany                                1165.00           1162.66               .20 -80.0135796,37.7752220                                        -80.0130991,37.7757193                                        0.0695651                     
-Alleghany                                 614.00            612.81               .19 -81.1691020,36.4617981                                        -81.1702246,36.4613710                                        0.111234                      
-Allegheny                                1930.00           1928.12               .10 -79.9145901,40.4591042                                        -79.9145256,40.4592694                                        0.0191408                     
-Allen                                    1711.00           1709.53               .09 -85.0688313,41.1036465                                        -85.0727680,41.1014468                                        0.411141                      
-Allen                                    1311.00           1308.72               .17 -95.3228227,37.8727931                                        -95.3204597,37.8753425                                        0.351137                      
-Allen                                    1055.00           1053.69               .12 -84.1308842,40.7963831                                        -84.1309026,40.7965299                                        0.0163763                     
-Allen                                     914.00            911.90               .23 -86.1720311,36.8197629                                        -86.1720599,36.8198344                                        0.00834114                    
-Allen                                    1991.00           1984.74               .31 -92.7147705,30.5998019                                        -92.7147495,30.5999032                                        0.0114082                     
-Allendale                                1072.00           1068.61               .32 -81.4095984,32.9610623                                        -81.4096167,32.9611381                                        0.00857498                    
-Alpena                                   1550.00           1550.22               .01 -83.3848734,45.0386846                                        -83.3844861,45.0392376                                        0.0686131                     
-Alpine                                   1927.00           1924.14               .15 -119.7196689,38.5990838                                       -119.7194543,38.5991965                                       0.0224931                     
-Amador                                   1572.00           1569.81               .14 -120.5714313,38.4765541                                       -120.5716694,38.4768913                                       0.0428119                     
-Amelia                                    930.00            928.97               .11 -77.8946962,37.3579765                                        -77.8945415,37.3581087                                        0.0200751                     
-Amherst                                  1242.00           1240.28               .14 -79.1476102,37.6131428                                        -79.1475422,37.6132472                                        0.013051                      
-Amite                                    1901.00           1894.63               .34 -90.9189620,31.2349871                                        -90.9199831,31.2366039                                        0.203953                      
-Anchorage                                4471.00           4487.66               .37 -149.6095495,61.1353294                                       -149.6088626,61.1358987                                       0.0734407                     
-Anderson                                  895.00            893.00               .22 -84.1844937,36.1310079                                        -84.1842111,36.1313227                                        0.0432127                     
-Anderson                                 1966.00           1961.76               .22 -82.5749099,34.5759782                                        -82.5750844,34.5761367                                        0.023784                      
-Anderson                                 2800.00           2791.89               .29 -95.6383847,31.7958845                                        -95.6383297,31.7961713                                        0.0322193                     
-Anderson                                  530.00            529.21               .15 -85.0100877,37.9870321                                        -85.0101366,37.9870850                                        0.00726859                    
-Anderson                                 1514.00           1512.06               .13 -95.3190191,38.2336821                                        -95.3190391,38.2338204                                        0.0154554                     
-Andrew                                   1132.00           1130.36               .14 -94.9604314,40.0028543                                        -94.9603557,40.0029186                                        0.0096379                     
-Andrews                                  3899.00           3888.16               .28 -102.6321596,32.3234219                                       -102.6322617,32.3238800                                       0.0517011                     
-Androscoggin                             1288.00           1287.61               .03 -70.1857595,44.1219602                                        -70.1857558,44.1220811                                        0.0134369                     
-Angelina                                 2246.00           2239.66               .28 -94.6294988,31.2728291                                        -94.6295237,31.2732321                                        0.0447448                     
-Anne Arundel                             1166.00           1164.06               .17 -76.5992537,38.9754998                                        -76.5996931,38.9764674                                        0.113973                      
-Anoka                                    1155.00           1155.30               .03 -93.2702379,45.1930631                                        -93.2712826,45.1935578                                        0.0988042                     
-Anson                                    1394.00           1390.93               .22 -80.0852336,35.1134175                                        -80.0888394,35.1139737                                        0.334451                      
-Antelope                                 2225.00           2223.54               .07 -98.0726111,42.1476394                                        -98.0726155,42.1478068                                        0.0185938                     
-Antrim                                   1360.00           1360.42               .03 -85.3078535,45.0016980                                        -85.3071041,45.0012259                                        0.079019                      
-Apache                                  29122.00          29057.98               .22 -109.5479814,34.3181105                                       -109.5531389,34.2971350                                       2.37471                       
-Appanoose                                1338.00           1336.90               .08 -92.8445085,40.7178591                                        -92.8444727,40.7179967                                        0.0155775                     
-Appling                                  1330.00           1326.42               .27 -82.2735127,31.7919500                                        -82.2735341,31.7920218                                        0.00821402                    
-Appomattox                                868.00            866.23               .20 -78.7932450,37.3693304                                        -78.7931901,37.3694045                                        0.0095547                     
-Aransas                                   758.00            755.21               .37 -97.0070509,28.0885995                                        -97.0068823,28.0884778                                        0.0213678                     
-Arapahoe                                 2089.00           2085.89               .15 -104.8085219,39.6633871                                       -104.8222628,39.6602379                                       1.22991                       
-Archer                                   2403.00           2396.86               .26 -98.6033509,33.6476709                                        -98.6049576,33.6442682                                        0.405774                      
-Archuleta                                3515.00           3509.05               .17 -107.0220661,37.1521723                                       -107.0296557,37.1619826                                       1.28059                       
-Arecibo                                   331.00            329.24               .53 -66.6714573,18.3949278                                        -66.6708670,18.3939088                                        0.128889                      
-Arenac                                    963.00            962.85               .02 -83.7479829,44.0239295                                        -83.7480225,44.0240604                                        0.0148812                     
-Arkansas                                 2684.00           2677.43               .24 -91.2712196,34.2148235                                        -91.2712316,34.2149545                                        0.0145785                     
-Arlington                                  67.00             67.31               .46 -77.0916376,38.8721719                                        -77.0916298,38.8721755                                        0.000782702                   
-Armstrong                                2372.00           2366.94               .21 -101.3911343,34.9517569                                       -101.3911668,34.9519752                                       0.024394                      
-Armstrong                                1721.00           1719.23               .10 -79.5052822,40.8833088                                        -79.5053319,40.8833917                                        0.010114                      
-Aroostook                               17676.00          17681.34               .03 -68.4708284,46.9148238                                        -68.4686555,46.9172695                                        0.318305                      
-Arroyo                                     39.00             39.04               .10 -66.0577185,17.9938805                                        -66.0577530,17.9949967                                        0.123597                      
-Arthur                                   1862.00           1860.12               .10 -101.5804802,41.5939187                                       -101.5803929,41.5941061                                       0.0220469                     
-Ascension                                 787.00            784.06               .37 -90.8415767,30.2516738                                        -90.8415768,30.2517327                                        0.00652508                    
-Ashe                                     1114.00           1111.94               .18 -81.4677509,36.4019679                                        -81.4666564,36.4012441                                        0.126848                      
-Ashland                                  2735.00           2736.02               .04 -90.6546769,46.8236372                                        -90.6540367,46.8243990                                        0.0977693                     
-Ashland                                  1107.00           1105.52               .13 -82.2976924,40.8081443                                        -82.2965228,40.8061121                                        0.246312                      
+A+ï¿½asco                                   103.00            102.73               .26 -67.1329947,18.2847947                                        -67.1325044,18.2847397                                        0.0521983
+Abbeville                                1327.00           1324.10               .22 -82.4483699,34.2237069                                        -82.4485584,34.2238219                                        0.0215487
+Acadia                                   1709.00           1702.89               .36 -92.5020925,30.2284598                                        -92.5020462,30.2285459                                        0.0105366
+Accomack                                 1461.00           1458.80               .15 -75.7415572,37.7658599                                        -75.7416303,37.7647998                                        0.117835
+Ada                                      2748.00           2746.39               .06 -116.3414064,43.3947596                                       -116.3414340,43.3948853                                       0.0141505
+Adair                                    1070.00           1067.96               .19 -85.2448719,37.2148762                                        -85.2449017,37.2149224                                        0.00575879
+Adair                                    1498.00           1494.62               .23 -94.6354092,35.9174646                                        -94.6376589,35.9187746                                        0.249717
+Adair                                    1476.00           1474.71               .09 -92.5540582,40.1906338                                        -92.5540548,40.1907776                                        0.0159644
+Adair                                    1478.00           1477.05               .06 -94.4793820,41.3765260                                        -94.4794001,41.3766748                                        0.0165864
+Adams                                    4997.00           4999.79               .06 -118.3232278,46.8748906                                       -118.3232244,46.8757480                                       0.0953205
+Adams                                    1520.00           1517.62               .16 -83.4708273,38.7986072                                        -83.4691456,38.8002377                                        0.232605
+Adams                                    1103.00           1102.10               .08 -94.7095814,41.0278368                                        -94.7079140,41.0299683                                        0.27514
+Adams                                    1781.00           1780.61               .02 -89.8964030,43.9834049                                        -89.8962307,43.9826015                                        0.0903357
+Adams                                    3547.00           3547.12               .00 -116.3207474,44.8697177                                       -116.3205724,44.8699751                                       0.0317713
+Adams                                     881.00            880.42               .07 -84.9089406,40.7139760                                        -84.9148901,40.7171251                                        0.612376
+Adams                                    3070.00           3065.99               .13 -104.7480496,39.8335661                                       -104.7629220,39.8410512                                       1.52029
+Adams                                    1463.00           1461.18               .12 -98.4937693,40.5043052                                        -98.4936511,40.5044656                                        0.0204383
+Adams                                    1267.00           1262.64               .34 -91.3981957,31.4291537                                        -91.3982394,31.4289774                                        0.0199768
+Adams                                    2260.00           2257.03               .13 -91.2799451,39.9657462                                        -91.2797927,39.9659667                                        0.0277311
+Adams                                    1352.00           1350.81               .09 -77.1021873,39.8976988                                        -77.1006942,39.8989300                                        0.18707
+Adams                                    2560.00           2561.00               .04 -102.4693626,46.0764149                                       -102.4769747,46.0806508                                       0.753921
+Addison                                  2092.00           2091.30               .03 -73.2474021,44.0346002                                        -73.2465437,44.0353366                                        0.106909
+Adjuntas                                  175.00            173.78               .70 -66.7567308,18.1820164                                        -66.7566691,18.1822082                                        0.0222091
+Aguada                                     81.00             80.66               .42 -67.1744735,18.3620033                                        -67.1744522,18.3617210                                        0.0313217
+Aguadilla                                  95.00             95.00               .00 -67.1260072,18.4463241                                        -67.1258806,18.4464678                                        0.0207765
+Aguas Buenas                               78.00             77.85               .19 -66.1315273,18.2474611                                        -66.1318908,18.2474641                                        0.0384444
+Aibonito                                   82.00             81.07              1.13 -66.2550944,18.1364224                                        -66.2550942,18.1364270                                        0.000499622
+Aiken                                    2806.00           2798.87               .25 -81.6527541,33.5438792                                        -81.6517808,33.5444346                                        0.109388
+Aitkin                                   5166.00           5168.30               .04 -93.4591356,46.5104239                                        -93.4591257,46.5108517                                        0.0475658
+Alachua                                  2518.00           2509.27               .35 -82.3110118,29.6934539                                        -82.3107893,29.6935987                                        0.0268553
+Alamance                                 1128.00           1125.88               .19 -79.3433238,36.0429762                                        -79.3437866,36.0437042                                        0.0909051
+Alameda                                  1953.00           1949.62               .17 -122.0271504,37.6943623                                       -122.0262002,37.6945374                                       0.0860326
+Alamosa                                  1876.00           1872.77               .17 -105.6213150,37.6141980                                       -105.6214487,37.6143913                                       0.0244947
+Albany                                   1382.00           1381.12               .06 -73.9152097,42.6427224                                        -73.9158903,42.6436925                                        0.121363
+Albany                                  11168.00          11159.34               .08 -105.6434120,41.8968217                                       -105.6439531,41.8973914                                       0.0775917
+Albemarle                                1884.00           1880.71               .17 -78.6099674,38.0189443                                        -78.6104536,38.0186137                                        0.0562968
+Alcona                                   1799.00           1798.90               .01 -83.4151826,44.6896845                                        -83.4162210,44.6900574                                        0.0921638
+Alcorn                                   1042.00           1039.89               .20 -88.5883902,34.8690606                                        -88.5915564,34.8649891                                        0.536495
+Aleutians East                          18470.00          18513.75               .24 -161.8646726,55.0633901                                       -161.8816328,55.0790481                                       2.05238
+Aleutians West                          11725.00          11746.22               .18 -163.1203838,52.8876488                                       -171.6983768,52.9782835                                       576.539
+Alexander                                 656.00            654.29               .26 -89.2861988,37.1677778                                        -89.2861502,37.1678165                                        0.00609513
+Alexander                                 684.00            682.84               .17 -81.2132650,35.9048252                                        -81.2127495,35.9049776                                        0.0495098
+Alexandria                                 40.00             40.26               .65 -77.0897486,38.8212249                                        -77.0897596,38.8212313                                        0.00118949
+Alfalfa                                  2287.00           2282.91               .18 -98.2910872,36.7485304                                        -98.2926952,36.7450536                                        0.411687
+Alger                                    2427.00           2427.90               .04 -86.6694124,46.4939090                                        -86.6696400,46.4942169                                        0.0384281
+Allamakee                                1707.00           1706.02               .06 -91.3007947,43.3050804                                        -91.2973176,43.3006606                                        0.56631
+Allegan                                  2184.00           2182.24               .08 -85.9838968,42.6054525                                        -85.9820538,42.6045543                                        0.181191
+Allegany                                 2680.00           2678.84               .04 -78.0523961,42.2850097                                        -78.0525736,42.2876490                                        0.293529
+Allegany                                 1115.00           1113.31               .15 -78.6507138,39.5873252                                        -78.6491418,39.5872161                                        0.135589
+Alleghany                                1165.00           1162.66               .20 -80.0135796,37.7752220                                        -80.0130991,37.7757193                                        0.0695651
+Alleghany                                 614.00            612.81               .19 -81.1691020,36.4617981                                        -81.1702246,36.4613710                                        0.111234
+Allegheny                                1930.00           1928.12               .10 -79.9145901,40.4591042                                        -79.9145256,40.4592694                                        0.0191408
+Allen                                    1711.00           1709.53               .09 -85.0688313,41.1036465                                        -85.0727680,41.1014468                                        0.411141
+Allen                                    1311.00           1308.72               .17 -95.3228227,37.8727931                                        -95.3204597,37.8753425                                        0.351137
+Allen                                    1055.00           1053.69               .12 -84.1308842,40.7963831                                        -84.1309026,40.7965299                                        0.0163763
+Allen                                     914.00            911.90               .23 -86.1720311,36.8197629                                        -86.1720599,36.8198344                                        0.00834114
+Allen                                    1991.00           1984.74               .31 -92.7147705,30.5998019                                        -92.7147495,30.5999032                                        0.0114082
+Allendale                                1072.00           1068.61               .32 -81.4095984,32.9610623                                        -81.4096167,32.9611381                                        0.00857498
+Alpena                                   1550.00           1550.22               .01 -83.3848734,45.0386846                                        -83.3844861,45.0392376                                        0.0686131
+Alpine                                   1927.00           1924.14               .15 -119.7196689,38.5990838                                       -119.7194543,38.5991965                                       0.0224931
+Amador                                   1572.00           1569.81               .14 -120.5714313,38.4765541                                       -120.5716694,38.4768913                                       0.0428119
+Amelia                                    930.00            928.97               .11 -77.8946962,37.3579765                                        -77.8945415,37.3581087                                        0.0200751
+Amherst                                  1242.00           1240.28               .14 -79.1476102,37.6131428                                        -79.1475422,37.6132472                                        0.013051
+Amite                                    1901.00           1894.63               .34 -90.9189620,31.2349871                                        -90.9199831,31.2366039                                        0.203953
+Anchorage                                4471.00           4487.66               .37 -149.6095495,61.1353294                                       -149.6088626,61.1358987                                       0.0734407
+Anderson                                  895.00            893.00               .22 -84.1844937,36.1310079                                        -84.1842111,36.1313227                                        0.0432127
+Anderson                                 1966.00           1961.76               .22 -82.5749099,34.5759782                                        -82.5750844,34.5761367                                        0.023784
+Anderson                                 2800.00           2791.89               .29 -95.6383847,31.7958845                                        -95.6383297,31.7961713                                        0.0322193
+Anderson                                  530.00            529.21               .15 -85.0100877,37.9870321                                        -85.0101366,37.9870850                                        0.00726859
+Anderson                                 1514.00           1512.06               .13 -95.3190191,38.2336821                                        -95.3190391,38.2338204                                        0.0154554
+Andrew                                   1132.00           1130.36               .14 -94.9604314,40.0028543                                        -94.9603557,40.0029186                                        0.0096379
+Andrews                                  3899.00           3888.16               .28 -102.6321596,32.3234219                                       -102.6322617,32.3238800                                       0.0517011
+Androscoggin                             1288.00           1287.61               .03 -70.1857595,44.1219602                                        -70.1857558,44.1220811                                        0.0134369
+Angelina                                 2246.00           2239.66               .28 -94.6294988,31.2728291                                        -94.6295237,31.2732321                                        0.0447448
+Anne Arundel                             1166.00           1164.06               .17 -76.5992537,38.9754998                                        -76.5996931,38.9764674                                        0.113973
+Anoka                                    1155.00           1155.30               .03 -93.2702379,45.1930631                                        -93.2712826,45.1935578                                        0.0988042
+Anson                                    1394.00           1390.93               .22 -80.0852336,35.1134175                                        -80.0888394,35.1139737                                        0.334451
+Antelope                                 2225.00           2223.54               .07 -98.0726111,42.1476394                                        -98.0726155,42.1478068                                        0.0185938
+Antrim                                   1360.00           1360.42               .03 -85.3078535,45.0016980                                        -85.3071041,45.0012259                                        0.079019
+Apache                                  29122.00          29057.98               .22 -109.5479814,34.3181105                                       -109.5531389,34.2971350                                       2.37471
+Appanoose                                1338.00           1336.90               .08 -92.8445085,40.7178591                                        -92.8444727,40.7179967                                        0.0155775
+Appling                                  1330.00           1326.42               .27 -82.2735127,31.7919500                                        -82.2735341,31.7920218                                        0.00821402
+Appomattox                                868.00            866.23               .20 -78.7932450,37.3693304                                        -78.7931901,37.3694045                                        0.0095547
+Aransas                                   758.00            755.21               .37 -97.0070509,28.0885995                                        -97.0068823,28.0884778                                        0.0213678
+Arapahoe                                 2089.00           2085.89               .15 -104.8085219,39.6633871                                       -104.8222628,39.6602379                                       1.22991
+Archer                                   2403.00           2396.86               .26 -98.6033509,33.6476709                                        -98.6049576,33.6442682                                        0.405774
+Archuleta                                3515.00           3509.05               .17 -107.0220661,37.1521723                                       -107.0296557,37.1619826                                       1.28059
+Arecibo                                   331.00            329.24               .53 -66.6714573,18.3949278                                        -66.6708670,18.3939088                                        0.128889
+Arenac                                    963.00            962.85               .02 -83.7479829,44.0239295                                        -83.7480225,44.0240604                                        0.0148812
+Arkansas                                 2684.00           2677.43               .24 -91.2712196,34.2148235                                        -91.2712316,34.2149545                                        0.0145785
+Arlington                                  67.00             67.31               .46 -77.0916376,38.8721719                                        -77.0916298,38.8721755                                        0.000782702
+Armstrong                                2372.00           2366.94               .21 -101.3911343,34.9517569                                       -101.3911668,34.9519752                                       0.024394
+Armstrong                                1721.00           1719.23               .10 -79.5052822,40.8833088                                        -79.5053319,40.8833917                                        0.010114
+Aroostook                               17676.00          17681.34               .03 -68.4708284,46.9148238                                        -68.4686555,46.9172695                                        0.318305
+Arroyo                                     39.00             39.04               .10 -66.0577185,17.9938805                                        -66.0577530,17.9949967                                        0.123597
+Arthur                                   1862.00           1860.12               .10 -101.5804802,41.5939187                                       -101.5803929,41.5941061                                       0.0220469
+Ascension                                 787.00            784.06               .37 -90.8415767,30.2516738                                        -90.8415768,30.2517327                                        0.00652508
+Ashe                                     1114.00           1111.94               .18 -81.4677509,36.4019679                                        -81.4666564,36.4012441                                        0.126848
+Ashland                                  2735.00           2736.02               .04 -90.6546769,46.8236372                                        -90.6540367,46.8243990                                        0.0977693
+Ashland                                  1107.00           1105.52               .13 -82.2976924,40.8081443                                        -82.2965228,40.8061121                                        0.246312
 
 (100 rows affected)
 
@@ -1576,13 +1576,13 @@ CREATE TABLE cb_2014_us_nation_5m (
 
 -- SQL statement 53: Comment geospatial data table >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_table.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. cb_2014_us_county_500k
- *						2: comment. Usual rules for comment text in SQK - single 
+ *						2: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -1590,7 +1590,7 @@ DECLARE @tableName   sysname  /*
  * Description:			Comment table
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_nation_5m'
@@ -1603,35 +1603,35 @@ IF EXISTS (
            AND [name]     = N'MS_Description'
 		   AND [minor_id] = 0)
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'The nation at a scale of 1:5,000,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'The nation at a scale of 1:5,000,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'The nation at a scale of 1:5,000,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'The nation at a scale of 1:5,000,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m';
 
 
 -- SQL statement 54: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_nation_5m'
@@ -1645,37 +1645,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Unique geographic index', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Unique geographic index',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'gid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Unique geographic index', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Unique geographic index',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'gid';
 
 
 -- SQL statement 55: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_nation_5m'
@@ -1689,37 +1689,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area ID (GEOID): Nation identifier', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area ID (GEOID): Nation identifier',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'areaid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area ID (GEOID): Nation identifier', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area ID (GEOID): Nation identifier',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'areaid';
 
 
 -- SQL statement 56: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_nation_5m'
@@ -1733,37 +1733,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area name (NAME): Nation name', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area name (NAME): Nation name',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'areaname'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area name (NAME): Nation name', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area name (NAME): Nation name',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'areaname';
 
 
 -- SQL statement 57: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_nation_5m'
@@ -1777,37 +1777,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area in square km', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area in square km',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'area_km2'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area in square km', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area in square km',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'area_km2';
 
 
 -- SQL statement 58: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_nation_5m'
@@ -1821,37 +1821,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for geographic centroid', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for geographic centroid',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'geographic_centroid_wkt'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for geographic centroid', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for geographic centroid',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'geographic_centroid_wkt';
 
 
 -- SQL statement 59: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_nation_5m'
@@ -1865,37 +1865,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 6', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 6',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'wkt_6'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 6', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 6',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'wkt_6';
 
 
 -- SQL statement 60: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_nation_5m'
@@ -1909,37 +1909,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 7', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 7',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'wkt_7'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 7', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 7',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'wkt_7';
 
 
 -- SQL statement 61: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_nation_5m'
@@ -1953,37 +1953,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 8', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 8',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'wkt_8'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 8', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 8',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'wkt_8';
 
 
 -- SQL statement 62: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_nation_5m'
@@ -1997,37 +1997,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 9', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 9',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'wkt_9'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 9', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 9',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'wkt_9';
 
 
 -- SQL statement 63: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_nation_5m'
@@ -2041,37 +2041,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'American FactFinder summary level code + geovariant code + ''00US''', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'American FactFinder summary level code + geovariant code + ''00US''',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'affgeoid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'American FactFinder summary level code + geovariant code + ''00US''', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'American FactFinder summary level code + geovariant code + ''00US''',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'affgeoid';
 
 
 -- SQL statement 64: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_nation_5m'
@@ -2085,37 +2085,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Nation identifier', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Nation identifier',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'geoid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Nation identifier', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Nation identifier',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'geoid';
 
 
 -- SQL statement 65: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_nation_5m'
@@ -2129,16 +2129,16 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Nation name', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Nation name',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'name'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Nation name', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Nation name',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'name';
 
@@ -2409,7 +2409,7 @@ WITH a AS (
           CASE WHEN a.area_km2 > 0 THEN CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(21,6))
 				WHEN a.area_km2 = a.area_km2_calc THEN 0
 	        	ELSE NULL
-	   	   END AS pct_km2_diff 
+	   	   END AS pct_km2_diff
   FROM a
 )
 UPDATE cb_2014_us_nation_5m
@@ -2447,7 +2447,7 @@ WITH a AS (
           CASE WHEN a.area_km2 > 0 THEN CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(21,6))
 				WHEN a.area_km2 = a.area_km2_calc THEN 0
 	        	ELSE NULL
-	   	   END AS pct_km2_diff 
+	   	   END AS pct_km2_diff
   FROM a
 )
 UPDATE cb_2014_us_nation_5m
@@ -2485,7 +2485,7 @@ WITH a AS (
           CASE WHEN a.area_km2 > 0 THEN CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(21,6))
 				WHEN a.area_km2 = a.area_km2_calc THEN 0
 	        	ELSE NULL
-	   	   END AS pct_km2_diff 
+	   	   END AS pct_km2_diff
   FROM a
 )
 UPDATE cb_2014_us_nation_5m
@@ -2523,7 +2523,7 @@ WITH a AS (
           CASE WHEN a.area_km2 > 0 THEN CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(21,6))
 				WHEN a.area_km2 = a.area_km2_calc THEN 0
 	        	ELSE NULL
-	   	   END AS pct_km2_diff 
+	   	   END AS pct_km2_diff
   FROM a
 )
 UPDATE cb_2014_us_nation_5m
@@ -2567,10 +2567,10 @@ CREATE SPATIAL INDEX cb_2014_us_nation_5m_geom_9_gix ON cb_2014_us_nation_5m (ge
  *						1: index name;e.g. geometry_cb_2014_us_500k_gix
  *						2: table name; e.g. geometry_cb_2014_us_500k
  *						3: Geometry field name; e.g. geom
- *						4: Xmin (4326); e.g. -179.13729006727 
- *						5: Ymin (4326); e.g. -14.3737802873213 
- *						6: Xmax (4326); e.g.  179.773803959804  
- *						7: Ymax (4326); e.g. 71.352561 
+ *						4: Xmin (4326); e.g. -179.13729006727
+ *						5: Ymin (4326); e.g. -14.3737802873213
+ *						6: Xmax (4326); e.g.  179.773803959804
+ *						7: Ymax (4326); e.g. 71.352561
  *
  * Description:			Create geometry table
  * Note:				% becomes % after substitution
@@ -2615,8 +2615,8 @@ WITH a AS (
 SELECT SUBSTRING(a.areaname, 1, 30) AS areaname,
        a.area_km2,
 	   a.area_km2_calc,
-	   CASE WHEN area_km2 = 0 THEN NULL 
-			ELSE CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(15,2)) 
+	   CASE WHEN area_km2 = 0 THEN NULL
+			ELSE CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(15,2))
 			END AS pct_km2_diff,
 	   a.geographic_centroid,
        a.geographic_centroid_calc,
@@ -2625,9 +2625,9 @@ SELECT SUBSTRING(a.areaname, 1, 30) AS areaname,
  WHERE nrow <= 100
  ORDER BY 1 ;
 
-areaname                       area_km2          area_km2_calc     pct_km2_diff      geographic_centroid                                           geographic_centroid_calc                                      centroid_diff_km              
+areaname                       area_km2          area_km2_calc     pct_km2_diff      geographic_centroid                                           geographic_centroid_calc                                      centroid_diff_km
 ------------------------------ ----------------- ----------------- ----------------- ------------------------------------------------------------- ------------------------------------------------------------- ------------------------------
-United States                         9371410.00        9366617.08               .05 -108.5280837,45.1075717                                       -108.5847760,50.9802518                                       653.003                       
+United States                         9371410.00        9366617.08               .05 -108.5280837,45.1075717                                       -108.5847760,50.9802518                                       653.003
 
 (1 rows affected)
 
@@ -2659,13 +2659,13 @@ CREATE TABLE cb_2014_us_state_500k (
 
 -- SQL statement 96: Comment geospatial data table >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_table.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. cb_2014_us_county_500k
- *						2: comment. Usual rules for comment text in SQK - single 
+ *						2: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -2673,7 +2673,7 @@ DECLARE @tableName   sysname  /*
  * Description:			Comment table
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -2686,35 +2686,35 @@ IF EXISTS (
            AND [name]     = N'MS_Description'
 		   AND [minor_id] = 0)
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'The State at a scale of 1:500,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'The State at a scale of 1:500,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'The State at a scale of 1:500,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'The State at a scale of 1:500,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k';
 
 
 -- SQL statement 97: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -2728,37 +2728,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Unique geographic index', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Unique geographic index',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'gid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Unique geographic index', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Unique geographic index',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'gid';
 
 
 -- SQL statement 98: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -2772,37 +2772,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area ID (STATENS): Current state Geographic Names Information System (GNIS) code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area ID (STATENS): Current state Geographic Names Information System (GNIS) code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'areaid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area ID (STATENS): Current state Geographic Names Information System (GNIS) code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area ID (STATENS): Current state Geographic Names Information System (GNIS) code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'areaid';
 
 
 -- SQL statement 99: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -2816,37 +2816,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area name (NAME): Current State name', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area name (NAME): Current State name',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'areaname'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area name (NAME): Current State name', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area name (NAME): Current State name',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'areaname';
 
 
 -- SQL statement 100: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -2860,37 +2860,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area in square km', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area in square km',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'area_km2'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area in square km', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area in square km',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'area_km2';
 
 
 -- SQL statement 101: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -2904,37 +2904,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for geographic centroid', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for geographic centroid',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'geographic_centroid_wkt'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for geographic centroid', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for geographic centroid',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'geographic_centroid_wkt';
 
 
 -- SQL statement 102: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -2948,37 +2948,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 6', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 6',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'wkt_6'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 6', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 6',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'wkt_6';
 
 
 -- SQL statement 103: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -2992,37 +2992,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 7', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 7',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'wkt_7'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 7', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 7',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'wkt_7';
 
 
 -- SQL statement 104: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -3036,37 +3036,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 8', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 8',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'wkt_8'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 8', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 8',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'wkt_8';
 
 
 -- SQL statement 105: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -3080,37 +3080,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 9', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 9',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'wkt_9'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Wellknown text for zoomlevel 9', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Wellknown text for zoomlevel 9',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'wkt_9';
 
 
 -- SQL statement 106: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -3124,37 +3124,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current state Federal Information Processing Series (FIPS) code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current state Federal Information Processing Series (FIPS) code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'statefp'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current state Federal Information Processing Series (FIPS) code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current state Federal Information Processing Series (FIPS) code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'statefp';
 
 
 -- SQL statement 107: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -3168,37 +3168,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current state Geographic Names Information System (GNIS) code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current state Geographic Names Information System (GNIS) code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'statens'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current state Geographic Names Information System (GNIS) code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current state Geographic Names Information System (GNIS) code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'statens';
 
 
 -- SQL statement 108: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -3212,37 +3212,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'American FactFinder summary level code + geovariant code + ''00US'' + GEOID', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'American FactFinder summary level code + geovariant code + ''00US'' + GEOID',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'affgeoid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'American FactFinder summary level code + geovariant code + ''00US'' + GEOID', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'American FactFinder summary level code + geovariant code + ''00US'' + GEOID',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'affgeoid';
 
 
 -- SQL statement 109: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -3256,37 +3256,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'State identifier; state FIPS code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'State identifier; state FIPS code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'geoid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'State identifier; state FIPS code', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'State identifier; state FIPS code',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'geoid';
 
 
 -- SQL statement 110: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -3300,37 +3300,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current United States Postal Service state abbreviation', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current United States Postal Service state abbreviation',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'stusps'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current United States Postal Service state abbreviation', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current United States Postal Service state abbreviation',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'stusps';
 
 
 -- SQL statement 111: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -3344,37 +3344,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current State name', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current State name',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'name'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current State name', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current State name',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'name';
 
 
 -- SQL statement 112: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -3388,37 +3388,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current legal/statistical area description code for state', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current legal/statistical area description code for state',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'lsad'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current legal/statistical area description code for state', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current legal/statistical area description code for state',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'lsad';
 
 
 -- SQL statement 113: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -3432,37 +3432,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current land area (square meters)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current land area (square meters)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'aland'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current land area (square meters)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current land area (square meters)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'aland';
 
 
 -- SQL statement 114: Comment geospatial data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.cb_2014_us_state_500k'
@@ -3476,16 +3476,16 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current water area (square meters)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current water area (square meters)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'awater'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Current water area (square meters)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Current water area (square meters)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'awater';
 
@@ -3756,7 +3756,7 @@ WITH a AS (
           CASE WHEN a.area_km2 > 0 THEN CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(21,6))
 				WHEN a.area_km2 = a.area_km2_calc THEN 0
 	        	ELSE NULL
-	   	   END AS pct_km2_diff 
+	   	   END AS pct_km2_diff
   FROM a
 )
 UPDATE cb_2014_us_state_500k
@@ -3794,7 +3794,7 @@ WITH a AS (
           CASE WHEN a.area_km2 > 0 THEN CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(21,6))
 				WHEN a.area_km2 = a.area_km2_calc THEN 0
 	        	ELSE NULL
-	   	   END AS pct_km2_diff 
+	   	   END AS pct_km2_diff
   FROM a
 )
 UPDATE cb_2014_us_state_500k
@@ -3832,7 +3832,7 @@ WITH a AS (
           CASE WHEN a.area_km2 > 0 THEN CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(21,6))
 				WHEN a.area_km2 = a.area_km2_calc THEN 0
 	        	ELSE NULL
-	   	   END AS pct_km2_diff 
+	   	   END AS pct_km2_diff
   FROM a
 )
 UPDATE cb_2014_us_state_500k
@@ -3870,7 +3870,7 @@ WITH a AS (
           CASE WHEN a.area_km2 > 0 THEN CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(21,6))
 				WHEN a.area_km2 = a.area_km2_calc THEN 0
 	        	ELSE NULL
-	   	   END AS pct_km2_diff 
+	   	   END AS pct_km2_diff
   FROM a
 )
 UPDATE cb_2014_us_state_500k
@@ -3914,10 +3914,10 @@ CREATE SPATIAL INDEX cb_2014_us_state_500k_geom_9_gix ON cb_2014_us_state_500k (
  *						1: index name;e.g. geometry_cb_2014_us_500k_gix
  *						2: table name; e.g. geometry_cb_2014_us_500k
  *						3: Geometry field name; e.g. geom
- *						4: Xmin (4326); e.g. -179.13729006727 
- *						5: Ymin (4326); e.g. -14.3737802873213 
- *						6: Xmax (4326); e.g.  179.773803959804  
- *						7: Ymax (4326); e.g. 71.352561 
+ *						4: Xmin (4326); e.g. -179.13729006727
+ *						5: Ymin (4326); e.g. -14.3737802873213
+ *						6: Xmax (4326); e.g.  179.773803959804
+ *						7: Ymax (4326); e.g. 71.352561
  *
  * Description:			Create geometry table
  * Note:				% becomes % after substitution
@@ -3962,8 +3962,8 @@ WITH a AS (
 SELECT SUBSTRING(a.areaname, 1, 30) AS areaname,
        a.area_km2,
 	   a.area_km2_calc,
-	   CASE WHEN area_km2 = 0 THEN NULL 
-			ELSE CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(15,2)) 
+	   CASE WHEN area_km2 = 0 THEN NULL
+			ELSE CAST(100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2) AS NUMERIC(15,2))
 			END AS pct_km2_diff,
 	   a.geographic_centroid,
        a.geographic_centroid_calc,
@@ -3972,64 +3972,64 @@ SELECT SUBSTRING(a.areaname, 1, 30) AS areaname,
  WHERE nrow <= 100
  ORDER BY 1 ;
 
-areaname                       area_km2          area_km2_calc     pct_km2_diff      geographic_centroid                                           geographic_centroid_calc                                      centroid_diff_km              
+areaname                       area_km2          area_km2_calc     pct_km2_diff      geographic_centroid                                           geographic_centroid_calc                                      centroid_diff_km
 ------------------------------ ----------------- ----------------- ----------------- ------------------------------------------------------------- ------------------------------------------------------------- ------------------------------
-Alabama                                134272.00         133897.60               .28 -86.7664801,31.7690552                                        -86.7686828,31.7496785                                        2.15864                       
-Alaska                                1516559.00        1522698.01               .40 -150.4186689,58.3829445                                       -151.4738059,59.1312166                                       103.327                       
-American Samoa                            203.00            201.99               .50 -170.3028174,-14.2005732                                      -170.2959930,-14.1991422                                      0.753457                      
-Arizona                                295964.00         295235.53               .25 -113.3962308,34.4586965                                       -113.4473011,34.4482863                                       4.8329                        
-Arkansas                               138054.00         137732.71               .23 -91.7460601,34.7989664                                        -91.7355145,34.8078319                                        1.37786                       
-California                             410633.00         409888.03               .18 -120.2495103,36.2457149                                       -120.1715860,36.2816155                                       8.05633                       
-Colorado                               269980.00         269600.61               .14 -104.8083807,38.9255584                                       -104.8244214,38.9644696                                       4.53803                       
-Commonwealth of the Northern M            480.00            477.74               .47 145.6158196,16.1727270                                        145.6146566,16.1800355                                        0.818271                      
-Connecticut                             12941.00          12930.94               .08 -72.8528547,41.3456700                                        -72.8534926,41.3426830                                        0.336014                      
-Delaware                                 5247.00           5239.95               .13 -75.4994397,39.2171211                                        -75.4955681,39.2266829                                        1.11296                       
-District of Columbia                      177.00            176.97               .02 -77.0161157,38.8992875                                        -77.0183130,38.8981127                                        0.230967                      
-Florida                                151512.00         150962.67               .36 -82.1912856,27.2641345                                        -82.1547044,27.2680062                                        3.6476                        
-Georgia                                153017.00         152586.97               .28 -82.8985468,32.6450261                                        -82.8777461,32.6467765                                        1.96125                       
-Guam                                      564.00            560.58               .61 144.7632529,13.4279676                                        144.7652779,13.4278028                                        0.220051                      
-Hawaii                                  16836.00          16749.69               .51 -157.7523478,21.0611975                                       -157.7165084,21.0922908                                       5.07169                       
-Idaho                                  216480.00         216445.19               .02 -114.6750465,45.4195058                                       -114.6603165,45.4457501                                       3.13628                       
-Illinois                               146089.00         145919.05               .12 -89.2220210,39.8410669                                        -89.2258648,39.8229279                                        2.0407                        
-Indiana                                 93835.00          93722.30               .12 -86.6396086,39.2583984                                        -86.6655253,39.2257279                                        4.26165                       
-Iowa                                   145844.00         145742.34               .07 -93.8227667,42.0221135                                        -93.8151855,42.0375233                                        1.82314                       
-Kansas                                 213421.00         213096.15               .15 -96.9603123,38.7478453                                        -96.9901974,38.7814421                                        4.54495                       
-Kentucky                               104842.00         104658.47               .18 -85.2123467,37.7223858                                        -85.2068848,37.7528177                                        3.41182                       
-Louisiana                              122527.00         122142.32               .31 -91.2369599,30.3596078                                        -91.2231357,30.3595940                                        1.32902                       
-Maine                                   84895.00          84901.80               .01 -68.9047269,44.5331050                                        -68.9047529,44.5405675                                        0.829256                      
-Maryland                                26683.00          26646.73               .14 -76.5695403,38.7769268                                        -76.5711298,38.7808231                                        0.454047                      
-Massachusetts                           21269.00          21255.42               .06 -70.8496779,41.9574786                                        -70.8400672,41.9560536                                        0.81236                       
-Michigan                               151073.00         151047.18               .02 -85.7125401,45.4651011                                        -85.6891882,45.4935603                                        3.65213                       
-Minnesota                              218495.00         218557.53               .03 -94.2946076,46.9142549                                        -94.2953285,46.9645226                                        5.58851                       
-Mississippi                            123841.00         123495.21               .28 -90.2098739,32.2488404                                        -90.2138270,32.2474982                                        0.401164                      
-Missouri                               180826.00         180544.22               .16 -92.1883047,38.3681761                                        -92.1247204,38.3985600                                        6.4992                        
-Montana                                380654.00         380831.58               .05 -112.4401590,46.0953789                                       -112.4705830,46.1396785                                       5.45684                       
-Nebraska                               200500.00         200334.43               .08 -97.8496887,41.4426956                                        -97.8269072,41.4787766                                        4.4363                        
-Nevada                                 286755.00         286372.77               .13 -115.9924743,37.9127710                                       -115.9484724,37.9198649                                       3.94849                       
-New Hampshire                           24046.00          24038.51               .03 -71.5978177,43.9585841                                        -71.6047671,43.9759756                                        2.01126                       
-New Jersey                              20173.00          20150.47               .11 -74.7342061,40.1862212                                        -74.7408285,40.1865817                                        0.565389                      
-New Mexico                             315687.00         314916.83               .24 -106.2103196,34.0796842                                       -106.1825525,34.0729228                                       2.67045                       
-New York                               127049.00         126986.52               .05 -74.9314132,42.2529504                                        -74.9379043,42.2959822                                        4.80981                       
-North Carolina                         128880.00         128599.17               .22 -78.1838148,35.4144296                                        -78.1563061,35.4463276                                        4.33183                       
-North Dakota                           183006.00         183108.85               .06 -97.7974493,47.3592469                                        -97.7792002,47.3868257                                        3.36168                       
-Ohio                                   107014.00         106894.42               .11 -82.4309673,40.3798732                                        -82.4276760,40.3791238                                        0.291615                      
-Oklahoma                               181432.00         181035.08               .22 -97.1409457,34.7124801                                        -97.1156299,34.6980422                                        2.81859                       
-Oregon                                 251404.00         251335.95               .03 -121.2656820,44.5161241                                       -121.2772822,44.5591170                                       4.86565                       
-Pennsylvania                           117458.00         117343.70               .10 -76.8260790,40.9801819                                        -76.7794707,41.0156052                                        5.55463                       
-Puerto Rico                              9079.00           9029.78               .54 -66.2423901,18.2032215                                        -66.2428670,18.2045412                                        0.154535                      
-Rhode Island                             2849.00           2846.23               .10 -71.3998546,41.5702071                                        -71.4007167,41.5661906                                        0.451852                      
-South Carolina                          80795.00          80589.34               .25 -81.3588011,33.5808271                                        -81.3627012,33.5789162                                        0.419542                      
-South Dakota                           199757.00         199726.92               .02 -98.1393053,43.8929745                                        -98.0953026,43.9005429                                        3.63403                       
-Tennessee                              109382.00         109150.38               .21 -85.8408130,35.8337160                                        -85.8306774,35.8777864                                        4.97486                       
-Texas                                  689860.00         687753.43               .31 -98.7725069,29.8219671                                        -98.7743170,29.8607031                                        4.29744                       
-United States Virgin Islands              358.00            355.95               .57 -64.8355293,18.1760173                                        -64.8366418,18.1743775                                        0.216319                      
-Utah                                   220179.00         219881.37               .14 -111.6210016,39.1152289                                       -111.6250827,39.1682195                                       5.89349                       
-Vermont                                 24908.00          24902.41               .02 -72.4362711,44.0669831                                        -72.4375341,44.0707847                                        0.434359                      
-Virginia                               105026.00         104842.89               .17 -78.0541807,37.6982304                                        -78.0415529,37.7255208                                        3.22716                       
-Washington                             175346.00         175443.54               .06 -122.6400069,47.7959450                                       -122.6429274,47.8063193                                       1.17404                       
-West Virginia                           62848.00          62753.77               .15 -80.3551374,38.7506277                                        -80.3661753,38.7528631                                        0.991077                      
-Wisconsin                              145379.00         145364.17               .01 -89.5095248,45.1986448                                        -89.4984439,45.2246008                                        3.01311                       
-Wyoming                                253458.00         253335.86               .05 -107.5718275,42.9599050                                       -107.5472209,42.9935163                                       4.23925                       
+Alabama                                134272.00         133897.60               .28 -86.7664801,31.7690552                                        -86.7686828,31.7496785                                        2.15864
+Alaska                                1516559.00        1522698.01               .40 -150.4186689,58.3829445                                       -151.4738059,59.1312166                                       103.327
+American Samoa                            203.00            201.99               .50 -170.3028174,-14.2005732                                      -170.2959930,-14.1991422                                      0.753457
+Arizona                                295964.00         295235.53               .25 -113.3962308,34.4586965                                       -113.4473011,34.4482863                                       4.8329
+Arkansas                               138054.00         137732.71               .23 -91.7460601,34.7989664                                        -91.7355145,34.8078319                                        1.37786
+California                             410633.00         409888.03               .18 -120.2495103,36.2457149                                       -120.1715860,36.2816155                                       8.05633
+Colorado                               269980.00         269600.61               .14 -104.8083807,38.9255584                                       -104.8244214,38.9644696                                       4.53803
+Commonwealth of the Northern M            480.00            477.74               .47 145.6158196,16.1727270                                        145.6146566,16.1800355                                        0.818271
+Connecticut                             12941.00          12930.94               .08 -72.8528547,41.3456700                                        -72.8534926,41.3426830                                        0.336014
+Delaware                                 5247.00           5239.95               .13 -75.4994397,39.2171211                                        -75.4955681,39.2266829                                        1.11296
+District of Columbia                      177.00            176.97               .02 -77.0161157,38.8992875                                        -77.0183130,38.8981127                                        0.230967
+Florida                                151512.00         150962.67               .36 -82.1912856,27.2641345                                        -82.1547044,27.2680062                                        3.6476
+Georgia                                153017.00         152586.97               .28 -82.8985468,32.6450261                                        -82.8777461,32.6467765                                        1.96125
+Guam                                      564.00            560.58               .61 144.7632529,13.4279676                                        144.7652779,13.4278028                                        0.220051
+Hawaii                                  16836.00          16749.69               .51 -157.7523478,21.0611975                                       -157.7165084,21.0922908                                       5.07169
+Idaho                                  216480.00         216445.19               .02 -114.6750465,45.4195058                                       -114.6603165,45.4457501                                       3.13628
+Illinois                               146089.00         145919.05               .12 -89.2220210,39.8410669                                        -89.2258648,39.8229279                                        2.0407
+Indiana                                 93835.00          93722.30               .12 -86.6396086,39.2583984                                        -86.6655253,39.2257279                                        4.26165
+Iowa                                   145844.00         145742.34               .07 -93.8227667,42.0221135                                        -93.8151855,42.0375233                                        1.82314
+Kansas                                 213421.00         213096.15               .15 -96.9603123,38.7478453                                        -96.9901974,38.7814421                                        4.54495
+Kentucky                               104842.00         104658.47               .18 -85.2123467,37.7223858                                        -85.2068848,37.7528177                                        3.41182
+Louisiana                              122527.00         122142.32               .31 -91.2369599,30.3596078                                        -91.2231357,30.3595940                                        1.32902
+Maine                                   84895.00          84901.80               .01 -68.9047269,44.5331050                                        -68.9047529,44.5405675                                        0.829256
+Maryland                                26683.00          26646.73               .14 -76.5695403,38.7769268                                        -76.5711298,38.7808231                                        0.454047
+Massachusetts                           21269.00          21255.42               .06 -70.8496779,41.9574786                                        -70.8400672,41.9560536                                        0.81236
+Michigan                               151073.00         151047.18               .02 -85.7125401,45.4651011                                        -85.6891882,45.4935603                                        3.65213
+Minnesota                              218495.00         218557.53               .03 -94.2946076,46.9142549                                        -94.2953285,46.9645226                                        5.58851
+Mississippi                            123841.00         123495.21               .28 -90.2098739,32.2488404                                        -90.2138270,32.2474982                                        0.401164
+Missouri                               180826.00         180544.22               .16 -92.1883047,38.3681761                                        -92.1247204,38.3985600                                        6.4992
+Montana                                380654.00         380831.58               .05 -112.4401590,46.0953789                                       -112.4705830,46.1396785                                       5.45684
+Nebraska                               200500.00         200334.43               .08 -97.8496887,41.4426956                                        -97.8269072,41.4787766                                        4.4363
+Nevada                                 286755.00         286372.77               .13 -115.9924743,37.9127710                                       -115.9484724,37.9198649                                       3.94849
+New Hampshire                           24046.00          24038.51               .03 -71.5978177,43.9585841                                        -71.6047671,43.9759756                                        2.01126
+New Jersey                              20173.00          20150.47               .11 -74.7342061,40.1862212                                        -74.7408285,40.1865817                                        0.565389
+New Mexico                             315687.00         314916.83               .24 -106.2103196,34.0796842                                       -106.1825525,34.0729228                                       2.67045
+New York                               127049.00         126986.52               .05 -74.9314132,42.2529504                                        -74.9379043,42.2959822                                        4.80981
+North Carolina                         128880.00         128599.17               .22 -78.1838148,35.4144296                                        -78.1563061,35.4463276                                        4.33183
+North Dakota                           183006.00         183108.85               .06 -97.7974493,47.3592469                                        -97.7792002,47.3868257                                        3.36168
+Ohio                                   107014.00         106894.42               .11 -82.4309673,40.3798732                                        -82.4276760,40.3791238                                        0.291615
+Oklahoma                               181432.00         181035.08               .22 -97.1409457,34.7124801                                        -97.1156299,34.6980422                                        2.81859
+Oregon                                 251404.00         251335.95               .03 -121.2656820,44.5161241                                       -121.2772822,44.5591170                                       4.86565
+Pennsylvania                           117458.00         117343.70               .10 -76.8260790,40.9801819                                        -76.7794707,41.0156052                                        5.55463
+Puerto Rico                              9079.00           9029.78               .54 -66.2423901,18.2032215                                        -66.2428670,18.2045412                                        0.154535
+Rhode Island                             2849.00           2846.23               .10 -71.3998546,41.5702071                                        -71.4007167,41.5661906                                        0.451852
+South Carolina                          80795.00          80589.34               .25 -81.3588011,33.5808271                                        -81.3627012,33.5789162                                        0.419542
+South Dakota                           199757.00         199726.92               .02 -98.1393053,43.8929745                                        -98.0953026,43.9005429                                        3.63403
+Tennessee                              109382.00         109150.38               .21 -85.8408130,35.8337160                                        -85.8306774,35.8777864                                        4.97486
+Texas                                  689860.00         687753.43               .31 -98.7725069,29.8219671                                        -98.7743170,29.8607031                                        4.29744
+United States Virgin Islands              358.00            355.95               .57 -64.8355293,18.1760173                                        -64.8366418,18.1743775                                        0.216319
+Utah                                   220179.00         219881.37               .14 -111.6210016,39.1152289                                       -111.6250827,39.1682195                                       5.89349
+Vermont                                 24908.00          24902.41               .02 -72.4362711,44.0669831                                        -72.4375341,44.0707847                                        0.434359
+Virginia                               105026.00         104842.89               .17 -78.0541807,37.6982304                                        -78.0415529,37.7255208                                        3.22716
+Washington                             175346.00         175443.54               .06 -122.6400069,47.7959450                                       -122.6429274,47.8063193                                       1.17404
+West Virginia                           62848.00          62753.77               .15 -80.3551374,38.7506277                                        -80.3661753,38.7528631                                        0.991077
+Wisconsin                              145379.00         145364.17               .01 -89.5095248,45.1986448                                        -89.4984439,45.2246008                                        3.01311
+Wyoming                                253458.00         253335.86               .05 -107.5718275,42.9599050                                       -107.5472209,42.9935163                                       4.23925
 
 (56 rows affected)
 
@@ -4048,7 +4048,7 @@ Wyoming                                253458.00         253335.86              
  * Parameters:			None
  * Description:			Drop generate_series() function (TF = SQL table-valued-function)
  */
-IF OBJECT_ID (N'generate_series', N'TF') IS NOT NULL  
+IF OBJECT_ID (N'generate_series', N'TF') IS NOT NULL
     DROP FUNCTION generate_series;  ;
 
 
@@ -4132,7 +4132,7 @@ END;
  *		  CONSTRAINT partition_ck CHECK (partition = ANY (ARRAY[0, 1])),
  *		  CONSTRAINT postal_population_table_ck CHECK (postal_population_table IS NOT NULL AND postal_point_column IS NOT NULL OR postal_population_table IS NULL AND postal_point_column IS NULL)
  *		)
- *		 
+ *
  * Note:				%% becomes % after substitution
  */
 CREATE TABLE geography_usa_2014 (
@@ -4149,8 +4149,8 @@ CREATE TABLE geography_usa_2014 (
        maxzoomlevel       	   INTEGER      NOT NULL DEFAULT 11, /* New for DB */
        postal_population_table VARCHAR(30)  NULL,
        postal_point_column 	   VARCHAR(30)  NULL,
-       partition 			   INTEGER      NOT NULL DEFAULT 0, 
-       max_geojson_digits 	   INTEGER      NOT NULL DEFAULT 8, 	   
+       partition 			   INTEGER      NOT NULL DEFAULT 0,
+       max_geojson_digits 	   INTEGER      NOT NULL DEFAULT 8,
        CONSTRAINT geography_usa_2014_pk PRIMARY KEY(geography),
 	   CONSTRAINT geography_usa_2014_part_ck CHECK (partition IN (0, 1)),
 	   CONSTRAINT geography_usa_2014_ppt_ck CHECK (
@@ -4160,13 +4160,13 @@ CREATE TABLE geography_usa_2014 (
 
 -- SQL statement 151: Comment geography meta data table >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_table.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. cb_2014_us_county_500k
- *						2: comment. Usual rules for comment text in SQK - single 
+ *						2: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -4174,7 +4174,7 @@ DECLARE @tableName   sysname  /*
  * Description:			Comment table
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geography_usa_2014'
@@ -4187,15 +4187,15 @@ IF EXISTS (
            AND [name]     = N'MS_Description'
 		   AND [minor_id] = 0)
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Hierarchial geographies. Usually based on Census geography', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Hierarchial geographies. Usually based on Census geography',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Hierarchial geographies. Usually based on Census geography', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Hierarchial geographies. Usually based on Census geography',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014';
 
 
@@ -4240,7 +4240,7 @@ SELECT 'USA_2014' AS geography,
 	   9  AS maxzoomlevel,
 	   NULL  AS postal_population_table,
        NULL  AS postal_point_column,
-       0  AS partition, 
+       0  AS partition,
        6  AS max_geojson_digits;
 
 
@@ -4248,21 +4248,21 @@ SELECT 'USA_2014' AS geography,
 
 -- SQL statement 153: Comment geography meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geography_usa_2014'
@@ -4276,37 +4276,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geography name', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geography name',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'geography'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geography name', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geography name',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'geography';
 
 
 -- SQL statement 154: Comment geography meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geography_usa_2014'
@@ -4320,37 +4320,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Description', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Description',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'description'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Description', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Description',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'description';
 
 
 -- SQL statement 155: Comment geography meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geography_usa_2014'
@@ -4364,37 +4364,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Hierarchy table', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Hierarchy table',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'hierarchytable'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Hierarchy table', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Hierarchy table',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'hierarchytable';
 
 
 -- SQL statement 156: Comment geography meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geography_usa_2014'
@@ -4408,37 +4408,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geometry table', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geometry table',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'geometrytable'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geometry table', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geometry table',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'geometrytable';
 
 
 -- SQL statement 157: Comment geography meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geography_usa_2014'
@@ -4452,37 +4452,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Tile table', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Tile table',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'tiletable'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Tile table', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Tile table',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'tiletable';
 
 
 -- SQL statement 158: Comment geography meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geography_usa_2014'
@@ -4496,37 +4496,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Projection SRID', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Projection SRID',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'srid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Projection SRID', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Projection SRID',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'srid';
 
 
 -- SQL statement 159: Comment geography meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geography_usa_2014'
@@ -4540,37 +4540,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Default comparison area: lowest resolution geolevel', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Default comparison area: lowest resolution geolevel',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'defaultcomparea'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Default comparison area: lowest resolution geolevel', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Default comparison area: lowest resolution geolevel',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'defaultcomparea';
 
 
 -- SQL statement 160: Comment geography meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geography_usa_2014'
@@ -4584,37 +4584,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Default study area: highest resolution geolevel', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Default study area: highest resolution geolevel',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'defaultstudyarea'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Default study area: highest resolution geolevel', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Default study area: highest resolution geolevel',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'defaultstudyarea';
 
 
 -- SQL statement 161: Comment geography meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geography_usa_2014'
@@ -4628,37 +4628,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Min zoomlevel', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Min zoomlevel',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'minzoomlevel'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Min zoomlevel', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Min zoomlevel',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'minzoomlevel';
 
 
 -- SQL statement 162: Comment geography meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geography_usa_2014'
@@ -4672,37 +4672,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Max zoomlevel', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Max zoomlevel',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'maxzoomlevel'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Max zoomlevel', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Max zoomlevel',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'maxzoomlevel';
 
 
 -- SQL statement 163: Comment geography meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geography_usa_2014'
@@ -4716,37 +4716,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Postal_population_table', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Postal_population_table',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'postal_population_table'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Postal_population_table', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Postal_population_table',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'postal_population_table';
 
 
 -- SQL statement 164: Comment geography meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geography_usa_2014'
@@ -4760,37 +4760,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Postal_point_column', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Postal_point_column',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'postal_point_column'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Postal_point_column', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Postal_point_column',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'postal_point_column';
 
 
 -- SQL statement 165: Comment geography meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geography_usa_2014'
@@ -4804,37 +4804,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Partition geometry and tile tables (0/1)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Partition geometry and tile tables (0/1)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'partition'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Partition geometry and tile tables (0/1)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Partition geometry and tile tables (0/1)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'partition';
 
 
 -- SQL statement 166: Comment geography meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geography_usa_2014'
@@ -4848,37 +4848,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Maximum digits in geojson (topojson quantisation)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Maximum digits in geojson (topojson quantisation)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'max_geojson_digits'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Maximum digits in geojson (topojson quantisation)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Maximum digits in geojson (topojson quantisation)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'max_geojson_digits';
 
 
 -- SQL statement 167: Comment geography meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geography_usa_2014'
@@ -4892,16 +4892,16 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Adjacency table', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Adjacency table',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'adjacencytable'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Adjacency table', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Adjacency table',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geography_usa_2014',
 		@level2type = N'Column', @level2name = 'adjacencytable';
 
@@ -4948,7 +4948,7 @@ ELSE
  *	  CONSTRAINT t_rif40_geol_resolution_ck CHECK (resolution IN (0, 1)),
  *	  CONSTRAINT t_rif40_geol_restricted_ck CHECK (restricted IN (0, 1))
  *	)
- *		 
+ *
  * Note:				%% becomes % after substitution
 */
 CREATE TABLE geolevels_usa_2014 (
@@ -4962,9 +4962,9 @@ CREATE TABLE geolevels_usa_2014 (
        shapefile_table                 VARCHAR(30)  NULL,
        shapefile_area_id_column        VARCHAR(30)  NOT NULL,
        shapefile_desc_column           VARCHAR(30)  NULL,
-	   centroids_table 				   VARCHAR(30)  NULL, 
+	   centroids_table 				   VARCHAR(30)  NULL,
 	   centroids_area_id_column 	   VARCHAR(30)  NULL,
-	   covariate_table 				   VARCHAR(30)  NULL, 
+	   covariate_table 				   VARCHAR(30)  NULL,
        restricted 					   INTEGER      NULL DEFAULT 0,
        resolution                      INTEGER      NULL,
        comparea                        INTEGER      NULL,
@@ -4972,7 +4972,7 @@ CREATE TABLE geolevels_usa_2014 (
 	   areaid_count 				   INTEGER      NULL,
        CONSTRAINT geolevels_usa_2014_pk PRIMARY KEY(geography, geolevel_name),
 	   CONSTRAINT geolevels_usa_2014_fk FOREIGN KEY (geography)
-			REFERENCES geography_usa_2014 (geography), 
+			REFERENCES geography_usa_2014 (geography),
 	   CONSTRAINT geolevels_usa_2014_comparea_ck CHECK (comparea IN (0, 1)),
 	   CONSTRAINT geolevels_usa_2014_listing_ck CHECK (listing iN (0, 1)),
 	   CONSTRAINT geolevels_usa_2014_resolution_ck CHECK (resolution IN (0, 1)),
@@ -4982,13 +4982,13 @@ CREATE TABLE geolevels_usa_2014 (
 
 -- SQL statement 170: Comment geolevels meta data table >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_table.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. cb_2014_us_county_500k
- *						2: comment. Usual rules for comment text in SQK - single 
+ *						2: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -4996,7 +4996,7 @@ DECLARE @tableName   sysname  /*
  * Description:			Comment table
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5009,35 +5009,35 @@ IF EXISTS (
            AND [name]     = N'MS_Description'
 		   AND [minor_id] = 0)
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geolevels: hierarchy of level within a geography', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geolevels: hierarchy of level within a geography',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geolevels: hierarchy of level within a geography', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geolevels: hierarchy of level within a geography',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014';
 
 
 -- SQL statement 171: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5051,37 +5051,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geography (e.g EW2001)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geography (e.g EW2001)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'geography'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geography (e.g EW2001)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geography (e.g EW2001)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'geography';
 
 
 -- SQL statement 172: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5095,37 +5095,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Name of geolevel. This will be a column name in the numerator/denominator tables', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Name of geolevel. This will be a column name in the numerator/denominator tables',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'geolevel_name'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Name of geolevel. This will be a column name in the numerator/denominator tables', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Name of geolevel. This will be a column name in the numerator/denominator tables',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'geolevel_name';
 
 
 -- SQL statement 173: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5139,37 +5139,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'geolevel_id'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'geolevel_id';
 
 
 -- SQL statement 174: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5183,37 +5183,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Description', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Description',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'description'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Description', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Description',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'description';
 
 
 -- SQL statement 175: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5227,37 +5227,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Lookup table name. This is used to translate codes to the common names, e.g a LADUA of 00BK is "Westminster"', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Lookup table name. This is used to translate codes to the common names, e.g a LADUA of 00BK is "Westminster"',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'lookup_table'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Lookup table name. This is used to translate codes to the common names, e.g a LADUA of 00BK is "Westminster"', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Lookup table name. This is used to translate codes to the common names, e.g a LADUA of 00BK is "Westminster"',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'lookup_table';
 
 
 -- SQL statement 176: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5271,37 +5271,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Lookup table description column name.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Lookup table description column name.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'lookup_desc_column'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Lookup table description column name.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Lookup table description column name.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'lookup_desc_column';
 
 
 -- SQL statement 177: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5315,37 +5315,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Location of the GIS shape file. NULL if PostGress/PostGIS used. Can also use SHAPEFILE_GEOMETRY instead', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Location of the GIS shape file. NULL if PostGress/PostGIS used. Can also use SHAPEFILE_GEOMETRY instead',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'shapefile'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Location of the GIS shape file. NULL if PostGress/PostGIS used. Can also use SHAPEFILE_GEOMETRY instead', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Location of the GIS shape file. NULL if PostGress/PostGIS used. Can also use SHAPEFILE_GEOMETRY instead',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'shapefile';
 
 
 -- SQL statement 178: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5359,37 +5359,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Table containing GIS shape file data.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Table containing GIS shape file data.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'shapefile_table'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Table containing GIS shape file data.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Table containing GIS shape file data.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'shapefile_table';
 
 
 -- SQL statement 179: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5403,37 +5403,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Column containing the AREA_IDs in SHAPEFILE_TABLE', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Column containing the AREA_IDs in SHAPEFILE_TABLE',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'shapefile_area_id_column'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Column containing the AREA_IDs in SHAPEFILE_TABLE', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Column containing the AREA_IDs in SHAPEFILE_TABLE',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'shapefile_area_id_column';
 
 
 -- SQL statement 180: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5447,37 +5447,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Column containing the AREA_ID descriptions in SHAPEFILE_TABLE', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Column containing the AREA_ID descriptions in SHAPEFILE_TABLE',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'shapefile_desc_column'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Column containing the AREA_ID descriptions in SHAPEFILE_TABLE', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Column containing the AREA_ID descriptions in SHAPEFILE_TABLE',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'shapefile_desc_column';
 
 
 -- SQL statement 181: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5491,37 +5491,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Can use a map for selection at this resolution (0/1)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Can use a map for selection at this resolution (0/1)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'resolution'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Can use a map for selection at this resolution (0/1)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Can use a map for selection at this resolution (0/1)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'resolution';
 
 
 -- SQL statement 182: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5535,37 +5535,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Able to be used as a comparison area (0/1)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Able to be used as a comparison area (0/1)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'comparea'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Able to be used as a comparison area (0/1)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Able to be used as a comparison area (0/1)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'comparea';
 
 
 -- SQL statement 183: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5579,37 +5579,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Able to be used in a disease map listing (0/1)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Able to be used in a disease map listing (0/1)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'listing'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Able to be used in a disease map listing (0/1)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Able to be used in a disease map listing (0/1)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'listing';
 
 
 -- SQL statement 184: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5623,37 +5623,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Total number of area IDs within the geolevel', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Total number of area IDs within the geolevel',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'areaid_count'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Total number of area IDs within the geolevel', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Total number of area IDs within the geolevel',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'areaid_count';
 
 
 -- SQL statement 185: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5667,37 +5667,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Centroids table', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Centroids table',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'centroids_table'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Centroids table', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Centroids table',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'centroids_table';
 
 
 -- SQL statement 186: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5711,37 +5711,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Centroids area id column', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Centroids area id column',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'centroids_area_id_column'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Centroids area id column', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Centroids area id column',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'centroids_area_id_column';
 
 
 -- SQL statement 187: Comment geolevels meta data column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geolevels_usa_2014'
@@ -5755,16 +5755,16 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Covariate table', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Covariate table',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'covariate_table'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Covariate table', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Covariate table',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geolevels_usa_2014',
 		@level2type = N'Column', @level2name = 'covariate_table';
 
@@ -5938,13 +5938,13 @@ CREATE TABLE lookup_cb_2014_us_nation_5m (
 
 -- SQL statement 194: Comment table lookup_cb_2014_us_nation_5m >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_table.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. cb_2014_us_county_500k
- *						2: comment. Usual rules for comment text in SQK - single 
+ *						2: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -5952,7 +5952,7 @@ DECLARE @tableName   sysname  /*
  * Description:			Comment table
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.lookup_cb_2014_us_nation_5m'
@@ -5965,35 +5965,35 @@ IF EXISTS (
            AND [name]     = N'MS_Description'
 		   AND [minor_id] = 0)
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Lookup table for The County at a scale of 1:500,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Lookup table for The County at a scale of 1:500,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_nation_5m'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Lookup table for The County at a scale of 1:500,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Lookup table for The County at a scale of 1:500,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_nation_5m';
 
 
 -- SQL statement 195: Comment lookup_cb_2014_us_nation_5m columns >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.lookup_cb_2014_us_nation_5m'
@@ -6007,37 +6007,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area ID field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area ID field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'cb_2014_us_nation_5m'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area ID field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area ID field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'cb_2014_us_nation_5m';
 
 
 -- SQL statement 196: Comment lookup_cb_2014_us_nation_5m columns >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.lookup_cb_2014_us_nation_5m'
@@ -6051,37 +6051,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'GID field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'GID field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'gid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'GID field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'GID field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'gid';
 
 
 -- SQL statement 197: Comment lookup_cb_2014_us_nation_5m columns >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.lookup_cb_2014_us_nation_5m'
@@ -6095,37 +6095,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area Name field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area Name field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'areaname'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area Name field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area Name field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'areaname';
 
 
 -- SQL statement 198: Comment lookup_cb_2014_us_nation_5m columns >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.lookup_cb_2014_us_nation_5m'
@@ -6139,16 +6139,16 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geographic centroid', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geographic centroid',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'geographic_centroid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geographic centroid', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geographic centroid',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_nation_5m',
 		@level2type = N'Column', @level2name = 'geographic_centroid';
 
@@ -6180,13 +6180,13 @@ CREATE TABLE lookup_cb_2014_us_state_500k (
 
 -- SQL statement 201: Comment table lookup_cb_2014_us_state_500k >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_table.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. cb_2014_us_county_500k
- *						2: comment. Usual rules for comment text in SQK - single 
+ *						2: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -6194,7 +6194,7 @@ DECLARE @tableName   sysname  /*
  * Description:			Comment table
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.lookup_cb_2014_us_state_500k'
@@ -6207,35 +6207,35 @@ IF EXISTS (
            AND [name]     = N'MS_Description'
 		   AND [minor_id] = 0)
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Lookup table for The nation at a scale of 1:5,000,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Lookup table for The nation at a scale of 1:5,000,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_state_500k'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Lookup table for The nation at a scale of 1:5,000,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Lookup table for The nation at a scale of 1:5,000,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_state_500k';
 
 
 -- SQL statement 202: Comment lookup_cb_2014_us_state_500k columns >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.lookup_cb_2014_us_state_500k'
@@ -6249,37 +6249,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area ID field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area ID field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'cb_2014_us_state_500k'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area ID field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area ID field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'cb_2014_us_state_500k';
 
 
 -- SQL statement 203: Comment lookup_cb_2014_us_state_500k columns >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.lookup_cb_2014_us_state_500k'
@@ -6293,37 +6293,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'GID field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'GID field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'gid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'GID field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'GID field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'gid';
 
 
 -- SQL statement 204: Comment lookup_cb_2014_us_state_500k columns >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.lookup_cb_2014_us_state_500k'
@@ -6337,37 +6337,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area Name field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area Name field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'areaname'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area Name field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area Name field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'areaname';
 
 
 -- SQL statement 205: Comment lookup_cb_2014_us_state_500k columns >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.lookup_cb_2014_us_state_500k'
@@ -6381,16 +6381,16 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geographic centroid', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geographic centroid',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'geographic_centroid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geographic centroid', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geographic centroid',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_state_500k',
 		@level2type = N'Column', @level2name = 'geographic_centroid';
 
@@ -6422,13 +6422,13 @@ CREATE TABLE lookup_cb_2014_us_county_500k (
 
 -- SQL statement 208: Comment table lookup_cb_2014_us_county_500k >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_table.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. cb_2014_us_county_500k
- *						2: comment. Usual rules for comment text in SQK - single 
+ *						2: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -6436,7 +6436,7 @@ DECLARE @tableName   sysname  /*
  * Description:			Comment table
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.lookup_cb_2014_us_county_500k'
@@ -6449,35 +6449,35 @@ IF EXISTS (
            AND [name]     = N'MS_Description'
 		   AND [minor_id] = 0)
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Lookup table for The State at a scale of 1:500,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Lookup table for The State at a scale of 1:500,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_county_500k'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Lookup table for The State at a scale of 1:500,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Lookup table for The State at a scale of 1:500,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_county_500k';
 
 
 -- SQL statement 209: Comment lookup_cb_2014_us_county_500k columns >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.lookup_cb_2014_us_county_500k'
@@ -6491,37 +6491,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area ID field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area ID field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'cb_2014_us_county_500k'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area ID field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area ID field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'cb_2014_us_county_500k';
 
 
 -- SQL statement 210: Comment lookup_cb_2014_us_county_500k columns >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.lookup_cb_2014_us_county_500k'
@@ -6535,37 +6535,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'GID field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'GID field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'gid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'GID field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'GID field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'gid';
 
 
 -- SQL statement 211: Comment lookup_cb_2014_us_county_500k columns >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.lookup_cb_2014_us_county_500k'
@@ -6579,37 +6579,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area Name field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area Name field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'areaname'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area Name field', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area Name field',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'areaname';
 
 
 -- SQL statement 212: Comment lookup_cb_2014_us_county_500k columns >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.lookup_cb_2014_us_county_500k'
@@ -6623,16 +6623,16 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geographic centroid', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geographic centroid',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'geographic_centroid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geographic centroid', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geographic centroid',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'lookup_cb_2014_us_county_500k',
 		@level2type = N'Column', @level2name = 'geographic_centroid';
 
@@ -6654,8 +6654,8 @@ ELSE
  * Note:				%% becomes % after substitution
  */
 INSERT INTO lookup_cb_2014_us_nation_5m(cb_2014_us_nation_5m, areaname, gid, geographic_centroid)
-SELECT areaid, areaname, ROW_NUMBER() OVER(ORDER BY areaid) AS gid, 
-	   '{"type":"Point","coordinates":[' + CAST(geographic_centroid.Long AS VARCHAR) +  ',' + 
+SELECT areaid, areaname, ROW_NUMBER() OVER(ORDER BY areaid) AS gid,
+	   '{"type":"Point","coordinates":[' + CAST(geographic_centroid.Long AS VARCHAR) +  ',' +
 			CAST(geographic_centroid.Lat AS VARCHAR) + ']}' AS geographic_centroid
   FROM cb_2014_us_nation_5m
  ORDER BY 1;
@@ -6676,8 +6676,8 @@ SELECT areaid, areaname, ROW_NUMBER() OVER(ORDER BY areaid) AS gid,
  * Note:				%% becomes % after substitution
  */
 INSERT INTO lookup_cb_2014_us_state_500k(cb_2014_us_state_500k, areaname, gid, geographic_centroid)
-SELECT areaid, areaname, ROW_NUMBER() OVER(ORDER BY areaid) AS gid, 
-	   '{"type":"Point","coordinates":[' + CAST(geographic_centroid.Long AS VARCHAR) +  ',' + 
+SELECT areaid, areaname, ROW_NUMBER() OVER(ORDER BY areaid) AS gid,
+	   '{"type":"Point","coordinates":[' + CAST(geographic_centroid.Long AS VARCHAR) +  ',' +
 			CAST(geographic_centroid.Lat AS VARCHAR) + ']}' AS geographic_centroid
   FROM cb_2014_us_state_500k
  ORDER BY 1;
@@ -6698,8 +6698,8 @@ SELECT areaid, areaname, ROW_NUMBER() OVER(ORDER BY areaid) AS gid,
  * Note:				%% becomes % after substitution
  */
 INSERT INTO lookup_cb_2014_us_county_500k(cb_2014_us_county_500k, areaname, gid, geographic_centroid)
-SELECT areaid, areaname, ROW_NUMBER() OVER(ORDER BY areaid) AS gid, 
-	   '{"type":"Point","coordinates":[' + CAST(geographic_centroid.Long AS VARCHAR) +  ',' + 
+SELECT areaid, areaname, ROW_NUMBER() OVER(ORDER BY areaid) AS gid,
+	   '{"type":"Point","coordinates":[' + CAST(geographic_centroid.Long AS VARCHAR) +  ',' +
 			CAST(geographic_centroid.Lat AS VARCHAR) + ']}' AS geographic_centroid
   FROM cb_2014_us_county_500k
  ORDER BY 1;
@@ -6732,13 +6732,13 @@ CREATE INDEX hierarchy_usa_2014_cb_2014_us_state_500k ON hierarchy_usa_2014 (cb_
 
 -- SQL statement 222: Comment table: hierarchy_usa_2014 >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_table.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. cb_2014_us_county_500k
- *						2: comment. Usual rules for comment text in SQK - single 
+ *						2: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -6746,7 +6746,7 @@ DECLARE @tableName   sysname  /*
  * Description:			Comment table
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.hierarchy_usa_2014'
@@ -6759,35 +6759,35 @@ IF EXISTS (
            AND [name]     = N'MS_Description'
 		   AND [minor_id] = 0)
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Hierarchy lookup table for US 2014 Census geography to county level', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Hierarchy lookup table for US 2014 Census geography to county level',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'hierarchy_usa_2014'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Hierarchy lookup table for US 2014 Census geography to county level', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Hierarchy lookup table for US 2014 Census geography to county level',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'hierarchy_usa_2014';
 
 
 -- SQL statement 223: Comment column: hierarchy_usa_2014.cb_2014_us_county_500k >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.hierarchy_usa_2014'
@@ -6801,37 +6801,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Hierarchy lookup for The County at a scale of 1:500,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Hierarchy lookup for The County at a scale of 1:500,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'hierarchy_usa_2014',
 		@level2type = N'Column', @level2name = 'cb_2014_us_county_500k'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Hierarchy lookup for The County at a scale of 1:500,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Hierarchy lookup for The County at a scale of 1:500,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'hierarchy_usa_2014',
 		@level2type = N'Column', @level2name = 'cb_2014_us_county_500k';
 
 
 -- SQL statement 224: Comment column: hierarchy_usa_2014.cb_2014_us_nation_5m >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.hierarchy_usa_2014'
@@ -6845,37 +6845,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Hierarchy lookup for The nation at a scale of 1:5,000,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Hierarchy lookup for The nation at a scale of 1:5,000,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'hierarchy_usa_2014',
 		@level2type = N'Column', @level2name = 'cb_2014_us_nation_5m'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Hierarchy lookup for The nation at a scale of 1:5,000,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Hierarchy lookup for The nation at a scale of 1:5,000,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'hierarchy_usa_2014',
 		@level2type = N'Column', @level2name = 'cb_2014_us_nation_5m';
 
 
 -- SQL statement 225: Comment column: hierarchy_usa_2014.cb_2014_us_state_500k >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.hierarchy_usa_2014'
@@ -6889,34 +6889,34 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Hierarchy lookup for The State at a scale of 1:500,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Hierarchy lookup for The State at a scale of 1:500,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'hierarchy_usa_2014',
 		@level2type = N'Column', @level2name = 'cb_2014_us_state_500k'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Hierarchy lookup for The State at a scale of 1:500,000', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Hierarchy lookup for The State at a scale of 1:500,000',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'hierarchy_usa_2014',
 		@level2type = N'Column', @level2name = 'cb_2014_us_state_500k';
 
 
 -- SQL statement 226: Create function check_hierarchy_usa_2014 >>>
-IF OBJECT_ID(N'check_hierarchy_usa_2014', N'P') IS NOT NULL  
-    DROP PROCEDURE check_hierarchy_usa_2014;  
+IF OBJECT_ID(N'check_hierarchy_usa_2014', N'P') IS NOT NULL
+    DROP PROCEDURE check_hierarchy_usa_2014;
 
 SELECT name, type, type_desc FROM sys.objects WHERE name = 'check_hierarchy_usa_2014';
 
-name                                                                                                                             type type_desc                                                   
+name                                                                                                                             type type_desc
 -------------------------------------------------------------------------------------------------------------------------------- ---- ------------------------------------------------------------
 
 (0 rows affected)
 
 CREATE PROCEDURE check_hierarchy_usa_2014(
-	@l_geography 		VARCHAR(30), 
-	@l_hierarchytable 	VARCHAR(200), 
+	@l_geography 		VARCHAR(30),
+	@l_hierarchytable 	VARCHAR(200),
 	@l_type 			VARCHAR(30),
 	@error_count 		INTEGER OUTPUT)
 AS
@@ -6929,7 +6929,7 @@ AS
  * Description:			Create hierarchy check function
  * Note:				% becomes % after substitution
  */
- 
+
 /*
 Function: 		check_hierarchy_usa_2014()
 Parameters:		Geography, hierarchy table, type: 'missing', 'spurious additional' or 'multiple hierarchy'
@@ -6959,17 +6959,17 @@ UNION
 SELECT CAST('cb_2014_us_county_500k' AS VARCHAR) AS col,
 			a3.cb_2014_us_county_500k_total AS val
   FROM a3;
-  
+
 */
-BEGIN 
+BEGIN
 	DECLARE c2 CURSOR FOR
-		SELECT geolevel_id, geolevel_name, lookup_table		
+		SELECT geolevel_id, geolevel_name, lookup_table
 		  FROM geolevels_usa_2014
 		 WHERE geography = @l_geography
 		 ORDER BY geolevel_id;
 --
 	DECLARE @sql_stmt 				AS NVARCHAR(max)='XXX';
-	DECLARE @i 						AS INTEGER=0;	
+	DECLARE @i 						AS INTEGER=0;
 --
 	DECLARE @crlf					AS VARCHAR(2)=CHAR(10)+CHAR(13);
 	DECLARE @tab					AS VARCHAR(1)=CHAR(9);
@@ -6988,9 +6988,9 @@ BEGIN
 	BEGIN
 		SET @i+=1;
 --
-		IF @l_type = 'multiple hierarchy' 
+		IF @l_type = 'multiple hierarchy'
 			BEGIN
-				IF @i = 1 
+				IF @i = 1
 					noop:
 				ELSE IF @i > 2
 					SET @sql_stmt+=', ' + 'a' + CAST(@geolevel_id AS VARCHAR) + ' AS (' + @crlf +
@@ -7012,29 +7012,29 @@ BEGIN
 			END;
 --
 		IF @l_type = 'missing'
-			SET @sql_stmt+=@tab + @tab + 'SELECT ' + LOWER(@geolevel_name) + 
+			SET @sql_stmt+=@tab + @tab + 'SELECT ' + LOWER(@geolevel_name) +
 				' FROM ' + LOWER(@l_hierarchytable) + @crlf +
 				@tab + @tab + 'EXCEPT' + @crlf +
-				@tab + @tab + 'SELECT ' + LOWER(@geolevel_name) + ' FROM ' + LOWER(@lookup_table) + 
+				@tab + @tab + 'SELECT ' + LOWER(@geolevel_name) + ' FROM ' + LOWER(@lookup_table) +
 				') as' + CAST(@geolevel_id AS VARCHAR) + ')' + @crlf;
-		ELSE IF @l_type = 'spurious additional' 
-			SET @sql_stmt+=@tab + @tab + 'SELECT ' + LOWER(@geolevel_name) + 
+		ELSE IF @l_type = 'spurious additional'
+			SET @sql_stmt+=@tab + @tab + 'SELECT ' + LOWER(@geolevel_name) +
 				' FROM ' + LOWER(@lookup_table) + @crlf +
 				@tab + @tab + 'EXCEPT' + @crlf +
-				@tab + @tab + 'SELECT ' + LOWER(@geolevel_name) + ' FROM ' + LOWER(@l_hierarchytable) + 
+				@tab + @tab + 'SELECT ' + LOWER(@geolevel_name) + ' FROM ' + LOWER(@l_hierarchytable) +
 				') as' + CAST(@geolevel_id AS VARCHAR) + ')' + @crlf;
-		ELSE IF @l_type = 'multiple hierarchy' 
+		ELSE IF @l_type = 'multiple hierarchy'
 			BEGIN
-				IF @previous_geolevel_name IS NOT NULL 
-					SET @sql_stmt+=@tab + @tab + 'SELECT ' + LOWER(@geolevel_name) + 
+				IF @previous_geolevel_name IS NOT NULL
+					SET @sql_stmt+=@tab + @tab + 'SELECT ' + LOWER(@geolevel_name) +
 						', COUNT(DISTINCT(' + @previous_geolevel_name + ')) AS total' + @crlf +
 						@tab + @tab + '  FROM ' + LOWER(@l_hierarchytable) + @crlf +
 						@tab + @tab + ' GROUP BY ' + LOWER(@geolevel_name) + @crlf +
-						@tab + @tab + 'HAVING COUNT(DISTINCT(' + @previous_geolevel_name + ')) > 1' + 
+						@tab + @tab + 'HAVING COUNT(DISTINCT(' + @previous_geolevel_name + ')) > 1' +
 						') as' + CAST(@geolevel_id AS VARCHAR) + ')' + @crlf;
 			END;
 		ELSE
-			RAISERROR('Invalid check type: %s, valid types are: ''missing'', ''spurious additional'', or ''multiple hierarchy''', 
+			RAISERROR('Invalid check type: %s, valid types are: ''missing'', ''spurious additional'', or ''multiple hierarchy''',
 				1, 16, @l_type 	/* Check type */);
 		SET @previous_geolevel_name=LOWER(@geolevel_name);
 --
@@ -7048,50 +7048,50 @@ BEGIN
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
 		SET @i+=1;
-		IF @l_type = 'multiple hierarchy' 
+		IF @l_type = 'multiple hierarchy'
 			BEGIN
 			IF @i = 1
 				noop2:
 			ELSE IF @i > 2
-				SET @sql_stmt+=@crlf + 'UNION' + @crlf + 'SELECT CAST(''' + LOWER(@geolevel_name) + 
-					''' AS VARCHAR) AS col, ' + @crlf + 
-					@tab + 'a' + CAST(@geolevel_id AS VARCHAR) + '.' + 
+				SET @sql_stmt+=@crlf + 'UNION' + @crlf + 'SELECT CAST(''' + LOWER(@geolevel_name) +
+					''' AS VARCHAR) AS col, ' + @crlf +
+					@tab + 'a' + CAST(@geolevel_id AS VARCHAR) + '.' +
 					LOWER(@geolevel_name) + '_total AS val' + @crlf +
 					'  FROM a' + CAST(@geolevel_id AS VARCHAR);
 			ELSE
-				SET @sql_stmt+='SELECT CAST(''' + LOWER(@geolevel_name) + ''' AS VARCHAR) AS col,' + @crlf + 
-					@tab + 'a' + CAST(@geolevel_id AS VARCHAR) + '.' + LOWER(@geolevel_name) + 
+				SET @sql_stmt+='SELECT CAST(''' + LOWER(@geolevel_name) + ''' AS VARCHAR) AS col,' + @crlf +
+					@tab + 'a' + CAST(@geolevel_id AS VARCHAR) + '.' + LOWER(@geolevel_name) +
 					'_total AS val' + @crlf +
 					'  FROM a' + CAST(@geolevel_id AS VARCHAR);
 			END;
 		ELSE
 			BEGIN
-			IF @i != 1 
-				SET @sql_stmt+=@crlf + 'UNION' + @crlf + 'SELECT CAST(''' + LOWER(@geolevel_name) + 
-					''' AS VARCHAR) AS col, ' + @crlf + 
-					@tab + 'a' + CAST(@geolevel_id AS VARCHAR) + '.' + 
+			IF @i != 1
+				SET @sql_stmt+=@crlf + 'UNION' + @crlf + 'SELECT CAST(''' + LOWER(@geolevel_name) +
+					''' AS VARCHAR) AS col, ' + @crlf +
+					@tab + 'a' + CAST(@geolevel_id AS VARCHAR) + '.' +
 					LOWER(@geolevel_name) + '_total AS val' + @crlf +
 					'  FROM a' + CAST(@geolevel_id AS VARCHAR);
 			ELSE
-				SET @sql_stmt+='SELECT CAST(''' + LOWER(@geolevel_name) + ''' AS VARCHAR) AS col,' + @crlf + 
-					@tab + 'a' + CAST(@geolevel_id AS VARCHAR) + '.' + LOWER(@geolevel_name) + 
+				SET @sql_stmt+='SELECT CAST(''' + LOWER(@geolevel_name) + ''' AS VARCHAR) AS col,' + @crlf +
+					@tab + 'a' + CAST(@geolevel_id AS VARCHAR) + '.' + LOWER(@geolevel_name) +
 					'_total AS val' + @crlf +
 					'  FROM a' + CAST(@geolevel_id AS VARCHAR);
-			END;	
+			END;
 --
 		FETCH NEXT FROM c2 INTO @geolevel_id, @geolevel_name, @lookup_table;
 	END;
 	CLOSE c2;
 --
 	DEALLOCATE c2;
---	
+--
 	PRINT 'SQL> ' + @sql_stmt;
     DECLARE @results AS TABLE (
-		col VARCHAR(200), val NUMERIC) 
+		col VARCHAR(200), val NUMERIC)
 	INSERT into @results EXECUTE sp_executesql @sql_stmt;
 --
 -- Process results table
---	
+--
 	DECLARE @col AS VARCHAR(200);
 	DECLARE @val AS NUMERIC;
 	DECLARE c1 CURSOR FOR
@@ -7101,14 +7101,14 @@ BEGIN
 	FETCH NEXT FROM c1 INTO @col, @val;
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		PRINT 'Geography: ' + @l_geography + ' geolevel: ' + @col + ' has ' + CAST(@val AS VARCHAR) + 
+		PRINT 'Geography: ' + @l_geography + ' geolevel: ' + @col + ' has ' + CAST(@val AS VARCHAR) +
 			' ' + @l_type + ' codes';
 		IF @val != 0
-			SET @error_count+=1;	
+			SET @error_count+=1;
 --
 		FETCH NEXT FROM c1 INTO @col, @val;
 	END;
-	CLOSE c1;  
+	CLOSE c1;
 --
 	DEALLOCATE c1;
 END;;
@@ -7124,10 +7124,10 @@ DECLARE @CurrentUser sysname  /*
  * Description:			Create hierarchy check function comment
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
-EXECUTE sp_addextendedproperty 'MS_Description',   
+SELECT @CurrentUser = user_name();
+EXECUTE sp_addextendedproperty 'MS_Description',
    'Procedure: 		check_hierarchy_check_hierarchy_usa_2014()
-Parameters:		Geography, hierarchy table, type: "missing", "spurious additional" or "multiple hierarchy", 
+Parameters:		Geography, hierarchy table, type: "missing", "spurious additional" or "multiple hierarchy",
 				Error count (OUT)
 Returns:		Nothing
 Description:	Diff geography hierarchy table using dynamic method 4
@@ -7156,7 +7156,7 @@ WITH /* missing */ a1 AS (
 SELECT ARRAY[a1.cb_2014_us_nation_5m_total, a2.cb_2014_us_state_500k_total, a3.cb_2014_us_county_500k_total] AS res_array
 FROM a1, a2, a3;
 
-Or: 
+Or:
 
 WITH /* multiple hierarchy */ a2 AS (
         SELECT COUNT(*) AS cb_2014_us_state_500k_total
@@ -7175,7 +7175,7 @@ WITH /* multiple hierarchy */ a2 AS (
 SELECT ARRAY[a2.cb_2014_us_state_500k_total, a3.cb_2014_us_county_500k_total] AS res_array
 FROM a2, a3;
 ',
-   'user', @CurrentUser,   
+   'user', @CurrentUser,
    'procedure', 'check_hierarchy_usa_2014';
 
 
@@ -7192,7 +7192,7 @@ DECLARE @l_geography AS VARCHAR(200)='USA_2014';
  * Note:				%% becomes % after substitution
  *
  * Output for SAHSULAND:
- 
+
 Populating SAHSULAND geography hierarchy table: HIERARCHY_SAHSULAND; spid: 52
 SQL> SELECT /- Subqueries x12 ... x34: intersection aggregate geometries starting from the lowest resolution.
                Created using N-1 geoevels cross joins rather than 1 to minimise cross join size and hence improve performance.
@@ -7276,26 +7276,26 @@ SQL> ALTER INDEX hierarchy_sahsuland_sahsu_grd_level2 ON hierarchy_sahsuland REO
 SQL> ALTER INDEX hierarchy_sahsuland_sahsu_grd_level3 ON hierarchy_sahsuland REORGANIZE
 SQL> ALTER INDEX PK__hierarch__61FEBAD4794A035D ON hierarchy_sahsuland REORGANIZE
 SQL> UPDATE STATISTICS hierarchy_sahsuland
- 
+
  */
 --
-	
+
 --
 DECLARE c1_hier CURSOR FOR
-		SELECT geolevel_id, geolevel_name, shapefile_table, shapefile_area_id_column, shapefile_desc_column 
+		SELECT geolevel_id, geolevel_name, shapefile_table, shapefile_area_id_column, shapefile_desc_column
 		  FROM geolevels_USA_2014
 		 WHERE geography = @l_geography
 		 ORDER BY geography, geolevel_id;
 DECLARE c2_hier CURSOR FOR
-		SELECT i.name AS index_name, 
+		SELECT i.name AS index_name,
 		       object_name(object_id) AS table_name
   		  FROM sys.indexes i
 		 WHERE i.object_id = (
 					 SELECT object_id(LOWER(hierarchytable))
 				       FROM geography_USA_2014
 				      WHERE geography = @l_geography)
-		 ORDER BY 1;		 
-DECLARE c4_hier CURSOR FOR		 
+		 ORDER BY 1;
+DECLARE c4_hier CURSOR FOR
 	SELECT geography, hierarchytable
 		  FROM geography_USA_2014
 		 WHERE geography = @l_geography;
@@ -7338,50 +7338,50 @@ BEGIN
 	IF @geography IS NULL
 		RAISERROR('geography: %s not found', 16, 1, @l_geography	/* Geography */);
 --
-	 PRINT 'Populating ' + @l_geography + ' geography hierarchy table: ' + @hierarchytable + 
+	 PRINT 'Populating ' + @l_geography + ' geography hierarchy table: ' + @hierarchytable +
 		'; spid: ' + CAST(@@spid AS VARCHAR);
 
 	SET @num_geolevels=0;
 	OPEN c1_hier;
-	FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table, 
+	FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table,
 								 @shapefile_area_id_column, @shapefile_desc_column;
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		SET @num_geolevels+=1;	
-		IF @num_geolevels = 1 
+		SET @num_geolevels+=1;
+		IF @num_geolevels = 1
 			SET @columns=LOWER(@geolevel_name);
 		ELSE
 			SET @columns+=', ' + LOWER(@geolevel_name);
-		FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table, 
+		FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table,
 									 @shapefile_area_id_column, @shapefile_desc_column;
 	END;
 	CLOSE c1_hier;
---	
-	IF @num_geolevels = 0 
+--
+	IF @num_geolevels = 0
 		RAISERROR('No rows found in: geolevels_%s for geography %s', 16, 1, @l_geography, @l_geography);
 --
 -- CTE x<n><n+1> - CROSS JOINs with intersections
 --
 	OPEN c1_hier;
-	FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table, 
+	FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table,
 								 @shapefile_area_id_column, @shapefile_desc_column;
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
 		SET @i+=1;
 
 		DECLARE c1a_hier CURSOR FOR
-				SELECT geolevel_name, shapefile_table, shapefile_area_id_column, shapefile_desc_column 
+				SELECT geolevel_name, shapefile_table, shapefile_area_id_column, shapefile_desc_column
 				  FROM geolevels_USA_2014
 				 WHERE geography   = @l_geography
 				   AND geolevel_id = @geolevel_id+1
-				 ORDER BY geography, geolevel_id;		
+				 ORDER BY geography, geolevel_id;
 		OPEN c1a_hier;
-		FETCH NEXT FROM c1a_hier INTO @n_geolevel_name, @n_shapefile_table, 
+		FETCH NEXT FROM c1a_hier INTO @n_geolevel_name, @n_shapefile_table,
 									  @n_shapefile_area_id_column, @n_shapefile_desc_column;
 		CLOSE c1a_hier;
 		DEALLOCATE c1a_hier;
 
---		PRINT 'i: ' + CAST(@i AS VARCHAR) + '; num_geolevels: ' + CAST(@num_geolevels AS VARCHAR) + 
+--		PRINT 'i: ' + CAST(@i AS VARCHAR) + '; num_geolevels: ' + CAST(@num_geolevels AS VARCHAR) +
 --			'; geolevel_name: ' + @geolevel_name + '; n_geolevel_name: ' + @n_geolevel_name;
 		IF @i = 1
 /* E.g
@@ -7393,9 +7393,9 @@ SELECT a1.areaid AS cb_2014_us_nation_5m,
   INTO dbo.#x12
   FROM cb_2014_us_nation_5m a1   CROSS JOIN cb_2014_us_state_500k a2
  WHERE a1.geom_orig.STIntersects(a2.geom_orig) = 1;
-	
-Postgres Original: 
-	
+
+Postgres Original:
+
 x23 AS (
 	SELECT a2.areaid AS level2,
        	   a3.areaid AS level3,
@@ -7403,7 +7403,7 @@ x23 AS (
 	       ST_Area(ST_Intersection(a2.geom, a3.geom)) AS a23_area
           FROM a2 CROSS JOIN a3
 	 WHERE ST_Intersects(a2.geom, a3.geom)
-	 
+
 SQL Server:
 
 SELECT a1.areaid AS SAHSU_GRD_LEVEL1,
@@ -7413,31 +7413,31 @@ SELECT a1.areaid AS SAHSU_GRD_LEVEL1,
   INTO x12_52
   FROM SAHSU_GRD_LEVEL1 a1 CROSS JOIN SAHSU_GRD_LEVEL2 a2
  WHERE a1.geom_orig.STIntersects(a2.geom_orig) = 1
-   AND a1.geom_orig.STIntersection(a2.geom_orig).STArea() > 0;	 
-	 
- */		
+   AND a1.geom_orig.STIntersection(a2.geom_orig).STArea() > 0;
+
+ */
 			BEGIN
-				SET @sql_stmt=			
+				SET @sql_stmt=
 					'SELECT /* Subqueries x' +
 						CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + ' ... x' +
 						CAST(@num_geolevels-1 AS VARCHAR) + CAST(@num_geolevels AS VARCHAR) +
-						': intersection aggregate geometries starting from the lowest resolution.' + @crlf + 
+						': intersection aggregate geometries starting from the lowest resolution.' + @crlf +
 						@tab + '       Created using N-1 geoevels cross joins rather than 1 to minimise cross join size and hence improve performance.' + @crlf +
 						@tab + '       Calculate the area of the higher resolution geolevel and the area of the intersected area */' + @crlf +
-					'       a' + CAST(@i AS VARCHAR) + '.areaid AS ' + @geolevel_name + ',' + @crlf + 
+					'       a' + CAST(@i AS VARCHAR) + '.areaid AS ' + @geolevel_name + ',' + @crlf +
 					'       a' + CAST(@i+1 AS VARCHAR) + '.areaid AS ' + @n_geolevel_name + ',' + @crlf +
-					'       a' + CAST(@i+1 AS VARCHAR) + '.geom_orig.STArea() AS a' + CAST(@i+1 AS VARCHAR) + '_area,' + @crlf + 
-					'       a' + CAST(@i AS VARCHAR) + '.geom_orig.STIntersection(a' + CAST(@i+1 AS VARCHAR) + '.geom_orig).STArea() AS a' + 
-						CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '_area' + @crlf + 
-				    '  INTO ##x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '_' + CAST(@@spid AS VARCHAR) + @crlf + 
-					'  FROM ' + @shapefile_table + ' a' + CAST(@i AS VARCHAR) + 
-					' CROSS JOIN ' + @n_shapefile_table + ' a' + CAST(@i+1 AS VARCHAR) + '' + @crlf + 
-					' WHERE a' + CAST(@i AS VARCHAR) + '.geom_orig.STIntersects(a' + CAST(@i+1 AS VARCHAR) + '.geom_orig) = 1' + @crlf + 		
+					'       a' + CAST(@i+1 AS VARCHAR) + '.geom_orig.STArea() AS a' + CAST(@i+1 AS VARCHAR) + '_area,' + @crlf +
+					'       a' + CAST(@i AS VARCHAR) + '.geom_orig.STIntersection(a' + CAST(@i+1 AS VARCHAR) + '.geom_orig).STArea() AS a' +
+						CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '_area' + @crlf +
+				    '  INTO ##x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '_' + CAST(@@spid AS VARCHAR) + @crlf +
+					'  FROM ' + @shapefile_table + ' a' + CAST(@i AS VARCHAR) +
+					' CROSS JOIN ' + @n_shapefile_table + ' a' + CAST(@i+1 AS VARCHAR) + '' + @crlf +
+					' WHERE a' + CAST(@i AS VARCHAR) + '.geom_orig.STIntersects(a' + CAST(@i+1 AS VARCHAR) + '.geom_orig) = 1' + @crlf +
 					'   AND a' + CAST(@i AS VARCHAR) + '.geom_orig.STIntersection(a' + CAST(@i+1 AS VARCHAR) + '.geom_orig).STArea() > 0';
 				PRINT 'SQL> ' + @sql_stmt;
-				EXECUTE @rowcount = sp_executesql @sql_stmt;	
-			END;			
-		ELSE IF @i < (@num_geolevels-1) 
+				EXECUTE @rowcount = sp_executesql @sql_stmt;
+			END;
+		ELSE IF @i < (@num_geolevels-1)
 /* E.g
 
 SELECT a2.areaid AS cb_2014_us_state_500k,
@@ -7451,20 +7451,20 @@ SELECT a2.areaid AS cb_2014_us_state_500k,
 */
 			BEGIN
 				SET @sql_stmt=
-					'SELECT /* Subqueries x' + 
-						CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + ' ... x' + 
-						CAST(@num_geolevels-1 AS VARCHAR) + CAST(@num_geolevels AS VARCHAR) + 
-						': intersection aggregate geometries starting from the lowest resolution.' + @crlf + 
-						@tab + '       Created using N-1 geoevels cross joins rather than 1 to minimise cross join size and hence improve performance.' + @crlf + 
-						@tab + '       Calculate the area of the higher resolution geolevel and the area of the intersected area */' + @crlf + 
-					'       a' + CAST(@i AS VARCHAR) + '.areaid AS ' + @geolevel_name + ',' + @crlf + 
-					'       a' + CAST(@i+1 AS VARCHAR) + '.areaid AS ' + @n_geolevel_name + ',' + @crlf + 
-					'       a' + CAST(@i+1 AS VARCHAR) + '.geom_orig.STArea() AS a' + CAST(@i+1 AS VARCHAR) + '_area,' + @crlf + 
-					'       a' + CAST(@i AS VARCHAR) + '.geom_orig.STIntersection(a' + CAST(@i+1 AS VARCHAR) + '.geom_orig).STArea() AS a' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '_area' + @crlf + 
-				    '  INTO ##x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '_' + CAST(@@spid AS VARCHAR) + @crlf + 
-					'  FROM ' + @shapefile_table + ' a' + CAST(@i AS VARCHAR) + 
-					' CROSS JOIN ' + @n_shapefile_table + ' a' + CAST(@i+1 AS VARCHAR) + '' + @crlf + 
-					' WHERE a' + CAST(@i AS VARCHAR) + '.geom_orig.STIntersects(a' + CAST(@i+1 AS VARCHAR) + 
+					'SELECT /* Subqueries x' +
+						CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + ' ... x' +
+						CAST(@num_geolevels-1 AS VARCHAR) + CAST(@num_geolevels AS VARCHAR) +
+						': intersection aggregate geometries starting from the lowest resolution.' + @crlf +
+						@tab + '       Created using N-1 geoevels cross joins rather than 1 to minimise cross join size and hence improve performance.' + @crlf +
+						@tab + '       Calculate the area of the higher resolution geolevel and the area of the intersected area */' + @crlf +
+					'       a' + CAST(@i AS VARCHAR) + '.areaid AS ' + @geolevel_name + ',' + @crlf +
+					'       a' + CAST(@i+1 AS VARCHAR) + '.areaid AS ' + @n_geolevel_name + ',' + @crlf +
+					'       a' + CAST(@i+1 AS VARCHAR) + '.geom_orig.STArea() AS a' + CAST(@i+1 AS VARCHAR) + '_area,' + @crlf +
+					'       a' + CAST(@i AS VARCHAR) + '.geom_orig.STIntersection(a' + CAST(@i+1 AS VARCHAR) + '.geom_orig).STArea() AS a' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '_area' + @crlf +
+				    '  INTO ##x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '_' + CAST(@@spid AS VARCHAR) + @crlf +
+					'  FROM ' + @shapefile_table + ' a' + CAST(@i AS VARCHAR) +
+					' CROSS JOIN ' + @n_shapefile_table + ' a' + CAST(@i+1 AS VARCHAR) + '' + @crlf +
+					' WHERE a' + CAST(@i AS VARCHAR) + '.geom_orig.STIntersects(a' + CAST(@i+1 AS VARCHAR) +
 						'.geom_orig) = 1';
 				PRINT 'SQL> ' + @sql_stmt;
 				EXECUTE @rowcount = sp_executesql @sql_stmt;
@@ -7479,11 +7479,11 @@ SELECT a2.areaid AS cb_2014_us_state_500k,
   INTO dbo.#x23
   FROM cb_2014_us_state_500k a2 CROSS JOIN cb_2014_us_county_500k a3
  WHERE a2.geom_orig.STIntersects(a3.geom_orig) = 1;
-		
-Postgres Original: 
+
+Postgres Original:
 
  x34 AS (
-	SELECT a3.level3, 
+	SELECT a3.level3,
 	       a4.level4,
   	       ST_Area(a4.geom) AS a4_area,
 	       ST_Area(ST_Intersection(a3.geom, a4.geom)) a34_area
@@ -7492,24 +7492,24 @@ Postgres Original:
 */
 			BEGIN
 				SET @sql_stmt=
-					'SELECT /* Subqueries x' + 
-						CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + ' ... x' + 
-						CAST(@num_geolevels-1 AS VARCHAR) + CAST(@num_geolevels AS VARCHAR) + 
-						': intersection aggregate geometries starting from the lowest resolution.' + @crlf + 
-						@tab + '       Created using N-1 geoevels cross joins rather than 1 to minimise cross join size and hence improve performance.' + @crlf + 
-						@tab + '       Calculate the area of the higher resolution geolevel and the area of the intersected area */' + @crlf + 
-					'       a' + CAST(@i AS VARCHAR) + '.areaid AS ' + @geolevel_name + ',' + @crlf + 
-					'       a' + CAST(@i+1 AS VARCHAR) + '.areaid AS ' + @n_geolevel_name + ',' + @crlf + 
-					'       a' + CAST(@i+1 AS VARCHAR) + '.geom_orig.STArea() AS a' + CAST(@i+1 AS VARCHAR) + '_area,' + @crlf + 
-					'       a' + CAST(@i AS VARCHAR) + '.geom_orig.STIntersection(a' + CAST(@i+1 AS VARCHAR) + '.geom_orig).STArea() AS a' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '_area' + @crlf + 
-				    '  INTO ##x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '_' + CAST(@@spid AS VARCHAR) + @crlf + 
-					'  FROM ' + @shapefile_table + ' a' + CAST(@i AS VARCHAR) + ' CROSS JOIN ' + @n_shapefile_table + ' a' + CAST(@i+1 AS VARCHAR) + '' + @crlf + 
-					' WHERE a' + CAST(@i AS VARCHAR) + '.geom_orig.STIntersects(a' + CAST(@i+1 AS VARCHAR) + 
+					'SELECT /* Subqueries x' +
+						CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + ' ... x' +
+						CAST(@num_geolevels-1 AS VARCHAR) + CAST(@num_geolevels AS VARCHAR) +
+						': intersection aggregate geometries starting from the lowest resolution.' + @crlf +
+						@tab + '       Created using N-1 geoevels cross joins rather than 1 to minimise cross join size and hence improve performance.' + @crlf +
+						@tab + '       Calculate the area of the higher resolution geolevel and the area of the intersected area */' + @crlf +
+					'       a' + CAST(@i AS VARCHAR) + '.areaid AS ' + @geolevel_name + ',' + @crlf +
+					'       a' + CAST(@i+1 AS VARCHAR) + '.areaid AS ' + @n_geolevel_name + ',' + @crlf +
+					'       a' + CAST(@i+1 AS VARCHAR) + '.geom_orig.STArea() AS a' + CAST(@i+1 AS VARCHAR) + '_area,' + @crlf +
+					'       a' + CAST(@i AS VARCHAR) + '.geom_orig.STIntersection(a' + CAST(@i+1 AS VARCHAR) + '.geom_orig).STArea() AS a' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '_area' + @crlf +
+				    '  INTO ##x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '_' + CAST(@@spid AS VARCHAR) + @crlf +
+					'  FROM ' + @shapefile_table + ' a' + CAST(@i AS VARCHAR) + ' CROSS JOIN ' + @n_shapefile_table + ' a' + CAST(@i+1 AS VARCHAR) + '' + @crlf +
+					' WHERE a' + CAST(@i AS VARCHAR) + '.geom_orig.STIntersects(a' + CAST(@i+1 AS VARCHAR) +
 						'.geom_orig) = 1';
 				PRINT 'SQL> ' + @sql_stmt;
 				EXECUTE @rowcount = sp_executesql @sql_stmt;
 			END;
-		FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table, 
+		FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table,
 									 @shapefile_area_id_column, @shapefile_desc_column;
 	END;
 	CLOSE c1_hier;
@@ -7518,7 +7518,7 @@ Postgres Original:
 --
 
 /*
-	SELECT x12.level1, x12.level2, x23.level3, x34.level4, 
+	SELECT x12.level1, x12.level2, x23.level3, x34.level4,
 	       CASE WHEN a2_area > 0 THEN a12_area/a2_area ELSE NULL END test12,
 	       CASE WHEN a3_area > 0 THEN a23_area/a3_area ELSE NULL END test23,
 	       CASE WHEN a4_area > 0 THEN a34_area/a4_area ELSE NULL END test34,
@@ -7531,94 +7531,94 @@ Postgres Original:
    	   AND x23.level3 = x34.level3;
 )
  */
-	SET @sql_stmt=@crlf + 
-		'SELECT /* Join x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + ' ... x' + CAST(@num_geolevels-1 AS VARCHAR) + CAST(@num_geolevels AS VARCHAR) + 
-			'intersections, pass through the computed areas, compute intersected area/higher resolution geolevel area,' + @crlf + 
-		@tab + '     compute maximum intersected area/higher resolution geolevel area using an analytic partition of all' + @crlf + 
+	SET @sql_stmt=@crlf +
+		'SELECT /* Join x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + ' ... x' + CAST(@num_geolevels-1 AS VARCHAR) + CAST(@num_geolevels AS VARCHAR) +
+			'intersections, pass through the computed areas, compute intersected area/higher resolution geolevel area,' + @crlf +
+		@tab + '     compute maximum intersected area/higher resolution geolevel area using an analytic partition of all' + @crlf +
 		@tab + '     duplicate higher resolution geolevels */' + @crlf;
 --
 -- First line of SELECT statement
 --
 	SET @i=0;
 	OPEN c1_hier;
-	FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table, 
+	FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table,
 								 @shapefile_area_id_column, @shapefile_desc_column;
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		SET @i+=1;	
-									 
+		SET @i+=1;
+
 		DECLARE c1a_hier CURSOR FOR
-				SELECT geolevel_name, shapefile_table, shapefile_area_id_column, shapefile_desc_column 
+				SELECT geolevel_name, shapefile_table, shapefile_area_id_column, shapefile_desc_column
 				  FROM geolevels_USA_2014
 				 WHERE geography   = @l_geography
 				   AND geolevel_id = @geolevel_id+1
-				 ORDER BY geography, geolevel_id;		
+				 ORDER BY geography, geolevel_id;
 		OPEN c1a_hier;
-		FETCH NEXT FROM c1a_hier INTO @n_geolevel_name, @n_shapefile_table, 
+		FETCH NEXT FROM c1a_hier INTO @n_geolevel_name, @n_shapefile_table,
 									  @n_shapefile_area_id_column, @n_shapefile_desc_column;
 		CLOSE c1a_hier;
 		DEALLOCATE c1a_hier;
-		
---		PRINT 'i: ' + CAST(@i AS VARCHAR) + '; num_geolevels: ' + CAST(@num_geolevels AS VARCHAR) + 
+
+--		PRINT 'i: ' + CAST(@i AS VARCHAR) + '; num_geolevels: ' + CAST(@num_geolevels AS VARCHAR) +
 --			'; geolevel_name: ' + @geolevel_name + '; n_geolevel_name: ' + @n_geolevel_name;
-			
-		IF @i < @num_geolevels 
+
+		IF @i < @num_geolevels
 		BEGIN
 			IF @i = 1
 				SET @sql_stmt+=
-					@tab + '       x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '.' + 
+					@tab + '       x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '.' +
 						@geolevel_name + ', ' + @crlf;
 			SET @sql_stmt+=
-				@tab + '       x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '.' + 
+				@tab + '       x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '.' +
 					@n_geolevel_name + ', ' + @crlf;
 		END;
-		
-		FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table, 
+
+		FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table,
 									 @shapefile_area_id_column, @shapefile_desc_column;
 	END;
 	CLOSE c1_hier;
 --
 -- Add CASE, MAX lines
--- 
+--
 	SET @i=0;
 	OPEN c1_hier;
-	FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table, 
+	FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table,
 								 @shapefile_area_id_column, @shapefile_desc_column;
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		SET @i+=1;	
-									 
+		SET @i+=1;
+
 		DECLARE c1a_hier CURSOR FOR
-				SELECT geolevel_name, shapefile_table, shapefile_area_id_column, shapefile_desc_column 
+				SELECT geolevel_name, shapefile_table, shapefile_area_id_column, shapefile_desc_column
 				  FROM geolevels_USA_2014
 				 WHERE geography   = @l_geography
 				   AND geolevel_id = @geolevel_id+1
-				 ORDER BY geography, geolevel_id;		
+				 ORDER BY geography, geolevel_id;
 		OPEN c1a_hier;
-		FETCH NEXT FROM c1a_hier INTO @n_geolevel_name, @n_shapefile_table, 
+		FETCH NEXT FROM c1a_hier INTO @n_geolevel_name, @n_shapefile_table,
 									  @n_shapefile_area_id_column, @n_shapefile_desc_column;
 		CLOSE c1a_hier;
 		DEALLOCATE c1a_hier;
-		
---		PRINT 'i: ' + CAST(@i AS VARCHAR) + '; num_geolevels: ' + CAST(@num_geolevels AS VARCHAR) + 
+
+--		PRINT 'i: ' + CAST(@i AS VARCHAR) + '; num_geolevels: ' + CAST(@num_geolevels AS VARCHAR) +
 --			'; geolevel_name: ' + @geolevel_name + '; n_geolevel_name: ' + @n_geolevel_name;
-			
-		IF @i < @num_geolevels 
+
+		IF @i < @num_geolevels
 		BEGIN
 			SET @sql_stmt+=
-	    		@tab + '       CASE WHEN x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '.a' + 
-						CAST(@i+1 AS VARCHAR) + '_area > 0 THEN x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + 
-						'.a' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '_area/x' + 
-						CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '.a' + CAST(@i+1 AS VARCHAR) + 
+	    		@tab + '       CASE WHEN x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '.a' +
+						CAST(@i+1 AS VARCHAR) + '_area > 0 THEN x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) +
+						'.a' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '_area/x' +
+						CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '.a' + CAST(@i+1 AS VARCHAR) +
 					'_area ELSE NULL END test' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + ',' + @crlf +
-				@tab + '       MAX(x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '.a' + 
-					CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '_area/x' + 
-					CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '.a' + CAST(@i+1 AS VARCHAR) + '_area)' + 
-					' OVER (PARTITION BY x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + 
-					'.' + @n_geolevel_name + ') AS max' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + ',' + @crlf;		
+				@tab + '       MAX(x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '.a' +
+					CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '_area/x' +
+					CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '.a' + CAST(@i+1 AS VARCHAR) + '_area)' +
+					' OVER (PARTITION BY x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) +
+					'.' + @n_geolevel_name + ') AS max' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + ',' + @crlf;
 		END;
-		
-		FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table, 
+
+		FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table,
 									 @shapefile_area_id_column, @shapefile_desc_column;
 	END;
 	CLOSE c1_hier;
@@ -7632,75 +7632,75 @@ Postgres Original:
 	SET @sql_stmt+='  INTO ##y' + '_' + CAST(@@spid AS VARCHAR) + @crlf;
 --
 -- Add FROM clause
--- 
+--
 	SET @i=0;
 	OPEN c1_hier;
-	FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table, 
+	FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table,
 								 @shapefile_area_id_column, @shapefile_desc_column;
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		SET @i+=1;	
-		
---		PRINT 'i: ' + CAST(@i AS VARCHAR) + '; num_geolevels: ' + CAST(@num_geolevels AS VARCHAR) + 
+		SET @i+=1;
+
+--		PRINT 'i: ' + CAST(@i AS VARCHAR) + '; num_geolevels: ' + CAST(@num_geolevels AS VARCHAR) +
 --			'; geolevel_name: ' + @geolevel_name + '; n_geolevel_name: ' + @n_geolevel_name;
-			
-		IF @i < @num_geolevels 
+
+		IF @i < @num_geolevels
 		BEGIN
-			IF @i = 1 
+			IF @i = 1
 				SET @sql_stmt+='  FROM ##x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) +
 					'_' + CAST(@@spid AS VARCHAR) +
 					' x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR);
 			ELSE
-				SET @sql_stmt+=', ##x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + 
+				SET @sql_stmt+=', ##x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) +
 					'_' + CAST(@@spid AS VARCHAR) +
 					' x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR);
 		END;
-		
-		FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table, 
+
+		FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table,
 									 @shapefile_area_id_column, @shapefile_desc_column;
 	END;
 	CLOSE c1_hier;
 --
 -- Add WHERE clause
--- 
+--
 	SET @i=0;
 	OPEN c1_hier;
-	FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table, 
+	FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table,
 								 @shapefile_area_id_column, @shapefile_desc_column;
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		SET @i+=1;	
-									 
+		SET @i+=1;
+
 		DECLARE c1a_hier CURSOR FOR
-				SELECT geolevel_name, shapefile_table, shapefile_area_id_column, shapefile_desc_column 
+				SELECT geolevel_name, shapefile_table, shapefile_area_id_column, shapefile_desc_column
 				  FROM geolevels_USA_2014
 				 WHERE geography   = @l_geography
 				   AND geolevel_id = @geolevel_id+1
-				 ORDER BY geography, geolevel_id;		
+				 ORDER BY geography, geolevel_id;
 		OPEN c1a_hier;
-		FETCH NEXT FROM c1a_hier INTO @n_geolevel_name, @n_shapefile_table, 
+		FETCH NEXT FROM c1a_hier INTO @n_geolevel_name, @n_shapefile_table,
 									  @n_shapefile_area_id_column, @n_shapefile_desc_column;
 		CLOSE c1a_hier;
 		DEALLOCATE c1a_hier;
-		
---		PRINT 'i: ' + CAST(@i AS VARCHAR) + '; num_geolevels: ' + CAST(@num_geolevels AS VARCHAR) + 
+
+--		PRINT 'i: ' + CAST(@i AS VARCHAR) + '; num_geolevels: ' + CAST(@num_geolevels AS VARCHAR) +
 --			'; geolevel_name: ' + @geolevel_name + '; n_geolevel_name: ' + @n_geolevel_name;
-			
+
 		IF @i < (@num_geolevels-1) /* FOR i IN 1 .. (num_geolevels-2) LOOP */
 		BEGIN
-			IF @i = 1 
-				SET @sql_stmt+=@crlf + 
-					' WHERE x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '.' + @n_geolevel_name + 
+			IF @i = 1
+				SET @sql_stmt+=@crlf +
+					' WHERE x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '.' + @n_geolevel_name +
 						' = x' + CAST(@i+1 AS VARCHAR) + CAST(@i+2 AS VARCHAR) + '.' + @n_geolevel_name;
 			ELSE
-				SET @sql_stmt+=@crlf + 
-					'   AND x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '.' + @n_geolevel_name + 
+				SET @sql_stmt+=@crlf +
+					'   AND x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + '.' + @n_geolevel_name +
 						' = x' + CAST(@i+1 AS VARCHAR) + CAST(@i+2 AS VARCHAR) + '.' + @n_geolevel_name;
-		END;		
-		FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table, 
+		END;
+		FETCH NEXT FROM c1_hier INTO @geolevel_id, @geolevel_name, @shapefile_table,
 									 @shapefile_area_id_column, @shapefile_desc_column;
 	END;
-	CLOSE c1_hier;	
+	CLOSE c1_hier;
 --
 -- Run SQL to create Y
 --
@@ -7712,19 +7712,19 @@ Postgres Original:
 	SET @i=1;
 	WHILE @i < @num_geolevels
 	BEGIN
-		SET @sql_stmt='DROP TABLE ##x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + 
+		SET @sql_stmt='DROP TABLE ##x' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) +
 				 '_' + CAST(@@spid AS VARCHAR);
 		PRINT 'SQL> ' + @sql_stmt;
 		EXECUTE @rowcount = sp_executesql @sql_stmt;
-		SET @i+=1;	
+		SET @i+=1;
 	END;
-	
+
 --
 -- Insert statement and columns
 --
-	SET @sql_stmt='INSERT INTO ' + LOWER(@hierarchytable) + ' (' + @columns + ')' + @crlf;	
-	
---	
+	SET @sql_stmt='INSERT INTO ' + LOWER(@hierarchytable) + ' (' + @columns + ')' + @crlf;
+
+--
 -- Final SELECT
 --
 /*
@@ -7733,9 +7733,9 @@ SELECT level1, level2, level3, level4,
  WHERE max12 = test12
    AND max23 = test23
    AND max34 = test34
- ORDER BY 1, 2, 3, 4;  
+ ORDER BY 1, 2, 3, 4;
  */
-	SET @sql_stmt+='SELECT /* Select y intersection, eliminating duplicates using selecting the lower geolevel resolution' + @crlf + 
+	SET @sql_stmt+='SELECT /* Select y intersection, eliminating duplicates using selecting the lower geolevel resolution' + @crlf +
          @tab + ' with the largest intersection by area for each (higher resolution) geolevel */' + @crlf + '       ' + @columns + @crlf +
 		'  FROM ##y_' + CAST(@@spid AS VARCHAR) + @crlf;
 --
@@ -7745,28 +7745,28 @@ SELECT level1, level2, level3, level4,
 	WHILE @i < @num_geolevels
 	BEGIN
 		IF @i = 1
-			SET @sql_stmt+=' WHERE max' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + 
+			SET @sql_stmt+=' WHERE max' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) +
 				' = test' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + @crlf;
 		ELSE
-			SET @sql_stmt+='   AND max' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + 
+			SET @sql_stmt+='   AND max' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) +
 				' = test' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + @crlf;
 --
 -- Remove all joins that have <50% overlap
---				
+--
 		SET @sql_stmt+='   AND max' + CAST(@i AS VARCHAR) + CAST(@i+1 AS VARCHAR) + ' > 0.5 /* >50% overlap */' + @crlf;
-		
-		SET @i+=1;	
+
+		SET @i+=1;
 	END;
 --
 -- ORDER BY clause
---	
+--
 	SET @sql_stmt+=' ORDER BY 1';
 	SET @i=2;
 	WHILE @i <= @num_geolevels /* FOR i IN 2 .. num_geolevels LOOP */
-	BEGIN	
+	BEGIN
 		SET @sql_stmt+=', ' + CAST(@i AS VARCHAR);
-		SET @i+=1;	
-	END;	
+		SET @i+=1;
+	END;
 --
 	DEALLOCATE c1_hier;
 --
@@ -7778,16 +7778,16 @@ SELECT level1, level2, level3, level4,
 	SET @rowcount = @@ROWCOUNT;
 --
 -- Drop Y temp table
---	
+--
 	SET @sql_stmt='DROP TABLE ##y_' + CAST(@@spid AS VARCHAR);
 	PRINT 'SQL> ' + @sql_stmt;
 	EXECUTE sp_executesql @sql_stmt;
 	SELECT name FROM tempdb.sys.objects;
 --
 -- Check rows were inserted
---	
-	IF @rowcount = 0 
-		RAISERROR('No rows found in %s geography hierarchy table: %s; sp_executesql rval: %d', 16, 1, 
+--
+	IF @rowcount = 0
+		RAISERROR('No rows found in %s geography hierarchy table: %s; sp_executesql rval: %d', 16, 1,
 			@l_geography 			/* Geography */,
 			@hierarchytable			/* Hierarchy table */,
 			@i						/* Return value from sp_executesql() */);
@@ -7800,7 +7800,7 @@ SELECT level1, level2, level3, level4,
 	BEGIN
 		SET @sql_stmt='ALTER INDEX ' + @indexname + ' ON ' + @tablename + ' REORGANIZE';
 		PRINT 'SQL> ' + @sql_stmt;
-		EXECUTE sp_executesql @sql_stmt;	
+		EXECUTE sp_executesql @sql_stmt;
 		FETCH NEXT FROM c2_hier INTO @indexname, @tablename;
 	END;
 	CLOSE c2_hier;
@@ -7810,72 +7810,113 @@ SELECT level1, level2, level3, level4,
 --
 	SET @sql_stmt='UPDATE STATISTICS ' + LOWER(@hierarchytable);
 	PRINT 'SQL> ' + @sql_stmt;
-	EXECUTE sp_executesql @sql_stmt;			
+	EXECUTE sp_executesql @sql_stmt;
 END;
 
 Populating USA_2014 geography hierarchy table: HIERARCHY_USA_2014; spid: 51
 SQL> SELECT /* Subqueries x12 ... x23: intersection aggregate geometries starting from the lowest resolution.
-	       Created using N-1 geoevels cross joins rather than 1 to minimise cross join size and hence improve performance.
-	       Calculate the area of the higher resolution geolevel and the area of the intersected area */
-       a1.areaid AS CB_2014_US_NATION_5M,
-       a2.areaid AS CB_2014_US_STATE_500K,
-       a2.geom_orig.STArea() AS a2_area,
-       a1.geom_orig.STIntersection(a2.geom_orig).STArea() AS a12_area
-  INTO ##x12_51
-  FROM CB_2014_US_NATION_5M a1 CROSS JOIN CB_2014_US_STATE_500K a2
- WHERE a1.geom_orig.STIntersects(a2.geom_orig) = 1
-   AND a1.geom_orig.STIntersection(a2.geom_orig).STArea() > 0
+
+	       Created using N-1 geoevels cross joins rather than 1 to minimise cross join size and hence improve performance.
+
+	       Calculate the area of the higher resolution geolevel and the area of the intersected area */
+
+       a1.areaid AS CB_2014_US_NATION_5M,
+
+       a2.areaid AS CB_2014_US_STATE_500K,
+
+       a2.geom_orig.STArea() AS a2_area,
+
+       a1.geom_orig.STIntersection(a2.geom_orig).STArea() AS a12_area
+
+  INTO ##x12_51
+
+  FROM CB_2014_US_NATION_5M a1 CROSS JOIN CB_2014_US_STATE_500K a2
+
+ WHERE a1.geom_orig.STIntersects(a2.geom_orig) = 1
+
+   AND a1.geom_orig.STIntersection(a2.geom_orig).STArea() > 0
 
 (56 rows affected)
 SQL> SELECT /* Subqueries x23 ... x23: intersection aggregate geometries starting from the lowest resolution.
-	       Created using N-1 geoevels cross joins rather than 1 to minimise cross join size and hence improve performance.
-	       Calculate the area of the higher resolution geolevel and the area of the intersected area */
-       a2.areaid AS CB_2014_US_STATE_500K,
-       a3.areaid AS CB_2014_US_COUNTY_500K,
-       a3.geom_orig.STArea() AS a3_area,
-       a2.geom_orig.STIntersection(a3.geom_orig).STArea() AS a23_area
-  INTO ##x23_51
-  FROM CB_2014_US_STATE_500K a2 CROSS JOIN CB_2014_US_COUNTY_500K a3
- WHERE a2.geom_orig.STIntersects(a3.geom_orig) = 1
+
+	       Created using N-1 geoevels cross joins rather than 1 to minimise cross join size and hence improve performance.
+
+	       Calculate the area of the higher resolution geolevel and the area of the intersected area */
+
+       a2.areaid AS CB_2014_US_STATE_500K,
+
+       a3.areaid AS CB_2014_US_COUNTY_500K,
+
+       a3.geom_orig.STArea() AS a3_area,
+
+       a2.geom_orig.STIntersection(a3.geom_orig).STArea() AS a23_area
+
+  INTO ##x23_51
+
+  FROM CB_2014_US_STATE_500K a2 CROSS JOIN CB_2014_US_COUNTY_500K a3
+
+ WHERE a2.geom_orig.STIntersects(a3.geom_orig) = 1
 
 (4576 rows affected)
-SQL> 
-SELECT /* Join x34 ... x23intersections, pass through the computed areas, compute intersected area/higher resolution geolevel area,
-	     compute maximum intersected area/higher resolution geolevel area using an analytic partition of all
-	     duplicate higher resolution geolevels */
-	       x12.CB_2014_US_NATION_5M, 
-	       x12.CB_2014_US_STATE_500K, 
-	       x23.CB_2014_US_COUNTY_500K, 
-	       CASE WHEN x12.a2_area > 0 THEN x12.a12_area/x12.a2_area ELSE NULL END test12,
-	       MAX(x12.a12_area/x12.a2_area) OVER (PARTITION BY x12.CB_2014_US_STATE_500K) AS max12,
-	       CASE WHEN x23.a3_area > 0 THEN x23.a23_area/x23.a3_area ELSE NULL END test23,
-	       MAX(x23.a23_area/x23.a3_area) OVER (PARTITION BY x23.CB_2014_US_COUNTY_500K) AS max23
-  INTO ##y_51
-  FROM ##x12_51 x12, ##x23_51 x23
- WHERE x12.CB_2014_US_STATE_500K = x23.CB_2014_US_STATE_500K
+SQL>
+
+SELECT /* Join x34 ... x23intersections, pass through the computed areas, compute intersected area/higher resolution geolevel area,
+
+	     compute maximum intersected area/higher resolution geolevel area using an analytic partition of all
+
+	     duplicate higher resolution geolevels */
+
+	       x12.CB_2014_US_NATION_5M,
+
+	       x12.CB_2014_US_STATE_500K,
+
+	       x23.CB_2014_US_COUNTY_500K,
+
+	       CASE WHEN x12.a2_area > 0 THEN x12.a12_area/x12.a2_area ELSE NULL END test12,
+
+	       MAX(x12.a12_area/x12.a2_area) OVER (PARTITION BY x12.CB_2014_US_STATE_500K) AS max12,
+
+	       CASE WHEN x23.a3_area > 0 THEN x23.a23_area/x23.a3_area ELSE NULL END test23,
+
+	       MAX(x23.a23_area/x23.a3_area) OVER (PARTITION BY x23.CB_2014_US_COUNTY_500K) AS max23
+
+  INTO ##y_51
+
+  FROM ##x12_51 x12, ##x23_51 x23
+
+ WHERE x12.CB_2014_US_STATE_500K = x23.CB_2014_US_STATE_500K
 
 (4576 rows affected)
 SQL> DROP TABLE ##x12_51
 SQL> DROP TABLE ##x23_51
 SQL> INSERT INTO hierarchy_usa_2014 (cb_2014_us_nation_5m, cb_2014_us_state_500k, cb_2014_us_county_500k)
-SELECT /* Select y intersection, eliminating duplicates using selecting the lower geolevel resolution
-	 with the largest intersection by area for each (higher resolution) geolevel */
-       cb_2014_us_nation_5m, cb_2014_us_state_500k, cb_2014_us_county_500k
-  FROM ##y_51
- WHERE max12 = test12
-   AND max12 > 0.5 /* >50% overlap */
-   AND max23 = test23
-   AND max23 > 0.5 /* >50% overlap */
- ORDER BY 1, 2, 3
+
+SELECT /* Select y intersection, eliminating duplicates using selecting the lower geolevel resolution
+
+	 with the largest intersection by area for each (higher resolution) geolevel */
+
+       cb_2014_us_nation_5m, cb_2014_us_state_500k, cb_2014_us_county_500k
+
+  FROM ##y_51
+
+ WHERE max12 = test12
+
+   AND max12 > 0.5 /* >50% overlap */
+
+   AND max23 = test23
+
+   AND max23 > 0.5 /* >50% overlap */
+
+ ORDER BY 1, 2, 3
 
 (3233 rows affected)
 SQL> DROP TABLE ##y_51
-name                                                                                                                            
+name
 --------------------------------------------------------------------------------------------------------------------------------
-#A0F47CB1                                                                                                                       
-#A1614C43                                                                                                                       
-#A1E8A0EA                                                                                                                       
-#A2C2400E                                                                                                                       
+#A0F47CB1
+#A1614C43
+#A1E8A0EA
+#A2C2400E
 
 (4 rows affected)
 SQL> ALTER INDEX hierarchy_usa_2014_cb_2014_us_state_500k ON hierarchy_usa_2014 REORGANIZE
@@ -7921,7 +7962,7 @@ BEGIN
 --
 -- Call diff and multiple hierarchy tests
 --
-	SELECT @CurrentUser = user_name(); 
+	SELECT @CurrentUser = user_name();
 	SET @function_name=@CurrentUser + '.check_hierarchy_USA_2014';
 	SET @l_type='missing';
 	EXECUTE @function_name @geography, @hierarchytable, @l_type, @e;
@@ -7931,104 +7972,180 @@ BEGIN
 	EXECUTE @function_name @geography, @hierarchytable, @l_type, @g;
 --
 	IF @e+@f > 0
-		RAISERROR('Geography: %s codes check %d missing, %d spurious additional, %d hierarchy fails', 16, 1,  
-			@geography	/* Geography */, 
-			@e			/* Missing */, 
-			@f			/* Spurious additional */, 
+		RAISERROR('Geography: %s codes check %d missing, %d spurious additional, %d hierarchy fails', 16, 1,
+			@geography	/* Geography */,
+			@e			/* Missing */,
+			@f			/* Spurious additional */,
 			@g			/* Multiple hierarchy */);
 	ELSE
 		PRINT 'Geography: ' + @geography + ' codes check OK';
 END;;
 
 SQL> WITH /* missing */ a1 AS (
-	SELECT COUNT(*) AS cb_2014_us_nation_5m_total
-	  FROM (
-		SELECT cb_2014_us_nation_5m FROM hierarchy_usa_2014
-		EXCEPT
-		SELECT cb_2014_us_nation_5m FROM lookup_cb_2014_us_nation_5m) as1)
-, a2 AS (
-	SELECT COUNT(*) AS cb_2014_us_state_500k_total
-	  FROM (
-		SELECT cb_2014_us_state_500k FROM hierarchy_usa_2014
-		EXCEPT
-		SELECT cb_2014_us_state_500k FROM lookup_cb_2014_us_state_500k) as2)
-, a3 AS (
-	SELECT COUNT(*) AS cb_2014_us_county_500k_total
-	  FROM (
-		SELECT cb_2014_us_county_500k FROM hierarchy_usa_2014
-		EXCEPT
-		SELECT cb_2014_us_county_500k FROM lookup_cb_2014_us_county_500k) as3)
-SELECT CAST('cb_2014_us_nation_5m' AS VARCHAR) AS col,
-	a1.cb_2014_us_nation_5m_total AS val
-  FROM a1
-UNION
-SELECT CAST('cb_2014_us_state_500k' AS VARCHAR) AS col, 
-	a2.cb_2014_us_state_500k_total AS val
-  FROM a2
-UNION
-SELECT CAST('cb_2014_us_county_500k' AS VARCHAR) AS col, 
-	a3.cb_2014_us_county_500k_total AS val
-  FROM a3
+
+	SELECT COUNT(*) AS cb_2014_us_nation_5m_total
+
+	  FROM (
+
+		SELECT cb_2014_us_nation_5m FROM hierarchy_usa_2014
+
+		EXCEPT
+
+		SELECT cb_2014_us_nation_5m FROM lookup_cb_2014_us_nation_5m) as1)
+
+, a2 AS (
+
+	SELECT COUNT(*) AS cb_2014_us_state_500k_total
+
+	  FROM (
+
+		SELECT cb_2014_us_state_500k FROM hierarchy_usa_2014
+
+		EXCEPT
+
+		SELECT cb_2014_us_state_500k FROM lookup_cb_2014_us_state_500k) as2)
+
+, a3 AS (
+
+	SELECT COUNT(*) AS cb_2014_us_county_500k_total
+
+	  FROM (
+
+		SELECT cb_2014_us_county_500k FROM hierarchy_usa_2014
+
+		EXCEPT
+
+		SELECT cb_2014_us_county_500k FROM lookup_cb_2014_us_county_500k) as3)
+
+SELECT CAST('cb_2014_us_nation_5m' AS VARCHAR) AS col,
+
+	a1.cb_2014_us_nation_5m_total AS val
+
+  FROM a1
+
+UNION
+
+SELECT CAST('cb_2014_us_state_500k' AS VARCHAR) AS col,
+
+	a2.cb_2014_us_state_500k_total AS val
+
+  FROM a2
+
+UNION
+
+SELECT CAST('cb_2014_us_county_500k' AS VARCHAR) AS col,
+
+	a3.cb_2014_us_county_500k_total AS val
+
+  FROM a3
 
 (3 rows affected)
 Geography: USA_2014 geolevel: cb_2014_us_nation_5m has 0 missing codes
 Geography: USA_2014 geolevel: cb_2014_us_state_500k has 0 missing codes
 Geography: USA_2014 geolevel: cb_2014_us_county_500k has 0 missing codes
 SQL> WITH /* spurious additional */ a1 AS (
-	SELECT COUNT(*) AS cb_2014_us_nation_5m_total
-	  FROM (
-		SELECT cb_2014_us_nation_5m FROM lookup_cb_2014_us_nation_5m
-		EXCEPT
-		SELECT cb_2014_us_nation_5m FROM hierarchy_usa_2014) as1)
-, a2 AS (
-	SELECT COUNT(*) AS cb_2014_us_state_500k_total
-	  FROM (
-		SELECT cb_2014_us_state_500k FROM lookup_cb_2014_us_state_500k
-		EXCEPT
-		SELECT cb_2014_us_state_500k FROM hierarchy_usa_2014) as2)
-, a3 AS (
-	SELECT COUNT(*) AS cb_2014_us_county_500k_total
-	  FROM (
-		SELECT cb_2014_us_county_500k FROM lookup_cb_2014_us_county_500k
-		EXCEPT
-		SELECT cb_2014_us_county_500k FROM hierarchy_usa_2014) as3)
-SELECT CAST('cb_2014_us_nation_5m' AS VARCHAR) AS col,
-	a1.cb_2014_us_nation_5m_total AS val
-  FROM a1
-UNION
-SELECT CAST('cb_2014_us_state_500k' AS VARCHAR) AS col, 
-	a2.cb_2014_us_state_500k_total AS val
-  FROM a2
-UNION
-SELECT CAST('cb_2014_us_county_500k' AS VARCHAR) AS col, 
-	a3.cb_2014_us_county_500k_total AS val
-  FROM a3
+
+	SELECT COUNT(*) AS cb_2014_us_nation_5m_total
+
+	  FROM (
+
+		SELECT cb_2014_us_nation_5m FROM lookup_cb_2014_us_nation_5m
+
+		EXCEPT
+
+		SELECT cb_2014_us_nation_5m FROM hierarchy_usa_2014) as1)
+
+, a2 AS (
+
+	SELECT COUNT(*) AS cb_2014_us_state_500k_total
+
+	  FROM (
+
+		SELECT cb_2014_us_state_500k FROM lookup_cb_2014_us_state_500k
+
+		EXCEPT
+
+		SELECT cb_2014_us_state_500k FROM hierarchy_usa_2014) as2)
+
+, a3 AS (
+
+	SELECT COUNT(*) AS cb_2014_us_county_500k_total
+
+	  FROM (
+
+		SELECT cb_2014_us_county_500k FROM lookup_cb_2014_us_county_500k
+
+		EXCEPT
+
+		SELECT cb_2014_us_county_500k FROM hierarchy_usa_2014) as3)
+
+SELECT CAST('cb_2014_us_nation_5m' AS VARCHAR) AS col,
+
+	a1.cb_2014_us_nation_5m_total AS val
+
+  FROM a1
+
+UNION
+
+SELECT CAST('cb_2014_us_state_500k' AS VARCHAR) AS col,
+
+	a2.cb_2014_us_state_500k_total AS val
+
+  FROM a2
+
+UNION
+
+SELECT CAST('cb_2014_us_county_500k' AS VARCHAR) AS col,
+
+	a3.cb_2014_us_county_500k_total AS val
+
+  FROM a3
 
 (3 rows affected)
 Geography: USA_2014 geolevel: cb_2014_us_nation_5m has 0 spurious additional codes
 Geography: USA_2014 geolevel: cb_2014_us_state_500k has 0 spurious additional codes
 Geography: USA_2014 geolevel: cb_2014_us_county_500k has 0 spurious additional codes
 SQL> WITH /* multiple hierarchy */ a2 AS (
-	SELECT COUNT(*) AS cb_2014_us_state_500k_total
-	  FROM (
-		SELECT cb_2014_us_state_500k, COUNT(DISTINCT(cb_2014_us_nation_5m)) AS total
-		  FROM hierarchy_usa_2014
-		 GROUP BY cb_2014_us_state_500k
-		HAVING COUNT(DISTINCT(cb_2014_us_nation_5m)) > 1) as2)
-, a3 AS (
-	SELECT COUNT(*) AS cb_2014_us_county_500k_total
-	  FROM (
-		SELECT cb_2014_us_county_500k, COUNT(DISTINCT(cb_2014_us_state_500k)) AS total
-		  FROM hierarchy_usa_2014
-		 GROUP BY cb_2014_us_county_500k
-		HAVING COUNT(DISTINCT(cb_2014_us_state_500k)) > 1) as3)
-SELECT CAST('cb_2014_us_state_500k' AS VARCHAR) AS col,
-	a2.cb_2014_us_state_500k_total AS val
-  FROM a2
-UNION
-SELECT CAST('cb_2014_us_county_500k' AS VARCHAR) AS col, 
-	a3.cb_2014_us_county_500k_total AS val
-  FROM a3
+
+	SELECT COUNT(*) AS cb_2014_us_state_500k_total
+
+	  FROM (
+
+		SELECT cb_2014_us_state_500k, COUNT(DISTINCT(cb_2014_us_nation_5m)) AS total
+
+		  FROM hierarchy_usa_2014
+
+		 GROUP BY cb_2014_us_state_500k
+
+		HAVING COUNT(DISTINCT(cb_2014_us_nation_5m)) > 1) as2)
+
+, a3 AS (
+
+	SELECT COUNT(*) AS cb_2014_us_county_500k_total
+
+	  FROM (
+
+		SELECT cb_2014_us_county_500k, COUNT(DISTINCT(cb_2014_us_state_500k)) AS total
+
+		  FROM hierarchy_usa_2014
+
+		 GROUP BY cb_2014_us_county_500k
+
+		HAVING COUNT(DISTINCT(cb_2014_us_state_500k)) > 1) as3)
+
+SELECT CAST('cb_2014_us_state_500k' AS VARCHAR) AS col,
+
+	a2.cb_2014_us_state_500k_total AS val
+
+  FROM a2
+
+UNION
+
+SELECT CAST('cb_2014_us_county_500k' AS VARCHAR) AS col,
+
+	a3.cb_2014_us_county_500k_total AS val
+
+  FROM a3
 
 (2 rows affected)
 Geography: USA_2014 geolevel: cb_2014_us_state_500k has 0 multiple hierarchy codes
@@ -8096,21 +8213,21 @@ ALTER TABLE geometry_usa_2014 ADD bbox geometry;
 
 -- SQL statement 235: Comment geometry table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geometry_usa_2014'
@@ -8124,29 +8241,29 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Bounding box', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Bounding box',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geometry_usa_2014',
 		@level2type = N'Column', @level2name = 'bbox'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Bounding box', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Bounding box',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geometry_usa_2014',
 		@level2type = N'Column', @level2name = 'bbox';
 
 
 -- SQL statement 236: Comment geometry table >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_table.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. cb_2014_us_county_500k
- *						2: comment. Usual rules for comment text in SQK - single 
+ *						2: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -8154,7 +8271,7 @@ DECLARE @tableName   sysname  /*
  * Description:			Comment table
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geometry_usa_2014'
@@ -8167,35 +8284,35 @@ IF EXISTS (
            AND [name]     = N'MS_Description'
 		   AND [minor_id] = 0)
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'All geolevels geometry combined into a single table for a single geography', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'All geolevels geometry combined into a single table for a single geography',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geometry_usa_2014'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'All geolevels geometry combined into a single table for a single geography', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'All geolevels geometry combined into a single table for a single geography',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geometry_usa_2014';
 
 
 -- SQL statement 237: Comment geometry table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geometry_usa_2014'
@@ -8209,37 +8326,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geometry_usa_2014',
 		@level2type = N'Column', @level2name = 'geolevel_id'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geometry_usa_2014',
 		@level2type = N'Column', @level2name = 'geolevel_id';
 
 
 -- SQL statement 238: Comment geometry table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geometry_usa_2014'
@@ -8253,37 +8370,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Zoom level: 0 to maxoomlevel (11). Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at zoomlevel 11', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Zoom level: 0 to maxoomlevel (11). Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at zoomlevel 11',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geometry_usa_2014',
 		@level2type = N'Column', @level2name = 'zoomlevel'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Zoom level: 0 to maxoomlevel (11). Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at zoomlevel 11', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Zoom level: 0 to maxoomlevel (11). Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at zoomlevel 11',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geometry_usa_2014',
 		@level2type = N'Column', @level2name = 'zoomlevel';
 
 
 -- SQL statement 239: Comment geometry table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geometry_usa_2014'
@@ -8297,37 +8414,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area ID.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area ID.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geometry_usa_2014',
 		@level2type = N'Column', @level2name = 'areaid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area ID.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area ID.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geometry_usa_2014',
 		@level2type = N'Column', @level2name = 'areaid';
 
 
 -- SQL statement 240: Comment geometry table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.geometry_usa_2014'
@@ -8341,16 +8458,16 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geometry data in SRID 4326 (WGS84).', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geometry data in SRID 4326 (WGS84).',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geometry_usa_2014',
 		@level2type = N'Column', @level2name = 'geom'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geometry data in SRID 4326 (WGS84).', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geometry data in SRID 4326 (WGS84).',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'geometry_usa_2014',
 		@level2type = N'Column', @level2name = 'geom';
 
@@ -8541,10 +8658,10 @@ ALTER TABLE geometry_usa_2014 ADD PRIMARY KEY (geolevel_id, areaid, zoomlevel);
  *						1: index name;e.g. geometry_cb_2014_us_500k_gix
  *						2: table name; e.g. geometry_cb_2014_us_500k
  *						3: Geometry field name; e.g. geom
- *						4: Xmin (4326); e.g. -179.13729006727 
- *						5: Ymin (4326); e.g. -14.3737802873213 
- *						6: Xmax (4326); e.g.  179.773803959804  
- *						7: Ymax (4326); e.g. 71.352561 
+ *						4: Xmin (4326); e.g. -179.13729006727
+ *						5: Ymin (4326); e.g. -14.3737802873213
+ *						6: Xmax (4326); e.g.  179.773803959804
+ *						7: Ymax (4326); e.g. 71.352561
  *
  * Description:			Create geometry table
  * Note:				% becomes % after substitution
@@ -8561,10 +8678,10 @@ CREATE SPATIAL INDEX geometry_usa_2014_gix ON geometry_usa_2014 (geom)
  *						1: index name;e.g. geometry_cb_2014_us_500k_gix
  *						2: table name; e.g. geometry_cb_2014_us_500k
  *						3: Geometry field name; e.g. geom
- *						4: Xmin (4326); e.g. -179.13729006727 
- *						5: Ymin (4326); e.g. -14.3737802873213 
- *						6: Xmax (4326); e.g.  179.773803959804  
- *						7: Ymax (4326); e.g. 71.352561 
+ *						4: Xmin (4326); e.g. -179.13729006727
+ *						5: Ymin (4326); e.g. -14.3737802873213
+ *						6: Xmax (4326); e.g.  179.773803959804
+ *						7: Ymax (4326); e.g. 71.352561
  *
  * Description:			Create geometry table
  * Note:				% becomes % after substitution
@@ -8632,13 +8749,13 @@ CREATE TABLE adjacency_usa_2014 (
 
 -- SQL statement 265: Comment table: adjacency_usa_2014 >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_table.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. cb_2014_us_county_500k
- *						2: comment. Usual rules for comment text in SQK - single 
+ *						2: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -8646,7 +8763,7 @@ DECLARE @tableName   sysname  /*
  * Description:			Comment table
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.adjacency_usa_2014'
@@ -8659,35 +8776,35 @@ IF EXISTS (
            AND [name]     = N'MS_Description'
 		   AND [minor_id] = 0)
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Adjacency lookup table for US 2014 Census geography to county level', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Adjacency lookup table for US 2014 Census geography to county level',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'adjacency_usa_2014'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Adjacency lookup table for US 2014 Census geography to county level', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Adjacency lookup table for US 2014 Census geography to county level',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'adjacency_usa_2014';
 
 
 -- SQL statement 266: Comment column: adjacency_usa_2014.geolevel_id >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.adjacency_usa_2014'
@@ -8701,37 +8818,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'adjacency_usa_2014',
 		@level2type = N'Column', @level2name = 'geolevel_id'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'adjacency_usa_2014',
 		@level2type = N'Column', @level2name = 'geolevel_id';
 
 
 -- SQL statement 267: Comment column: adjacency_usa_2014.areaid >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.adjacency_usa_2014'
@@ -8745,37 +8862,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area Id', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area Id',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'adjacency_usa_2014',
 		@level2type = N'Column', @level2name = 'areaid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area Id', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area Id',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'adjacency_usa_2014',
 		@level2type = N'Column', @level2name = 'areaid';
 
 
 -- SQL statement 268: Comment column: adjacency_usa_2014.num_adjacencies >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.adjacency_usa_2014'
@@ -8789,37 +8906,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Number of adjacencies', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Number of adjacencies',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'adjacency_usa_2014',
 		@level2type = N'Column', @level2name = 'num_adjacencies'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Number of adjacencies', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Number of adjacencies',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'adjacency_usa_2014',
 		@level2type = N'Column', @level2name = 'num_adjacencies';
 
 
 -- SQL statement 269: Comment column: adjacency_usa_2014.adjacency_list >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.adjacency_usa_2014'
@@ -8833,16 +8950,16 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Adjacent area Ids', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Adjacent area Ids',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'adjacency_usa_2014',
 		@level2type = N'Column', @level2name = 'adjacency_list'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Adjacent area Ids', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Adjacent area Ids',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'adjacency_usa_2014',
 		@level2type = N'Column', @level2name = 'adjacency_list';
 
@@ -8869,7 +8986,7 @@ WITH a AS (
 	   AND a.geom.STIntersects(b.geom) = 1
 ), b AS (
 	SELECT a.geolevel_id, a.areaid,
-		   c.adjacency_list 
+		   c.adjacency_list
 	  FROM a OUTER APPLY (
 		SELECT STUFF(( SELECT ',' + b.adjacent_areaid
 		   FROM a AS b
@@ -8899,8 +9016,8 @@ SELECT DISTINCT geolevel_id, areaid, LEN(adjacency_list)-LEN(REPLACE(adjacency_l
  * Description:			Convert longitude (WGS84 - 4326) to OSM tile x
  * Note:				% becomes % after substitution
  */
-IF OBJECT_ID (N'tileMaker_longitude2tile', N'FN') IS NOT NULL  
-    DROP FUNCTION tileMaker_longitude2tile;  
+IF OBJECT_ID (N'tileMaker_longitude2tile', N'FN') IS NOT NULL
+    DROP FUNCTION tileMaker_longitude2tile;
 
 
 CREATE FUNCTION tileMaker_longitude2tile(@longitude DOUBLE PRECISION, @zoom_level INTEGER)
@@ -8912,15 +9029,15 @@ BEGIN
 	RETURN @tileX;
 END;
 
-  
+
 DECLARE @CurrentUser sysname;
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 EXECUTE sp_addextendedproperty  'MS_Description', 'Function: 	 tileMaker_longitude2tile()
 Parameters:	 Longitude, zoom level
 Returns:	 OSM Tile x
 Description: Convert longitude (WGS84 - 4326) to OSM tile x
 
-Derivation of the tile X/Y 
+Derivation of the tile X/Y
 
 * Reproject the coordinates to the Mercator projection (from EPSG:4326 to EPSG:3857):
 
@@ -8936,7 +9053,7 @@ y = [1 - (y / p)] / 2
 * Calculate the number of tiles across the map, n, using 2**zoom
 * Multiply x and y by n. Round results down to give tilex and tiley.
 ',
-   'user', @CurrentUser,   
+   'user', @CurrentUser,
    'function', 'tileMaker_longitude2tile';
 
 
@@ -8949,33 +9066,33 @@ y = [1 - (y / p)] / 2
  * Description:			Convert latitude (WGS84 - 4326) to OSM tile y
  * Note:				% becomes % after substitution
  */
-IF OBJECT_ID (N'tileMaker_latitude2tile', N'FN') IS NOT NULL  
-    DROP FUNCTION tileMaker_latitude2tile;  
+IF OBJECT_ID (N'tileMaker_latitude2tile', N'FN') IS NOT NULL
+    DROP FUNCTION tileMaker_latitude2tile;
 
 
 CREATE FUNCTION tileMaker_latitude2tile(@latitude DOUBLE PRECISION, @zoom_level INTEGER)
-RETURNS INTEGER 
+RETURNS INTEGER
 AS
 BEGIN
 	DECLARE @tileY INTEGER;
 	SET @tileY=CAST(
-					FLOOR( 
-						(1.0 - LOG /* Natural Log */ 
-							(TAN(RADIANS(@latitude)) + 1.0 / COS(RADIANS(@latitude))) / PI()) / 2.0 * POWER(2, @zoom_level) 
-						) 
+					FLOOR(
+						(1.0 - LOG /* Natural Log */
+							(TAN(RADIANS(@latitude)) + 1.0 / COS(RADIANS(@latitude))) / PI()) / 2.0 * POWER(2, @zoom_level)
+						)
 					AS INTEGER);
 	RETURN @tileY;
 END;
 
-  
+
 DECLARE @CurrentUser sysname;
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 EXECUTE sp_addextendedproperty  'MS_Description', 'Function: 	 tileMaker_latitude2tile()
 Parameters:	 Latitude, zoom level
 Returns:	 OSM Tile y
 Description: Convert latitude (WGS84 - 4326) to OSM tile x
 
-Derivation of the tile X/Y 
+Derivation of the tile X/Y
 
 * Reproject the coordinates to the Mercator projection (from EPSG:4326 to EPSG:3857):
 
@@ -8991,7 +9108,7 @@ y = [1 - (y / p)] / 2
 * Calculate the number of tiles across the map, n, using 2**zoom
 * Multiply x and y by n. Round results down to give tilex and tiley.
 ',
-   'user', @CurrentUser,   
+   'user', @CurrentUser,
    'function', 'tileMaker_latitude2tile';
 
 
@@ -9001,11 +9118,11 @@ y = [1 - (y / p)] / 2
  * Type:				Postgres/PostGIS PL/pgsql function
  * Parameters:			None
  *
- * Description:			Convert OSM tile x to longitude (WGS84 - 4326) 
+ * Description:			Convert OSM tile x to longitude (WGS84 - 4326)
  * Note:				% becomes % after substitution
  */
-IF OBJECT_ID (N'tileMaker_tile2longitude', N'FN') IS NOT NULL  
-    DROP FUNCTION tileMaker_tile2longitude;  
+IF OBJECT_ID (N'tileMaker_tile2longitude', N'FN') IS NOT NULL
+    DROP FUNCTION tileMaker_tile2longitude;
 
 
 CREATE FUNCTION tileMaker_tile2longitude(@x INTEGER, @zoom_level INTEGER)
@@ -9016,15 +9133,15 @@ BEGIN
 	RETURN @longitude;
 END;
 
-  
+
 DECLARE @CurrentUser sysname;
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 EXECUTE sp_addextendedproperty  'MS_Description', 'Function: 	 tileMaker_tile2longitude()
 Parameters:	 OSM Tile x, zoom level
 Returns:	 Longitude
 Description: Convert OSM tile x to longitude (WGS84 - 4326)
 ',
-   'user', @CurrentUser,   
+   'user', @CurrentUser,
    'function', 'tileMaker_tile2longitude';
 
 
@@ -9037,8 +9154,8 @@ Description: Convert OSM tile x to longitude (WGS84 - 4326)
  * Description:			Convert OSM tile y to latitude (WGS84 - 4326)
  * Note:				% becomes % after substitution
  */
-IF OBJECT_ID (N'tileMaker_tile2latitude', N'FN') IS NOT NULL  
-    DROP FUNCTION tileMaker_tile2latitude;  
+IF OBJECT_ID (N'tileMaker_tile2latitude', N'FN') IS NOT NULL
+    DROP FUNCTION tileMaker_tile2latitude;
 
 
 CREATE FUNCTION tileMaker_tile2latitude(@y INTEGER, @zoom_level INTEGER)
@@ -9048,22 +9165,22 @@ BEGIN
 	DECLARE @n FLOAT;
 	DECLARE @sinh FLOAT;
 	DECLARE @E FLOAT = 2.7182818284;
-	
+
     SET @n = PI() - (2.0 * PI() * @y) / POWER(2.0, @zoom_level);
     SET @sinh = (1 - POWER(@E, -2*@n)) / (2 * POWER(@E, -@n));
     SET @latitude = DEGREES(ATAN(@sinh));
 	RETURN @latitude;
 END;
 
-  
+
 DECLARE @CurrentUser sysname;
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 EXECUTE sp_addextendedproperty  'MS_Description', 'Function: 	 tileMaker_tile2latitude()
 Parameters:	 OSM Tile y, zoom level
 Returns:	 Latitude
 Description: Convert OSM tile y to latitude (WGS84 - 4326)
 ',
-   'user', @CurrentUser,   
+   'user', @CurrentUser,
    'function', 'tileMaker_tile2latitude';
 
 
@@ -9071,7 +9188,7 @@ Description: Convert OSM tile y to latitude (WGS84 - 4326)
 /*
  * SQL statement name: 	tile_check.sql
  * Type:				MS SQL Server function
- * Parameters:			
+ * Parameters:
  *						1: Lowest resolution geolevels table
  *						2: Geography
  *						3: min_zoomlevel
@@ -9082,21 +9199,21 @@ Description: Convert OSM tile y to latitude (WGS84 - 4326)
  * Note:				% becomes % after substitution
  */
 WITH a AS ( /* Geolevel summary */
-		SELECT a1.geography, 
+		SELECT a1.geography,
 		       a1.geolevel_name AS min_geolevel_name,
                MIN(geolevel_id) AS min_geolevel_id,
                CAST(9 AS INTEGER) AS zoomlevel,
                a2.max_geolevel_id
           FROM geolevels_usa_2014 a1, (
                         SELECT geography, MAX(geolevel_id) AS max_geolevel_id
-  						  FROM geolevels_usa_2014 
+  						  FROM geolevels_usa_2014
 						 GROUP BY geography
 						) a2
-         WHERE a1.geography     = 'USA_2014' 
+         WHERE a1.geography     = 'USA_2014'
            AND a1.geography     = a2.geography
          GROUP BY a1.geography, a1.geolevel_name, a2.max_geolevel_id
         HAVING MIN(geolevel_id) = 1
-), b AS ( /* Get bounds of geography */		
+), b AS ( /* Get bounds of geography */
 	SELECT a2.geography,
 		   a2.min_geolevel_id,
 		   a2.max_geolevel_id,
@@ -9104,7 +9221,7 @@ WITH a AS ( /* Geolevel summary */
 		   CASE
 				WHEN a2.zoomlevel <= 6 THEN
 					geometry::STGeomFromWKB(b.geom_6.STAsBinary(), b.geom_6.STSrid /* Cast to geometry */).STEnvelope()
-				WHEN a2.zoomlevel BETWEEN (6+1) AND 9 THEN	
+				WHEN a2.zoomlevel BETWEEN (6+1) AND 9 THEN
 					geometry::STGeomFromWKB(b.geom_9.STAsBinary(), b.geom_9.STSrid /* Cast to geometry */).STEnvelope()
 				ELSE NULL
            END AS geom_envelope
@@ -9124,7 +9241,7 @@ SELECT b.geography,
 	   peter.tileMaker_longitude2tile(b.geom_envelope.STPointN(3).STX, zoomlevel) AS X_maxtile
   FROM b;
 
-geography                                          min_geolevel_id max_geolevel_id zoomlevel   Xmin       Xmax       Ymin       Ymax       Y_mintile   Y_maxtile   X_mintile   X_maxtile  
+geography                                          min_geolevel_id max_geolevel_id zoomlevel   Xmin       Xmax       Ymin       Ymax       Y_mintile   Y_maxtile   X_mintile   X_maxtile
 -------------------------------------------------- --------------- --------------- ----------- ---------- ---------- ---------- ---------- ----------- ----------- ----------- -----------
 USA_2014                                                         1               3           9 -179.14734  179.77847  -14.55255   71.35256         276         108           1         511
 
@@ -9153,7 +9270,7 @@ IF OBJECT_ID('t_tiles_usa_2014', 'U') IS NOT NULL DROP TABLE t_tiles_usa_2014;
 CREATE TABLE t_tiles_usa_2014 (
 	geolevel_id			INTEGER			NOT NULL,
 	zoomlevel			INTEGER			NOT NULL,
-	x					INTEGER			NOT NULL, 
+	x					INTEGER			NOT NULL,
 	y					INTEGER			NOT NULL,
 	optimised_topojson	NVARCHAR(MAX),
 	tile_id				VARCHAR(200)	NOT NULL,
@@ -9163,13 +9280,13 @@ CREATE TABLE t_tiles_usa_2014 (
 
 -- SQL statement 280: Comment tiles table >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_table.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. cb_2014_us_county_500k
- *						2: comment. Usual rules for comment text in SQK - single 
+ *						2: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -9177,7 +9294,7 @@ DECLARE @tableName   sysname  /*
  * Description:			Comment table
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.t_tiles_usa_2014'
@@ -9190,35 +9307,35 @@ IF EXISTS (
            AND [name]     = N'MS_Description'
 		   AND [minor_id] = 0)
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Maptiles for geography; empty tiles are added to complete zoomlevels for zoomlevels 0 to 11', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Maptiles for geography; empty tiles are added to complete zoomlevels for zoomlevels 0 to 11',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 't_tiles_usa_2014'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Maptiles for geography; empty tiles are added to complete zoomlevels for zoomlevels 0 to 11', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Maptiles for geography; empty tiles are added to complete zoomlevels for zoomlevels 0 to 11',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 't_tiles_usa_2014';
 
 
 -- SQL statement 281: Comment tiles table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.t_tiles_usa_2014'
@@ -9232,37 +9349,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 't_tiles_usa_2014',
 		@level2type = N'Column', @level2name = 'geolevel_id'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 't_tiles_usa_2014',
 		@level2type = N'Column', @level2name = 'geolevel_id';
 
 
 -- SQL statement 282: Comment tiles table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.t_tiles_usa_2014'
@@ -9276,37 +9393,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Zoom level: 0 to 11. Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at zoomlevel 11', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Zoom level: 0 to 11. Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at zoomlevel 11',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 't_tiles_usa_2014',
 		@level2type = N'Column', @level2name = 'zoomlevel'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Zoom level: 0 to 11. Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at zoomlevel 11', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Zoom level: 0 to 11. Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at zoomlevel 11',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 't_tiles_usa_2014',
 		@level2type = N'Column', @level2name = 'zoomlevel';
 
 
 -- SQL statement 283: Comment tiles table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.t_tiles_usa_2014'
@@ -9320,37 +9437,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'X tile number. From 0 to (2**<zoomlevel>)-1', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'X tile number. From 0 to (2**<zoomlevel>)-1',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 't_tiles_usa_2014',
 		@level2type = N'Column', @level2name = 'x'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'X tile number. From 0 to (2**<zoomlevel>)-1', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'X tile number. From 0 to (2**<zoomlevel>)-1',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 't_tiles_usa_2014',
 		@level2type = N'Column', @level2name = 'x';
 
 
 -- SQL statement 284: Comment tiles table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.t_tiles_usa_2014'
@@ -9364,37 +9481,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Y tile number. From 0 to (2**<zoomlevel>)-1', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Y tile number. From 0 to (2**<zoomlevel>)-1',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 't_tiles_usa_2014',
 		@level2type = N'Column', @level2name = 'y'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Y tile number. From 0 to (2**<zoomlevel>)-1', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Y tile number. From 0 to (2**<zoomlevel>)-1',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 't_tiles_usa_2014',
 		@level2type = N'Column', @level2name = 'y';
 
 
 -- SQL statement 285: Comment tiles table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.t_tiles_usa_2014'
@@ -9408,37 +9525,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Tile multipolygon in TopoJSON format, optimised for zoomlevel N. The SRID is always 4326.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Tile multipolygon in TopoJSON format, optimised for zoomlevel N. The SRID is always 4326.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 't_tiles_usa_2014',
 		@level2type = N'Column', @level2name = 'optimised_topojson'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Tile multipolygon in TopoJSON format, optimised for zoomlevel N. The SRID is always 4326.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Tile multipolygon in TopoJSON format, optimised for zoomlevel N. The SRID is always 4326.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 't_tiles_usa_2014',
 		@level2type = N'Column', @level2name = 'optimised_topojson';
 
 
 -- SQL statement 286: Comment tiles table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.t_tiles_usa_2014'
@@ -9452,37 +9569,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Tile ID in the format <geolevel number>_<geolevel name>_<zoomlevel>_<X tile number>_<Y tile number>', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Tile ID in the format <geolevel number>_<geolevel name>_<zoomlevel>_<X tile number>_<Y tile number>',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 't_tiles_usa_2014',
 		@level2type = N'Column', @level2name = 'tile_id'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Tile ID in the format <geolevel number>_<geolevel name>_<zoomlevel>_<X tile number>_<Y tile number>', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Tile ID in the format <geolevel number>_<geolevel name>_<zoomlevel>_<X tile number>_<Y tile number>',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 't_tiles_usa_2014',
 		@level2type = N'Column', @level2name = 'tile_id';
 
 
 -- SQL statement 287: Comment tiles table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.t_tiles_usa_2014'
@@ -9496,16 +9613,16 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Total number of areaIDs (geoJSON features)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Total number of areaIDs (geoJSON features)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 't_tiles_usa_2014',
 		@level2type = N'Column', @level2name = 'areaid_count'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Total number of areaIDs (geoJSON features)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Total number of areaIDs (geoJSON features)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 't_tiles_usa_2014',
 		@level2type = N'Column', @level2name = 'areaid_count';
 
@@ -9543,7 +9660,7 @@ CREATE INDEX t_tiles_usa_2014_areaid_count ON t_tiles_usa_2014 (areaid_count);
  * Description:			Create tiles view
  * Note:				%% becomes % after substitution
  */
-CREATE VIEW tiles_usa_2014 AS 
+CREATE VIEW tiles_usa_2014 AS
 WITH a AS (
         SELECT geography,
                MAX(geolevel_id) AS max_geolevel_id
@@ -9551,7 +9668,7 @@ WITH a AS (
 		 WHERE geography = 'USA_2014'
          GROUP BY geography
 ), b AS (
-		SELECT a.geography, z.IntValue AS geolevel_id 
+		SELECT a.geography, z.IntValue AS geolevel_id
 		  FROM a CROSS APPLY peter.generate_series(0, CAST(a.max_geolevel_id AS INTEGER), 1) z
 ), c AS (
         SELECT b2.geolevel_name,
@@ -9575,7 +9692,7 @@ WITH a AS (
                ex.zoomlevel,
                ex.xy_series
           FROM c,
-               ex 
+               ex
 )
 SELECT z.geography,
        z.geolevel_id,
@@ -9583,14 +9700,14 @@ SELECT z.geography,
        CASE
             WHEN h1.tile_id IS NULL AND h2.tile_id IS NULL THEN 1
             ELSE 0
-       END AS no_area_ids, 
-       COALESCE(h1.tile_id, 
-				CAST(z.geolevel_id AS VARCHAR) + 
+       END AS no_area_ids,
+       COALESCE(h1.tile_id,
+				CAST(z.geolevel_id AS VARCHAR) +
 					'_' +
 					z.geolevel_name +
 					'_' +
 					CAST(z.zoomlevel AS VARCHAR) +
-					'_' + 
+					'_' +
 					CAST(z.x AS VARCHAR) +
 					'_' +
 					CAST(z.y AS VARCHAR)
@@ -9598,10 +9715,10 @@ SELECT z.geography,
        z.x,
        z.y,
        z.zoomlevel,
-       COALESCE(h1.optimised_topojson, 
-				h2.optimised_topojson, 
+       COALESCE(h1.optimised_topojson,
+				h2.optimised_topojson,
 				'{"type": "FeatureCollection","features":[]}' /* NULL geojson */) AS optimised_topojson
-  FROM ( 
+  FROM (
 		SELECT ey.geolevel_name,
 			   ey.areaid_count,
                ey.geolevel_id,
@@ -9614,15 +9731,15 @@ SELECT z.geography,
 		) z
 		 LEFT JOIN t_tiles_usa_2014 h1 ON ( /* Multiple area ids in the geolevel */
 				z.areaid_count > 1 AND
-				z.zoomlevel    = h1.zoomlevel AND 
-				z.x            = h1.x AND 
-				z.y            = h1.y AND 
+				z.zoomlevel    = h1.zoomlevel AND
+				z.x            = h1.x AND
+				z.y            = h1.y AND
 				z.geolevel_id  = h1.geolevel_id)
 		 LEFT JOIN t_tiles_usa_2014 h2 ON ( /* Single area ids in the geolevel */
 				z.areaid_count = 1 AND
-				h2.zoomlevel   = 0 AND 
-				h2.x           = 0 AND 
-				h2.y           = 0 AND 
+				h2.zoomlevel   = 0 AND
+				h2.x           = 0 AND
+				h2.y           = 0 AND
 				h2.geolevel_id = 1);
 
 
@@ -9632,7 +9749,7 @@ DECLARE @CurrentUser sysname /*
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: view; e.g. tiles_cb_us_county_500k
- *						2: comment. Usual rules for comment text in SQK - single 
+ *						2: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -9640,11 +9757,11 @@ DECLARE @CurrentUser sysname /*
  * Description:			Comment view
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 EXECUTE sp_addextendedproperty
-@name = N'MS_Description',   
-@value = N'Maptiles view for geography; empty tiles are added to complete zoomlevels for zoomlevels 0 to 11. This view is efficent!', 
-@level0type = N'Schema', @level0name = @CurrentUser,  
+@name = N'MS_Description',
+@value = N'Maptiles view for geography; empty tiles are added to complete zoomlevels for zoomlevels 0 to 11. This view is efficent!',
+@level0type = N'Schema', @level0name = @CurrentUser,
 @level1type = N'View', @level1name = 'tiles_usa_2014'   ;
 
 
@@ -9655,7 +9772,7 @@ DECLARE @CurrentUser sysname /*
  * Parameters:
  *						1: view; e.g. tiles_cb_2014_us_500k
  *						2: column; e.g. geography
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -9665,9 +9782,9 @@ DECLARE @CurrentUser sysname /*
  */
 SELECT @CurrentUser = user_name();
 EXECUTE sp_addextendedproperty
-@name = N'MS_Description',   
-@value = N'Geography', 
-@level0type = N'Schema', @level0name = @CurrentUser,  
+@name = N'MS_Description',
+@value = N'Geography',
+@level0type = N'Schema', @level0name = @CurrentUser,
 @level1type = N'View', @level1name = 'tiles_usa_2014',
 @level2type = N'Column', @level2name = 'geography';
 
@@ -9679,7 +9796,7 @@ DECLARE @CurrentUser sysname /*
  * Parameters:
  *						1: view; e.g. tiles_cb_2014_us_500k
  *						2: column; e.g. geography
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -9689,9 +9806,9 @@ DECLARE @CurrentUser sysname /*
  */
 SELECT @CurrentUser = user_name();
 EXECUTE sp_addextendedproperty
-@name = N'MS_Description',   
-@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.', 
-@level0type = N'Schema', @level0name = @CurrentUser,  
+@name = N'MS_Description',
+@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.',
+@level0type = N'Schema', @level0name = @CurrentUser,
 @level1type = N'View', @level1name = 'tiles_usa_2014',
 @level2type = N'Column', @level2name = 'geolevel_id';
 
@@ -9703,7 +9820,7 @@ DECLARE @CurrentUser sysname /*
  * Parameters:
  *						1: view; e.g. tiles_cb_2014_us_500k
  *						2: column; e.g. geography
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -9713,9 +9830,9 @@ DECLARE @CurrentUser sysname /*
  */
 SELECT @CurrentUser = user_name();
 EXECUTE sp_addextendedproperty
-@name = N'MS_Description',   
-@value = N'Zoom level: 0 to 11. Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at zoomlevel 11', 
-@level0type = N'Schema', @level0name = @CurrentUser,  
+@name = N'MS_Description',
+@value = N'Zoom level: 0 to 11. Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at zoomlevel 11',
+@level0type = N'Schema', @level0name = @CurrentUser,
 @level1type = N'View', @level1name = 'tiles_usa_2014',
 @level2type = N'Column', @level2name = 'zoomlevel';
 
@@ -9727,7 +9844,7 @@ DECLARE @CurrentUser sysname /*
  * Parameters:
  *						1: view; e.g. tiles_cb_2014_us_500k
  *						2: column; e.g. geography
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -9737,9 +9854,9 @@ DECLARE @CurrentUser sysname /*
  */
 SELECT @CurrentUser = user_name();
 EXECUTE sp_addextendedproperty
-@name = N'MS_Description',   
-@value = N'X tile number. From 0 to (2**<zoomlevel>)-1', 
-@level0type = N'Schema', @level0name = @CurrentUser,  
+@name = N'MS_Description',
+@value = N'X tile number. From 0 to (2**<zoomlevel>)-1',
+@level0type = N'Schema', @level0name = @CurrentUser,
 @level1type = N'View', @level1name = 'tiles_usa_2014',
 @level2type = N'Column', @level2name = 'x';
 
@@ -9751,7 +9868,7 @@ DECLARE @CurrentUser sysname /*
  * Parameters:
  *						1: view; e.g. tiles_cb_2014_us_500k
  *						2: column; e.g. geography
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -9761,9 +9878,9 @@ DECLARE @CurrentUser sysname /*
  */
 SELECT @CurrentUser = user_name();
 EXECUTE sp_addextendedproperty
-@name = N'MS_Description',   
-@value = N'Y tile number. From 0 to (2**<zoomlevel>)-1', 
-@level0type = N'Schema', @level0name = @CurrentUser,  
+@name = N'MS_Description',
+@value = N'Y tile number. From 0 to (2**<zoomlevel>)-1',
+@level0type = N'Schema', @level0name = @CurrentUser,
 @level1type = N'View', @level1name = 'tiles_usa_2014',
 @level2type = N'Column', @level2name = 'y';
 
@@ -9775,7 +9892,7 @@ DECLARE @CurrentUser sysname /*
  * Parameters:
  *						1: view; e.g. tiles_cb_2014_us_500k
  *						2: column; e.g. geography
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -9785,9 +9902,9 @@ DECLARE @CurrentUser sysname /*
  */
 SELECT @CurrentUser = user_name();
 EXECUTE sp_addextendedproperty
-@name = N'MS_Description',   
-@value = N'Tile multipolygon in TopoJSON format, optimised for zoomlevel N. The SRID is always 4326.', 
-@level0type = N'Schema', @level0name = @CurrentUser,  
+@name = N'MS_Description',
+@value = N'Tile multipolygon in TopoJSON format, optimised for zoomlevel N. The SRID is always 4326.',
+@level0type = N'Schema', @level0name = @CurrentUser,
 @level1type = N'View', @level1name = 'tiles_usa_2014',
 @level2type = N'Column', @level2name = 'optimised_topojson';
 
@@ -9799,7 +9916,7 @@ DECLARE @CurrentUser sysname /*
  * Parameters:
  *						1: view; e.g. tiles_cb_2014_us_500k
  *						2: column; e.g. geography
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -9809,9 +9926,9 @@ DECLARE @CurrentUser sysname /*
  */
 SELECT @CurrentUser = user_name();
 EXECUTE sp_addextendedproperty
-@name = N'MS_Description',   
-@value = N'Tile ID in the format <geolevel number>_<geolevel name>_<zoomlevel>_<X tile number>_<Y tile number>', 
-@level0type = N'Schema', @level0name = @CurrentUser,  
+@name = N'MS_Description',
+@value = N'Tile ID in the format <geolevel number>_<geolevel name>_<zoomlevel>_<X tile number>_<Y tile number>',
+@level0type = N'Schema', @level0name = @CurrentUser,
 @level1type = N'View', @level1name = 'tiles_usa_2014',
 @level2type = N'Column', @level2name = 'tile_id';
 
@@ -9823,7 +9940,7 @@ DECLARE @CurrentUser sysname /*
  * Parameters:
  *						1: view; e.g. tiles_cb_2014_us_500k
  *						2: column; e.g. geography
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -9833,9 +9950,9 @@ DECLARE @CurrentUser sysname /*
  */
 SELECT @CurrentUser = user_name();
 EXECUTE sp_addextendedproperty
-@name = N'MS_Description',   
-@value = N'Name of geolevel. This will be a column name in the numerator/denominator tables', 
-@level0type = N'Schema', @level0name = @CurrentUser,  
+@name = N'MS_Description',
+@value = N'Name of geolevel. This will be a column name in the numerator/denominator tables',
+@level0type = N'Schema', @level0name = @CurrentUser,
 @level1type = N'View', @level1name = 'tiles_usa_2014',
 @level2type = N'Column', @level2name = 'geolevel_name';
 
@@ -9847,7 +9964,7 @@ DECLARE @CurrentUser sysname /*
  * Parameters:
  *						1: view; e.g. tiles_cb_2014_us_500k
  *						2: column; e.g. geography
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -9857,9 +9974,9 @@ DECLARE @CurrentUser sysname /*
  */
 SELECT @CurrentUser = user_name();
 EXECUTE sp_addextendedproperty
-@name = N'MS_Description',   
-@value = N'Tile contains no area_ids flag: 0/1', 
-@level0type = N'Schema', @level0name = @CurrentUser,  
+@name = N'MS_Description',
+@value = N'Tile contains no area_ids flag: 0/1',
+@level0type = N'Schema', @level0name = @CurrentUser,
 @level1type = N'View', @level1name = 'tiles_usa_2014',
 @level2type = N'Column', @level2name = 'no_area_ids';
 
@@ -9873,13 +9990,13 @@ EXECUTE sp_addextendedproperty
  * SQL statement name: 	tileMaker_STMakeEnvelope.sql
  * Type:				MS SQL Server SQL
  * Parameters:			None
- * Description:			geometry  ST_MakeEnvelope(double precision xmin, double precision ymin, double precision xmax, 
+ * Description:			geometry  ST_MakeEnvelope(double precision xmin, double precision ymin, double precision xmax,
  *						double precision ymax, integer srid=4326);
  * Note:				% becomes % after substitution
  *
- *  zoomlevel |         xmin     |         xmax     |          ymin     |      ymax | 
+ *  zoomlevel |         xmin     |         xmax     |          ymin     |      ymax |
  * -----------+------------------+------------------+-------------------+-----------+
- *          0 | -179.13729006727 | 179.773803959804 | -14.3737802873213 | 71.352561 |   
+ *          0 | -179.13729006727 | 179.773803959804 | -14.3737802873213 | 71.352561 |
  * WITH a AS (
  *	SELECT ST_MakeEnvelope(-179.13729006727, -14.373780287321, 179.773803959804, 71.352561, 4326) AS bbox
  * )
@@ -9892,8 +10009,8 @@ EXECUTE sp_addextendedproperty
  *
  *  POLYGON((xmin ymin,xmin ymax,xmax ymax,xmax ymin,xmin ymin))
  */
-IF OBJECT_ID (N'tileMaker_STMakeEnvelope', N'FN') IS NOT NULL  
-    DROP FUNCTION tileMaker_STMakeEnvelope;  
+IF OBJECT_ID (N'tileMaker_STMakeEnvelope', N'FN') IS NOT NULL
+    DROP FUNCTION tileMaker_STMakeEnvelope;
 
 
 CREATE FUNCTION tileMaker_STMakeEnvelope(@xmin DOUBLE PRECISION, @ymin DOUBLE PRECISION, @xmax DOUBLE PRECISION, @ymax DOUBLE PRECISION, @srid INTEGER=4326)
@@ -9901,32 +10018,32 @@ RETURNS GEOMETRY AS
 BEGIN
 	DECLARE @geom GEOMETRY;
 	SET @geom=geometry::STGeomFromText('POLYGON(('+
-	CAST(@xmin AS VARCHAR) + ' ' + 
+	CAST(@xmin AS VARCHAR) + ' ' +
 	CAST(@ymin AS VARCHAR) + ',' +
 	CAST(@xmin AS VARCHAR) + ' ' +
 	CAST(@ymax AS VARCHAR) + ',' +
 	CAST(@xmax AS VARCHAR) + ' ' +
 	CAST(@ymax AS VARCHAR) + ',' +
-	CAST(@xmax AS VARCHAR) + ' ' + 
-	CAST(@ymin AS VARCHAR) + ',' + 
+	CAST(@xmax AS VARCHAR) + ' ' +
+	CAST(@ymin AS VARCHAR) + ',' +
 	CAST(@xmin AS VARCHAR) + ' ' +
 	CAST(@ymin AS VARCHAR) + '))', @srid);
 	RETURN @geom;
 END;
 
-  
+
 DECLARE @CurrentUser sysname;
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 EXECUTE sp_addextendedproperty  'MS_Description', 'Function: 	 tileMaker_STMakeEnvelope()
 Parameters:	 double precision xmin, double precision ymin, double precision xmax, double precision ymax, integer srid=4326
 Returns:	 Geometry
-Description: Creates a rectangular Polygon formed from the given minimums and maximums. Input values must be in the 
+Description: Creates a rectangular Polygon formed from the given minimums and maximums. Input values must be in the
 			 spatial reference system specified by the SRID.
 
-Creates a rectangular Polygon formed from the minima and maxima. by the given shell. Input values must be in SRS specified 
+Creates a rectangular Polygon formed from the minima and maxima. by the given shell. Input values must be in SRS specified
 by the SRID. If no SRID is specified the WGS 84 spatial reference system is assumed
 ',
-   'user', @CurrentUser,   
+   'user', @CurrentUser,
    'function', 'tileMaker_STMakeEnvelope' ;
 
 
@@ -9955,7 +10072,7 @@ WITH a AS (
 			   geometry::EnvelopeAggregate(b.geom).STPointN(1).STY AS Ymin,
 			   geometry::EnvelopeAggregate(b.geom).STPointN(3).STX AS Xmax,
 			   geometry::EnvelopeAggregate(b.geom).STPointN(3).STY AS Ymax
-      FROM a 
+      FROM a
 			LEFT OUTER JOIN geometry_usa_2014 b ON (b.geolevel_id = 1 AND a.zoomlevel = b.zoomlevel)
 	 GROUP BY a.zoomlevel
 ), c AS (
@@ -9970,9 +10087,9 @@ WITH a AS (
 	 GROUP BY b.zoomlevel
 ), d AS ( /* Convert XY bounds to tile numbers */
         SELECT b.zoomlevel,
-               COALESCE(b.Xmin, c.Xmin) AS x_min, 
-			   COALESCE(b.Xmax, c.Xmax) AS x_max, 
-			   COALESCE(b.Ymin, c.Ymin) AS y_min, 
+               COALESCE(b.Xmin, c.Xmin) AS x_min,
+			   COALESCE(b.Xmax, c.Xmax) AS x_max,
+			   COALESCE(b.Ymin, c.Ymin) AS y_min,
 			   COALESCE(b.Ymax, c.Ymax) AS y_max,
                peter.tileMaker_latitude2tile(COALESCE(b.Ymax, c.Ymax), b.zoomlevel) AS Y_mintile,
                peter.tileMaker_latitude2tile(COALESCE(b.Ymin, c.Ymin), b.zoomlevel) AS Y_maxtile,
@@ -9990,13 +10107,13 @@ SELECT d.*,
 
 -- SQL statement 307: Comment tile limits table >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_table.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. cb_2014_us_county_500k
- *						2: comment. Usual rules for comment text in SQK - single 
+ *						2: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -10004,7 +10121,7 @@ DECLARE @tableName   sysname  /*
  * Description:			Comment table
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_limits_usa_2014'
@@ -10017,35 +10134,35 @@ IF EXISTS (
            AND [name]     = N'MS_Description'
 		   AND [minor_id] = 0)
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Tile limits', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Tile limits',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Tile limits', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Tile limits',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014';
 
 
 -- SQL statement 308: Comment tile limits table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_limits_usa_2014'
@@ -10059,37 +10176,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Zoom level: 0 to 11. Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at max zooomlevel (11)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Zoom level: 0 to 11. Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at max zooomlevel (11)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'zoomlevel'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Zoom level: 0 to 11. Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at max zooomlevel (11)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Zoom level: 0 to 11. Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at max zooomlevel (11)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'zoomlevel';
 
 
 -- SQL statement 309: Comment tile limits table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_limits_usa_2014'
@@ -10103,37 +10220,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Min X (longitude)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Min X (longitude)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'x_min'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Min X (longitude)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Min X (longitude)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'x_min';
 
 
 -- SQL statement 310: Comment tile limits table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_limits_usa_2014'
@@ -10147,37 +10264,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Max X (longitude)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Max X (longitude)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'x_max'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Max X (longitude)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Max X (longitude)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'x_max';
 
 
 -- SQL statement 311: Comment tile limits table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_limits_usa_2014'
@@ -10191,37 +10308,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Min Y (latitude)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Min Y (latitude)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'y_min'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Min Y (latitude)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Min Y (latitude)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'y_min';
 
 
 -- SQL statement 312: Comment tile limits table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_limits_usa_2014'
@@ -10235,37 +10352,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Max Y (latitude)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Max Y (latitude)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'y_max'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Max Y (latitude)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Max Y (latitude)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'y_max';
 
 
 -- SQL statement 313: Comment tile limits table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_limits_usa_2014'
@@ -10279,37 +10396,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Min Y tile number (latitude)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Min Y tile number (latitude)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'y_mintile'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Min Y tile number (latitude)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Min Y tile number (latitude)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'y_mintile';
 
 
 -- SQL statement 314: Comment tile limits table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_limits_usa_2014'
@@ -10323,37 +10440,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Max Y tile number (latitude)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Max Y tile number (latitude)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'y_maxtile'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Max Y tile number (latitude)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Max Y tile number (latitude)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'y_maxtile';
 
 
 -- SQL statement 315: Comment tile limits table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_limits_usa_2014'
@@ -10367,37 +10484,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Min X tile number (longitude)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Min X tile number (longitude)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'x_mintile'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Min X tile number (longitude)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Min X tile number (longitude)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'x_mintile';
 
 
 -- SQL statement 316: Comment tile limits table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_limits_usa_2014'
@@ -10411,37 +10528,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Max X tile number (longitude)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Max X tile number (longitude)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'x_maxtile'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Max X tile number (longitude)', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Max X tile number (longitude)',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'x_maxtile';
 
 
 -- SQL statement 317: Comment tile limits table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_limits_usa_2014'
@@ -10455,16 +10572,16 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Bounding box polygon for geolevel_id 1 area', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Bounding box polygon for geolevel_id 1 area',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'bbox'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Bounding box polygon for geolevel_id 1 area', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Bounding box polygon for geolevel_id 1 area',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_limits_usa_2014',
 		@level2type = N'Column', @level2name = 'bbox';
 
@@ -10494,7 +10611,7 @@ UPDATE STATISTICS tile_limits_usa_2014;
 -- SQL statement 321: Analyze table >>>
 SELECT zoomlevel, x_min, x_max, y_min, y_max, y_mintile, y_maxtile, x_mintile, x_maxtile FROM tile_limits_usa_2014;
 
-zoomlevel   x_min                    x_max                    y_min                    y_max                    y_mintile   y_maxtile   x_mintile   x_maxtile  
+zoomlevel   x_min                    x_max                    y_min                    y_max                    y_mintile   y_maxtile   x_mintile   x_maxtile
 ----------- ------------------------ ------------------------ ------------------------ ------------------------ ----------- ----------- ----------- -----------
           0      -179.14734000000004       179.77846999999986      -14.549542318143596       71.352561000000122           0           0           0           0
           1      -179.14734000000004       179.77846999999986      -14.549542318143596       71.352561000000122           0           1           0           1
@@ -10527,10 +10644,10 @@ IF OBJECT_ID('tile_intersects_usa_2014', 'U') IS NOT NULL DROP TABLE tile_inters
  */
 CREATE TABLE tile_intersects_usa_2014 (
 	geolevel_id				INTEGER			NOT NULL,
-	zoomlevel				INTEGER			NOT NULL, 
+	zoomlevel				INTEGER			NOT NULL,
 	areaid					VARCHAR(200)	NOT NULL,
-	x						INTEGER			NOT NULL, 
-	y						INTEGER			NOT NULL, 
+	x						INTEGER			NOT NULL,
+	y						INTEGER			NOT NULL,
     optimised_geojson		Text,
 	within					bit				NOT NULL
 );
@@ -10572,13 +10689,13 @@ ALTER TABLE tile_intersects_usa_2014 ADD geom geometry;
 
 -- SQL statement 326: Comment tile intersects table >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_table.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. cb_2014_us_county_500k
- *						2: comment. Usual rules for comment text in SQK - single 
+ *						2: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
@@ -10586,7 +10703,7 @@ DECLARE @tableName   sysname  /*
  * Description:			Comment table
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_intersects_usa_2014'
@@ -10599,35 +10716,35 @@ IF EXISTS (
            AND [name]     = N'MS_Description'
 		   AND [minor_id] = 0)
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Tile area id intersects', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Tile area id intersects',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Tile area id intersects', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Tile area id intersects',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014';
 
 
 -- SQL statement 327: Comment tile intersects table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_intersects_usa_2014'
@@ -10641,37 +10758,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'geolevel_id'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'ID for ordering (1=lowest resolution). Up to 99 supported.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'geolevel_id';
 
 
 -- SQL statement 328: Comment tile intersects table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_intersects_usa_2014'
@@ -10685,37 +10802,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Zoom level: 0 to 11. Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at zoomlevel 11', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Zoom level: 0 to 11. Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at zoomlevel 11',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'zoomlevel'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Zoom level: 0 to 11. Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at zoomlevel 11', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Zoom level: 0 to 11. Number of tiles is 2**<zoom level> * 2**<zoom level>; i.e. 1, 2x2, 4x4 ... 2048x2048 at zoomlevel 11',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'zoomlevel';
 
 
 -- SQL statement 329: Comment tile intersects table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_intersects_usa_2014'
@@ -10729,37 +10846,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area ID', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area ID',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'areaid'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Area ID', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Area ID',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'areaid';
 
 
 -- SQL statement 330: Comment tile intersects table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_intersects_usa_2014'
@@ -10773,37 +10890,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'X tile number. From 0 to (2**<zoomlevel>)-1', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'X tile number. From 0 to (2**<zoomlevel>)-1',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'x'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'X tile number. From 0 to (2**<zoomlevel>)-1', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'X tile number. From 0 to (2**<zoomlevel>)-1',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'x';
 
 
 -- SQL statement 331: Comment tile intersects table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_intersects_usa_2014'
@@ -10817,37 +10934,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Y tile number. From 0 to (2**<zoomlevel>)-1', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Y tile number. From 0 to (2**<zoomlevel>)-1',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'y'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Y tile number. From 0 to (2**<zoomlevel>)-1', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Y tile number. From 0 to (2**<zoomlevel>)-1',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'y';
 
 
 -- SQL statement 332: Comment tile intersects table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_intersects_usa_2014'
@@ -10861,37 +10978,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Tile areaid intersect multipolygon in GeoJSON format, optimised for zoomlevel N.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Tile areaid intersect multipolygon in GeoJSON format, optimised for zoomlevel N.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'optimised_geojson'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Tile areaid intersect multipolygon in GeoJSON format, optimised for zoomlevel N.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Tile areaid intersect multipolygon in GeoJSON format, optimised for zoomlevel N.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'optimised_geojson';
 
 
 -- SQL statement 333: Comment tile intersects table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_intersects_usa_2014'
@@ -10905,37 +11022,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Defined as: ST_Within(bbox, geom). Used to exclude any tile bounding completely within the area.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Defined as: ST_Within(bbox, geom). Used to exclude any tile bounding completely within the area.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'within'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Defined as: ST_Within(bbox, geom). Used to exclude any tile bounding completely within the area.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Defined as: ST_Within(bbox, geom). Used to exclude any tile bounding completely within the area.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'within';
 
 
 -- SQL statement 334: Comment tile intersects table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_intersects_usa_2014'
@@ -10949,37 +11066,37 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Bounding box of tile as a polygon.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Bounding box of tile as a polygon.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'bbox'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Bounding box of tile as a polygon.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Bounding box of tile as a polygon.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'bbox';
 
 
 -- SQL statement 335: Comment tile intersects table column >>>
 DECLARE @CurrentUser sysname
-DECLARE @columnName  sysname 
+DECLARE @columnName  sysname
 DECLARE @tableName   sysname  /*
  * SQL statement name: 	comment_column.sql
  * Type:				Microsoft SQL Server T/sql anonymous block
  * Parameters:
  *						1: table; e.g. geolevels_cb_2014_us_county_500k
  *						2: column; e.g. geolevel_name
- *						3: comment. Usual rules for comment text in SQK - single 
+ *						3: comment. Usual rules for comment text in SQK - single
  *									quotes (') need to be double ('')
  *
  * 						SchemaName is set to either @CurrentUser (build) or 'rif_data' for rif40
  * Description:			Comment table column
  * Note:				%% becomes % after substitution
  */
-SELECT @CurrentUser = user_name(); 
+SELECT @CurrentUser = user_name();
 SELECT @tableName  = '@CurrentUser';
 IF (@tableName = '@CurrentUser')
 	SELECT @tableName = @CurrentUser + '.tile_intersects_usa_2014'
@@ -10993,16 +11110,16 @@ IF EXISTS (
            AND [name] = N'MS_Description'
 		   AND [minor_id] = (SELECT [column_id] FROM SYS.COLUMNS WHERE [name] = @columnName AND [object_id] = OBJECT_ID(@tableName)))
     EXECUTE sp_updateextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geometry of area.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geometry of area.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'geom'
 ELSE
 	EXECUTE sp_addextendedproperty
-		@name = N'MS_Description',   
-		@value = N'Geometry of area.', 
-		@level0type = N'Schema', @level0name = @CurrentUser,  
+		@name = N'MS_Description',
+		@value = N'Geometry of area.',
+		@level0type = N'Schema', @level0name = @CurrentUser,
 		@level1type = N'Table', @level1name = 'tile_intersects_usa_2014',
 		@level2type = N'Column', @level2name = 'geom';
 
@@ -11020,27 +11137,27 @@ ELSE
  * Note:				% becomes % after substitution
  */
 WITH a AS (
-	SELECT zoomlevel, x_mintile, x_maxtile, y_mintile, y_maxtile	  
+	SELECT zoomlevel, x_mintile, x_maxtile, y_mintile, y_maxtile
 	  FROM tile_limits_usa_2014
 	 WHERE zoomlevel = 0
 ), x AS (
 	SELECT zoomlevel, z.IntValue AS x_series
 	  FROM a CROSS APPLY peter.generate_series(x_mintile, x_maxtile, 1) z
-), y AS (	 
-	SELECT zoomlevel, z.IntValue AS y_series	
-	  FROM a CROSS APPLY peter.generate_series(y_mintile, y_maxtile, 1) z      
+), y AS (
+	SELECT zoomlevel, z.IntValue AS y_series
+	  FROM a CROSS APPLY peter.generate_series(y_mintile, y_maxtile, 1) z
 ), b AS (
-	SELECT x.zoomlevel, 
-	       x.x_series AS x, 
-	       y.y_series AS y,      
-	       peter.tileMaker_tile2longitude(x.x_series, x.zoomlevel) AS xmin, 
+	SELECT x.zoomlevel,
+	       x.x_series AS x,
+	       y.y_series AS y,
+	       peter.tileMaker_tile2longitude(x.x_series, x.zoomlevel) AS xmin,
 		   peter.tileMaker_tile2latitude(y.y_series, x.zoomlevel) AS ymin,
-		   peter.tileMaker_tile2longitude(x.x_series+1, x.zoomlevel) AS xmax, 
+		   peter.tileMaker_tile2longitude(x.x_series+1, x.zoomlevel) AS xmax,
 		   peter.tileMaker_tile2latitude(y.y_series+1, x.zoomlevel) AS ymax
       FROM x, y
 	 WHERE x.zoomlevel = y.zoomlevel
 ), c AS (
-	SELECT b.zoomlevel, b.x, b.y, 
+	SELECT b.zoomlevel, b.x, b.y,
 		   peter.tileMaker_STMakeEnvelope(b.xmin, b.ymin, b.xmax, b.ymax, 4326) AS bbox,
 		   c.geolevel_id,
 		   c.areaid,
@@ -11050,10 +11167,10 @@ WITH a AS (
 	   AND peter.tileMaker_STMakeEnvelope(b.xmin, b.ymin, b.xmax, b.ymax, 4326).STIntersects(c.geom) = 1 /* intersects */
 ), tile_intersects_temp AS (
 	SELECT c.geolevel_id,
-		   c.zoomlevel, 
+		   c.zoomlevel,
 		   c.areaid,
-		   c.x, 
-		   c.y, 
+		   c.x,
+		   c.y,
 		   c.bbox,
 		   c.geom,
 		   NULL AS optimised_geojson,
@@ -11062,20 +11179,20 @@ WITH a AS (
 )
 INSERT INTO tile_intersects_usa_2014 (
 	geolevel_id,
-	zoomlevel, 
+	zoomlevel,
 	areaid,
-	x, 
-	y, 
+	x,
+	y,
 	bbox,
 	geom,
     optimised_geojson,
 	within
 )
 SELECT geolevel_id,
-	   zoomlevel, 
+	   zoomlevel,
 	   areaid,
-	   x, 
-	   y, 
+	   x,
+	   y,
        bbox,
 	   geom,
        optimised_geojson,
@@ -11102,7 +11219,7 @@ UPDATE STATISTICS tile_intersects_usa_2014;
  *						1: Tile intersects table name; e.g. tile_intersects_cb_2014_us_500k
  *
  * Description:			Select from tile intersects table
- 
+
 geolevel_id zoomlevel   areaid      x           y           within       bbox
 ----------- ----------- ----------- ----------- ----------- ----------- ---------------------------------------------------------
           1           0 US          0           0                     0 POLYGON ((-180 85.0511, -180 -85.0511, 180 -85.0511, 180 85.0511, -180 85.0511))
@@ -11113,18 +11230,18 @@ geolevel_id zoomlevel   areaid      x           y           within       bbox
  * Note:				% becomes % after substitution
  */
 SELECT geolevel_id,
-	   zoomlevel, 
+	   zoomlevel,
 	   areaid,
-	   x, 
-	   y, 
+	   x,
+	   y,
 	   within,
 	   bbox.STAsText() AS bbox
   FROM tile_intersects_usa_2014
  WHERE zoomlevel = 0 AND geolevel_id = 1;
 
-geolevel_id zoomlevel   areaid                                                                                                                                                                                                   x           y           within bbox                                                                                                                                                                                                                                                            
+geolevel_id zoomlevel   areaid                                                                                                                                                                                                   x           y           within bbox
 ----------- ----------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ----------- ----------- ------ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-          1           0 US                                                                                                                                                                                                                 0           0      0 POLYGON ((-180 85.0511, -180 -85.0511, 180 -85.0511, 180 85.0511, -180 85.0511))                                                                                                                                                                                
+          1           0 US                                                                                                                                                                                                                 0           0      0 POLYGON ((-180 85.0511, -180 -85.0511, 180 -85.0511, 180 85.0511, -180 85.0511))
 
 (1 rows affected)
 
@@ -11144,7 +11261,7 @@ geolevel_id zoomlevel   areaid                                                  
  * To performance trace add to script:
  *
  * SET STATISTICS PROFILE ON
- * SET STATISTICS TIME ON 
+ * SET STATISTICS TIME ON
  *
  * You may need to change #temp to temp (i.e. make it a real table to profile it)
  */
@@ -11160,9 +11277,9 @@ DECLARE c1_maxgeolevel_id 	CURSOR FOR
 		SELECT MAX(geolevel_id) AS max_geolevel_id,
 	           MAX(zoomlevel) AS max_zoomlevel
 	      FROM geometry_usa_2014;
-DECLARE c2_areaid_count 	CURSOR FOR	
+DECLARE c2_areaid_count 	CURSOR FOR
 		SELECT areaid_count
-		  FROM geolevels_usa_2014	
+		  FROM geolevels_usa_2014
 		 WHERE geolevel_id = 1;
 --
 DECLARE @max_geolevel_id INTEGER;
@@ -11206,8 +11323,8 @@ BEGIN
 	CLOSE c2_areaid_count;
 	DEALLOCATE c2_areaid_count;
 --
-	IF @areaid_count = 1 	/* 0/0/0 tile only;  */			
-		SET @start_geolevel_id=2;	
+	IF @areaid_count = 1 	/* 0/0/0 tile only;  */
+		SET @start_geolevel_id=2;
 	ELSE
 		SET @start_geolevel_id=1;
 --
@@ -11219,52 +11336,52 @@ BEGIN
 --
 --	SET @max_zoomlevel=7;
 --
-	SET @pstart = GETDATE();	
+	SET @pstart = GETDATE();
 --
 	WHILE @i <= @max_geolevel_id /* FOR i IN start_geolevel_id .. max_geolevel_id LOOP */
 	BEGIN
-		SET @geolevel_id=@i;	
-		SET @j=@start_zoomlevel;	
+		SET @geolevel_id=@i;
+		SET @j=@start_zoomlevel;
 		WHILE @j <= @max_zoomlevel /* FOR j IN 1 .. max_zoomlevel LOOP */
 		BEGIN
 			SET @sstart = GETDATE();
 			SET @lstart = GETDATE();
-			SET @zoomlevel=@j;			
+			SET @zoomlevel=@j;
 --
 			SET @l_use_zoomlevel=@zoomlevel;
-			IF @zoomlevel<6  
+			IF @zoomlevel<6
 				SET @l_use_zoomlevel=6;
---			
+--
 -- Intersector2: tile intersects table INSERT function. Zoomlevels <6 use zoomlevel 6 data
---				
+--
 -- Step 1: Calculate bounding box, parent X/Y min
 --		   This is separate to prevent SQL Server unnesting the cross join because it thinks it is very inefficent
 --		   This could probably be improved with manual statistics for the function, but there is no method for this in SQL Server
---  
+--
 			WITH a	AS (
-				SELECT b.zoomlevel AS zoomlevel, b.x_mintile, b.x_maxtile, b.y_mintile, b.y_maxtile	  
+				SELECT b.zoomlevel AS zoomlevel, b.x_mintile, b.x_maxtile, b.y_mintile, b.y_maxtile
 				  FROM tile_limits_usa_2014 b
 				 WHERE @zoomlevel = b.zoomlevel
 			), x AS (
 				SELECT zoomlevel, z.IntValue AS x_series
 				  FROM a CROSS APPLY peter.generate_series(x_mintile, x_maxtile, 1) z
-			), y AS (	 
-				SELECT zoomlevel, z.IntValue AS y_series	
-				  FROM a CROSS APPLY peter.generate_series(y_mintile, y_maxtile, 1) z       
+			), y AS (
+				SELECT zoomlevel, z.IntValue AS y_series
+				  FROM a CROSS APPLY peter.generate_series(y_mintile, y_maxtile, 1) z
 			), b AS (
-				SELECT x.zoomlevel, 
-					   x.x_series AS x, 
-					   y.y_series AS y,      
-					   peter.tileMaker_tile2longitude(x.x_series, x.zoomlevel) AS xmin, 
+				SELECT x.zoomlevel,
+					   x.x_series AS x,
+					   y.y_series AS y,
+					   peter.tileMaker_tile2longitude(x.x_series, x.zoomlevel) AS xmin,
 					   peter.tileMaker_tile2latitude(y.y_series, x.zoomlevel) AS ymin,
-					   peter.tileMaker_tile2longitude(x.x_series+1, x.zoomlevel) AS xmax, 
+					   peter.tileMaker_tile2longitude(x.x_series+1, x.zoomlevel) AS xmax,
 					   peter.tileMaker_tile2latitude(y.y_series+1, x.zoomlevel) AS ymax
 				  FROM x, y /* Explicit cross join */
 				 WHERE x.zoomlevel = y.zoomlevel
 			) /* Calculate bounding box, parent X/Y min */
-			SELECT b.zoomlevel, 
+			SELECT b.zoomlevel,
 				   b.x,
-				   b.y, 
+				   b.y,
 				   peter.tileMaker_STMakeEnvelope(b.xmin, b.ymin, b.xmax, b.ymax, 4326) AS bbox,
 				   peter.tileMaker_latitude2tile(b.ymin, b.zoomlevel-1) AS parent_ymin,
 				   peter.tileMaker_longitude2tile(b.xmin, b.zoomlevel-1) AS parent_xmin
@@ -11275,42 +11392,42 @@ BEGIN
 			SET @etime = CAST(GETDATE() - @lstart AS TIME);
 			SET @esecs = (DATEPART(MILLISECOND, @etime));
 			SET @esecs = @esecs/10;
-			SET @cesecs1 = CAST((DATEPART(HOUR, @etime) * 3600) + (DATEPART(MINUTE, @etime) * 60) + (DATEPART(SECOND, @etime)) AS VARCHAR(40)) + 
+			SET @cesecs1 = CAST((DATEPART(HOUR, @etime) * 3600) + (DATEPART(MINUTE, @etime) * 60) + (DATEPART(SECOND, @etime)) AS VARCHAR(40)) +
 					'.' + CAST(ROUND(@esecs, 1) AS VARCHAR(40));
 			SET @lstart = GETDATE();
---				
--- Step 2: Join to parent tile from previous geolevel_id; i.e. exclude if not present, intersect by bounding box (this in combination 
---         removes most tiles not containing data efficiently). This was the cause of most performance problems when SQL Server decided to 
+--
+-- Step 2: Join to parent tile from previous geolevel_id; i.e. exclude if not present, intersect by bounding box (this in combination
+--         removes most tiles not containing data efficiently). This was the cause of most performance problems when SQL Server decided to
 --         change this order. The COUNT(*) always returns 1; it is to prevent SQL Server unesting the query!
--- 		   This may cause problems in future if SQL Server becomes intelligent enough to spot this; although hopefully it will by then 
+-- 		   This may cause problems in future if SQL Server becomes intelligent enough to spot this; although hopefully it will by then
 -- 	       spot the STIntersect() is an expensive operation even with indexes
 --
 			WITH d AS ( /* Get parent tiles */
 				SELECT p.x, p.y, p.areaid, COUNT(p.x) AS total
 				  FROM tile_intersects_usa_2014 p /* Parent */
 				 WHERE p.zoomlevel    = @zoomlevel -1 	/* previous geolevel_id: c.zoomlevel -1 */
-				   AND p.geolevel_id  = @geolevel_id 
+				   AND p.geolevel_id  = @geolevel_id
 				 GROUP BY p.x, p.y, p.areaid
-			), e AS (	
+			), e AS (
 				SELECT c.zoomlevel, c.x, c.y, d.areaid, c.bbox
 				  FROM #temp2 c, d
 				 WHERE c.parent_xmin = d.x  			/* Join to parent tile from previous geolevel_id; i.e. exclude if not present */
 				   AND c.parent_ymin = d.y
 			)
-			SELECT e.zoomlevel, e.x, e.y, e.areaid, e.bbox, e2.geom		
+			SELECT e.zoomlevel, e.x, e.y, e.areaid, e.bbox, e2.geom
 			  INTO #temp
 			  FROM e, geometry_usa_2014 e2
 			 WHERE e2.zoomlevel    = @l_use_zoomlevel
 			   AND e2.geolevel_id  = @geolevel_id
 			   AND e2.areaid       = e.areaid
-			   AND e.bbox.STIntersects(e2.bbox) = 1		/* Intersect by bounding box */	
+			   AND e.bbox.STIntersects(e2.bbox) = 1		/* Intersect by bounding box */
 			 ORDER BY e.zoomlevel, e.x, e.y, e.areaid;
 			DROP TABLE #temp2;
 --
 			SET @etime = CAST(GETDATE() - @lstart AS TIME);
 			SET @esecs = (DATEPART(MILLISECOND, @etime));
 			SET @esecs = @esecs/10;
-			SET @cesecs5 = CAST((DATEPART(HOUR, @etime) * 3600) + (DATEPART(MINUTE, @etime) * 60) + (DATEPART(SECOND, @etime)) AS VARCHAR(40)) + 
+			SET @cesecs5 = CAST((DATEPART(HOUR, @etime) * 3600) + (DATEPART(MINUTE, @etime) * 60) + (DATEPART(SECOND, @etime)) AS VARCHAR(40)) +
 					'.' + CAST(ROUND(@esecs, 1) AS VARCHAR(40));
 			SET @lstart = GETDATE();
 --
@@ -11322,29 +11439,29 @@ BEGIN
 			ALTER TABLE #temp ALTER COLUMN areaid INTEGER NOT NULL;
 			ALTER TABLE #temp ADD PRIMARY KEY (x, y, areaid);
 			CREATE SPATIAL INDEX #temp_gix ON #temp (geom)
-				WITH ( BOUNDING_BOX = (xmin=-179.148909, ymin=-14.548699000000001, xmax=179.77847, ymax=71.36516200000001));	
+				WITH ( BOUNDING_BOX = (xmin=-179.148909, ymin=-14.548699000000001, xmax=179.77847, ymax=71.36516200000001));
 			CREATE SPATIAL INDEX #temp_gix2 ON #temp (bbox)
-				WITH ( BOUNDING_BOX = (xmin=-179.148909, ymin=-14.548699000000001, xmax=179.77847, ymax=71.36516200000001));			
+				WITH ( BOUNDING_BOX = (xmin=-179.148909, ymin=-14.548699000000001, xmax=179.77847, ymax=71.36516200000001));
 --
 			SET @etime = CAST(GETDATE() - @lstart AS TIME);
 			SET @esecs = (DATEPART(MILLISECOND, @etime));
 			SET @esecs = @esecs/10;
-			SET @cesecs6 = CAST((DATEPART(HOUR, @etime) * 3600) + (DATEPART(MINUTE, @etime) * 60) + (DATEPART(SECOND, @etime)) AS VARCHAR(40)) + 
+			SET @cesecs6 = CAST((DATEPART(HOUR, @etime) * 3600) + (DATEPART(MINUTE, @etime) * 60) + (DATEPART(SECOND, @etime)) AS VARCHAR(40)) +
 					'.' + CAST(ROUND(@esecs, 1) AS VARCHAR(40));
 			SET @lstart = GETDATE();
 			*/
---		
+--
 -- Step 3: intersects tile bounding box with geometry, exclude any tile bounded completely within the area
 --
 			WITH f AS (
 				SELECT @geolevel_id AS geolevel_id, e.zoomlevel, e.x, e.y, e.bbox, e.areaid, e.geom
-				  FROM #temp e  
-				 WHERE e.bbox.STIntersects(e.geom) = 1 /* intersects tile bounding box with geometry */ 
+				  FROM #temp e
+				 WHERE e.bbox.STIntersects(e.geom) = 1 /* intersects tile bounding box with geometry */
 			)
-			INSERT INTO tile_intersects_usa_2014(geolevel_id, zoomlevel, areaid, x, y, bbox, geom, optimised_geojson, within) 			
-			SELECT f.geolevel_id, f.zoomlevel, f.areaid, f.x, f.y, f.bbox, f.geom, 
+			INSERT INTO tile_intersects_usa_2014(geolevel_id, zoomlevel, areaid, x, y, bbox, geom, optimised_geojson, within)
+			SELECT f.geolevel_id, f.zoomlevel, f.areaid, f.x, f.y, f.bbox, f.geom,
 				   NULL AS optimised_geojson,
-				   1 AS within 
+				   1 AS within
 			  FROM f
 			 WHERE NOT f.bbox.STWithin(f.geom) = 1 /* Exclude any tile bounded completely within the area */
 			 ORDER BY f.geolevel_id, f.zoomlevel, f.areaid, f.x, f.y;
@@ -11353,25 +11470,25 @@ BEGIN
 			SET @etime = CAST(GETDATE() - @lstart AS TIME);
 			SET @esecs = (DATEPART(MILLISECOND, @etime));
 			SET @esecs = @esecs/10;
-			SET @cesecs2 = CAST((DATEPART(HOUR, @etime) * 3600) + (DATEPART(MINUTE, @etime) * 60) + (DATEPART(SECOND, @etime)) AS VARCHAR(40)) + 
+			SET @cesecs2 = CAST((DATEPART(HOUR, @etime) * 3600) + (DATEPART(MINUTE, @etime) * 60) + (DATEPART(SECOND, @etime)) AS VARCHAR(40)) +
 					'.' + CAST(ROUND(@esecs, 1) AS VARCHAR(40));
---						
+--
 			DROP TABLE #temp;
 --
 -- Run 2
 --
-			SET @lstart = GETDATE();	
---			
+			SET @lstart = GETDATE();
+--
 -- Intersector2: tile intersects table INSERT function. Zoomlevels <6 use zoomlevel 6 data
---				Insert tile area id intersections missing where not in the previous layer; 
---				this is usually due to it being simplified out of existance.  
---	
+--				Insert tile area id intersections missing where not in the previous layer;
+--				this is usually due to it being simplified out of existance.
+--
 			WITH a AS (
 				SELECT DISTINCT geolevel_id, areaid
 				  FROM geometry_usa_2014
 				 WHERE geolevel_id = @geolevel_id
 				   AND zoomlevel   = @zoomlevel
-				EXCEPT 
+				EXCEPT
 				SELECT DISTINCT geolevel_id, areaid
 				  FROM tile_intersects_usa_2014 a
 				 WHERE geolevel_id = @geolevel_id
@@ -11384,19 +11501,19 @@ BEGIN
 				   AND a.areaid      = b.areaid
 				   AND NOT b.geom.STIsEmpty() = 1
 			), c1 AS (
-				SELECT @zoomlevel AS zoomlevel, 
-					   b.geolevel_id, 
+				SELECT @zoomlevel AS zoomlevel,
+					   b.geolevel_id,
 					   b.areaid,
 					   peter.tileMaker_latitude2tile(geometry::EnvelopeAggregate(bbox).STPointN(1).STY  /* Ymin */, @zoomlevel) AS y_mintile,
 					   peter.tileMaker_longitude2tile(geometry::EnvelopeAggregate(bbox).STPointN(1).STX /* Xmin */, @zoomlevel) AS x_mintile,
 					   peter.tileMaker_latitude2tile(geometry::EnvelopeAggregate(bbox).STPointN(3).STY  /* Ymax */, @zoomlevel) AS y_maxtile,
 					   peter.tileMaker_longitude2tile(geometry::EnvelopeAggregate(bbox).STPointN(3).STX /* Xmax */, @zoomlevel) AS x_maxtile
 				   FROM b
-				  GROUP BY b.geolevel_id, 
+				  GROUP BY b.geolevel_id,
 					   b.areaid
 			), c AS (
 				SELECT c1.zoomlevel,
-					   c1.geolevel_id, 
+					   c1.geolevel_id,
 					   c1.areaid,
 					   c1.x_mintile,
 					   c1.y_mintile,
@@ -11406,43 +11523,43 @@ BEGIN
 				  FROM c1, b
 				 WHERE c1.areaid = b.areaid
 			), x AS (
-				SELECT c.zoomlevel, 
-					   c.geolevel_id, 
+				SELECT c.zoomlevel,
+					   c.geolevel_id,
 					   c.areaid,
 					   z.IntValue AS x_series
-				  FROM c CROSS APPLY peter.generate_series(x_mintile, x_maxtile, 1) z 
-			), y AS (	 
-				SELECT c.zoomlevel, 
-					   c.geolevel_id, 
+				  FROM c CROSS APPLY peter.generate_series(x_mintile, x_maxtile, 1) z
+			), y AS (
+				SELECT c.zoomlevel,
+					   c.geolevel_id,
 					   c.areaid,
-					   z.IntValue AS y_series	
-				  FROM c CROSS APPLY peter.generate_series(y_mintile, y_maxtile, 1) z 
+					   z.IntValue AS y_series
+				  FROM c CROSS APPLY peter.generate_series(y_mintile, y_maxtile, 1) z
 			), d AS (
-				SELECT x.zoomlevel, 
-					   x.geolevel_id, 
+				SELECT x.zoomlevel,
+					   x.geolevel_id,
 					   x.areaid,
-					   x.x_series AS x, 
-					   y.y_series AS y,      
-					   peter.tileMaker_tile2longitude(x.x_series, x.zoomlevel) AS xmin, 
+					   x.x_series AS x,
+					   y.y_series AS y,
+					   peter.tileMaker_tile2longitude(x.x_series, x.zoomlevel) AS xmin,
 					   peter.tileMaker_tile2latitude(y.y_series, x.zoomlevel) AS ymin,
-					   peter.tileMaker_tile2longitude(x.x_series+1, x.zoomlevel) AS xmax, 
+					   peter.tileMaker_tile2longitude(x.x_series+1, x.zoomlevel) AS xmax,
 					   peter.tileMaker_tile2latitude(y.y_series+1, x.zoomlevel) AS ymax
 				  FROM x, y
-				 WHERE x.zoomlevel   = y.zoomlevel	
+				 WHERE x.zoomlevel   = y.zoomlevel
 				   AND x.geolevel_id = y.geolevel_id
 				   AND x.areaid      = y.areaid
 			), e AS (
-				SELECT d.zoomlevel, 
-					   d.geolevel_id, 
+				SELECT d.zoomlevel,
+					   d.geolevel_id,
 					   d.areaid,
 					   d.x,
-					   d.y, 
+					   d.y,
 					   peter.tileMaker_STMakeEnvelope(d.xmin, d.ymin, d.xmax, d.ymax, 4326) AS bbox
 				  FROM d
 			), f1 AS (
-				SELECT DISTINCT e.zoomlevel, 
-					   e.geolevel_id, 
-					   e.areaid, 
+				SELECT DISTINCT e.zoomlevel,
+					   e.geolevel_id,
+					   e.areaid,
 					   e.x,
 					   e.y
 				  FROM e
@@ -11451,12 +11568,12 @@ BEGIN
 									WHERE c2.geolevel_id = @geolevel_id
 									  AND c2.zoomlevel   = @zoomlevel
 									  AND c2.x           = e.x
-									  AND c2.y           = e.y	
+									  AND c2.y           = e.y
 									  AND c2.areaid      = e.areaid)
 			), f AS (
-				SELECT f1.zoomlevel, 
-					   f1.geolevel_id, 
-					   f1.areaid, 
+				SELECT f1.zoomlevel,
+					   f1.geolevel_id,
+					   f1.areaid,
 					   f1.x,
 					   f1.y,
 					   e.bbox
@@ -11475,30 +11592,30 @@ BEGIN
 				       AND f.bbox.STIntersects(e2.bbox) = 1	/* Intersect by bounding box */
 					   AND f.bbox.STIntersects(e2.geom) = 1 /* intersects: (e.bbox && e.geom) is slower as it generates many more tiles */
 			)
-			INSERT INTO tile_intersects_usa_2014(geolevel_id, zoomlevel, areaid, x, y, bbox, geom, optimised_geojson, within) 
-			SELECT geolevel_id, zoomlevel, areaid, x, y, bbox, geom,	
+			INSERT INTO tile_intersects_usa_2014(geolevel_id, zoomlevel, areaid, x, y, bbox, geom, optimised_geojson, within)
+			SELECT geolevel_id, zoomlevel, areaid, x, y, bbox, geom,
 				   NULL AS optimised_geojson,
 				   g.bbox.STWithin(g.geom) AS within
-			  FROM g 
-			 ORDER BY geolevel_id, zoomlevel, areaid, x, y;	
---			 
-			SET @rowc2 = @@ROWCOUNT;	
---			
+			  FROM g
+			 ORDER BY geolevel_id, zoomlevel, areaid, x, y;
+--
+			SET @rowc2 = @@ROWCOUNT;
+--
 			SET @etime = CAST(GETDATE() - @lstart AS TIME);
 			SET @esecs = (DATEPART(MILLISECOND, @etime));
 			SET @esecs = @esecs/10;
-			SET @cesecs3 = CAST((DATEPART(HOUR, @etime) * 3600) + (DATEPART(MINUTE, @etime) * 60) + (DATEPART(SECOND, @etime)) AS VARCHAR(40)) + 
+			SET @cesecs3 = CAST((DATEPART(HOUR, @etime) * 3600) + (DATEPART(MINUTE, @etime) * 60) + (DATEPART(SECOND, @etime)) AS VARCHAR(40)) +
 					'.' + CAST(ROUND(@esecs, 1) AS VARCHAR(40));
-			SET @lstart = GETDATE();	
+			SET @lstart = GETDATE();
 --
 -- Rebuild tile intersects index
 --
-			ALTER INDEX ALL ON tile_intersects_usa_2014 REORGANIZE; 
---			
+			ALTER INDEX ALL ON tile_intersects_usa_2014 REORGANIZE;
+--
 			SET @etime = CAST(GETDATE() - @lstart AS TIME);
 			SET @esecs = (DATEPART(MILLISECOND, @etime));
 			SET @esecs = @esecs/10;
-			SET @cesecs4 = CAST((DATEPART(HOUR, @etime) * 3600) + (DATEPART(MINUTE, @etime) * 60) + (DATEPART(SECOND, @etime)) AS VARCHAR(40)) + 
+			SET @cesecs4 = CAST((DATEPART(HOUR, @etime) * 3600) + (DATEPART(MINUTE, @etime) * 60) + (DATEPART(SECOND, @etime)) AS VARCHAR(40)) +
 					'.' + CAST(ROUND(@esecs, 1) AS VARCHAR(40));
 --
 -- Calculate overall time since start
@@ -11506,22 +11623,22 @@ BEGIN
 			SET @etime = CAST(GETDATE() - @pstart AS TIME);
 			SET @esecs = (DATEPART(MILLISECOND, @etime));
 			SET @esecs = @esecs/10;
-			SET @cesecs = CAST((DATEPART(HOUR, @etime) * 3600) + (DATEPART(MINUTE, @etime) * 60) + (DATEPART(SECOND, @etime)) AS VARCHAR(40)) + 
+			SET @cesecs = CAST((DATEPART(HOUR, @etime) * 3600) + (DATEPART(MINUTE, @etime) * 60) + (DATEPART(SECOND, @etime)) AS VARCHAR(40)) +
 					'.' + CAST(ROUND(@esecs, 1) AS VARCHAR(40));
---		
+--
 -- Calculate intersects/s for this geolevel/zoomlevel combination
---			
+--
 			SET @etime = CAST(GETDATE() - @sstart AS TIME); -- For all queries in fop loop
 			IF (DATEPART(SECOND, @etime) > 0)
 				SET @isecs=@rowc/((DATEPART(HOUR, @etime) * 3600) + (DATEPART(MINUTE, @etime) * 60) + (DATEPART(SECOND, @etime)));
-			ELSE 
+			ELSE
 				SET @isecs=0;
 			SET @cisecs=CAST(ROUND(@isecs, 1) AS VARCHAR(40))
 --
 -- Processed 57+0 total areaid intersects, 3 tiles for geolevel id 2/3 zoomlevel: 1/11 in 0.7+0.0s+0.3s, 1.9s total; 92.1 intesects/s
 --
 			RAISERROR('Processed %d+%d for geolevel id: %d/%d; zoomlevel: %d/%d; in #temp2: %s, #temp: %s, insert: %s, insert2: %s, re-index: %s, %s total; %s intesects/s)', 10, 1,
-				@rowc, @rowc2, @geolevel_id, @max_geolevel_id, @zoomlevel, @max_zoomlevel, 
+				@rowc, @rowc2, @geolevel_id, @max_geolevel_id, @zoomlevel, @max_zoomlevel,
 				@cesecs1, -- #temp2 create
 				@cesecs5, -- #temp create
 				@cesecs2, -- INSERT into tile intersects table
@@ -11530,11 +11647,11 @@ BEGIN
 				@cesecs, -- Overall running total
 				@cisecs  -- Intersects/sec
 				) WITH NOWAIT;
-			SET @j+=1;	
+			SET @j+=1;
 		END;
-		SET @i+=1;	
+		SET @i+=1;
 	END;
---				
+--
 END;
 
 
@@ -11744,7 +11861,7 @@ INCLUDE ([areaid],[geom]);
  *						1: Tile intersects table name; e.g. tile_intersects_cb_2014_us_500k
  *
  * Description:			Select from tile intersects table
- 
+
 geolevel_id zoomlevel   areas       xmin        ymin        xmax        ymax        possible_tiles tiles       pct_saving
 ----------- ----------- ----------- ----------- ----------- ----------- ----------- -------------- ----------- ----------
           1           0           1           0           0           0           0              1           1         .0
@@ -11771,10 +11888,10 @@ geolevel_id zoomlevel   areas       xmin        ymin        xmax        ymax    
 
  * Note:				% becomes % after substitution
  */
-SELECT geolevel_id, zoomlevel, 
+SELECT geolevel_id, zoomlevel,
        COUNT(DISTINCT(areaid)) AS areas,
-       MIN(x) AS xmin, MIN(y) AS ymin, 
-       MAX(x) AS xmax, MAX(y) AS ymax, 
+       MIN(x) AS xmin, MIN(y) AS ymin,
+       MAX(x) AS xmax, MAX(y) AS ymax,
 	   (MAX(x)-MIN(x)+1)*(MAX(y)-MIN(y)+1) AS possible_tiles,
        COUNT(DISTINCT(CAST(x AS VARCHAR) + CAST(y AS VARCHAR))) AS tiles,
 	   CAST(ROUND((CAST( (((MAX(x)-MIN(x)+1)*(MAX(y)-MIN(y)+1)) /* possible_tiles */ - COUNT(DISTINCT(CAST(x AS VARCHAR) + CAST(y AS VARCHAR)))) AS NUMERIC)/
@@ -11951,7 +12068,7 @@ DECLARE c1 CURSOR FOR
 		   CASE WHEN a.area_km2 > 0 THEN 100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2)
 				WHEN a.area_km2 = a.area_km2_calc THEN 0
 				ELSE NULL
-		   END AS pct_km2_diff 
+		   END AS pct_km2_diff
 	  FROM a
 	), c AS (
 		SELECT COUNT(areaname) AS total_areas
@@ -11965,7 +12082,7 @@ DECLARE c1 CURSOR FOR
 		SELECT COUNT(areaname) AS total_areas_in_error
 		  FROM d
 	)
-	SELECT d.areaname, d.area_km2, d.area_km2_calc, d.pct_km2_diff, c.total_areas AS total_areas, e.total_areas_in_error AS total_areas_in_error, 
+	SELECT d.areaname, d.area_km2, d.area_km2_calc, d.pct_km2_diff, c.total_areas AS total_areas, e.total_areas_in_error AS total_areas_in_error,
 		   ROUND((100*CAST(e.total_areas_in_error AS NUMERIC)/CAST(c.total_areas AS NUMERIC)), 2) AS pct_in_error
 	  FROM d, c, e;
 DECLARE @areaname AS VARCHAR(30);
@@ -11982,7 +12099,7 @@ FETCH NEXT FROM c1 INTO @areaname, @area_km2, @area_km2_calc, @pct_km2_diff, @to
 WHILE @@FETCH_STATUS = 0
 BEGIN
 		SET @nrows+=1;
-		IF @nrows = 1 PRINT 'WARNING ' + CAST(@total_areas_in_error AS VARCHAR) + ' areas in error of ' + CAST(@total_areas AS VARCHAR) + 
+		IF @nrows = 1 PRINT 'WARNING ' + CAST(@total_areas_in_error AS VARCHAR) + ' areas in error of ' + CAST(@total_areas AS VARCHAR) +
 			', ' + CAST(@pct_in_error AS VARCHAR) + 'pct';
 		PRINT 'WARNING Area: ' + @areaname + ', area km2: ' + CAST(@area_km2 AS VARCHAR) +  + ', calc: ' +
 			CAST(@area_km2_calc AS VARCHAR) + ', diff: ' + CAST(@pct_km2_diff AS VARCHAR);
@@ -12025,7 +12142,7 @@ DECLARE c1 CURSOR FOR
 		   CASE WHEN a.area_km2 > 0 THEN 100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2)
 				WHEN a.area_km2 = a.area_km2_calc THEN 0
 				ELSE NULL
-		   END AS pct_km2_diff 
+		   END AS pct_km2_diff
 	  FROM a
 	), c AS (
 		SELECT COUNT(areaname) AS total_areas
@@ -12039,7 +12156,7 @@ DECLARE c1 CURSOR FOR
 		SELECT COUNT(areaname) AS total_areas_in_error
 		  FROM d
 	)
-	SELECT d.areaname, d.area_km2, d.area_km2_calc, d.pct_km2_diff, c.total_areas AS total_areas, e.total_areas_in_error AS total_areas_in_error, 
+	SELECT d.areaname, d.area_km2, d.area_km2_calc, d.pct_km2_diff, c.total_areas AS total_areas, e.total_areas_in_error AS total_areas_in_error,
 		   ROUND((100*CAST(e.total_areas_in_error AS NUMERIC)/CAST(c.total_areas AS NUMERIC)), 2) AS pct_in_error
 	  FROM d, c, e;
 DECLARE @areaname AS VARCHAR(30);
@@ -12056,7 +12173,7 @@ FETCH NEXT FROM c1 INTO @areaname, @area_km2, @area_km2_calc, @pct_km2_diff, @to
 WHILE @@FETCH_STATUS = 0
 BEGIN
 		SET @nrows+=1;
-		IF @nrows = 1 PRINT 'WARNING ' + CAST(@total_areas_in_error AS VARCHAR) + ' areas in error of ' + CAST(@total_areas AS VARCHAR) + 
+		IF @nrows = 1 PRINT 'WARNING ' + CAST(@total_areas_in_error AS VARCHAR) + ' areas in error of ' + CAST(@total_areas AS VARCHAR) +
 			', ' + CAST(@pct_in_error AS VARCHAR) + 'pct';
 		PRINT 'WARNING Area: ' + @areaname + ', area km2: ' + CAST(@area_km2 AS VARCHAR) +  + ', calc: ' +
 			CAST(@area_km2_calc AS VARCHAR) + ', diff: ' + CAST(@pct_km2_diff AS VARCHAR);
@@ -12099,7 +12216,7 @@ DECLARE c1 CURSOR FOR
 		   CASE WHEN a.area_km2 > 0 THEN 100*(ABS(a.area_km2 - a.area_km2_calc)/area_km2)
 				WHEN a.area_km2 = a.area_km2_calc THEN 0
 				ELSE NULL
-		   END AS pct_km2_diff 
+		   END AS pct_km2_diff
 	  FROM a
 	), c AS (
 		SELECT COUNT(areaname) AS total_areas
@@ -12113,7 +12230,7 @@ DECLARE c1 CURSOR FOR
 		SELECT COUNT(areaname) AS total_areas_in_error
 		  FROM d
 	)
-	SELECT d.areaname, d.area_km2, d.area_km2_calc, d.pct_km2_diff, c.total_areas AS total_areas, e.total_areas_in_error AS total_areas_in_error, 
+	SELECT d.areaname, d.area_km2, d.area_km2_calc, d.pct_km2_diff, c.total_areas AS total_areas, e.total_areas_in_error AS total_areas_in_error,
 		   ROUND((100*CAST(e.total_areas_in_error AS NUMERIC)/CAST(c.total_areas AS NUMERIC)), 2) AS pct_in_error
 	  FROM d, c, e;
 DECLARE @areaname AS VARCHAR(30);
@@ -12130,7 +12247,7 @@ FETCH NEXT FROM c1 INTO @areaname, @area_km2, @area_km2_calc, @pct_km2_diff, @to
 WHILE @@FETCH_STATUS = 0
 BEGIN
 		SET @nrows+=1;
-		IF @nrows = 1 PRINT 'WARNING ' + CAST(@total_areas_in_error AS VARCHAR) + ' areas in error of ' + CAST(@total_areas AS VARCHAR) + 
+		IF @nrows = 1 PRINT 'WARNING ' + CAST(@total_areas_in_error AS VARCHAR) + ' areas in error of ' + CAST(@total_areas AS VARCHAR) +
 			', ' + CAST(@pct_in_error AS VARCHAR) + 'pct';
 		PRINT 'WARNING Area: ' + @areaname + ', area km2: ' + CAST(@area_km2 AS VARCHAR) +  + ', calc: ' +
 			CAST(@area_km2_calc AS VARCHAR) + ', diff: ' + CAST(@pct_km2_diff AS VARCHAR);
