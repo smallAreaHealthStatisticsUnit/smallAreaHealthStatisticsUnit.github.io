@@ -310,7 +310,7 @@ This section is a series of links to developer documentation
 * [RIF Re-development](/The-RIF-re-development)
 * [RIF design documentation on Sourceforge](http://rapidinquiryfacility.sourceforge.net/index.html)
 * [Database Design](/Database-design)
-* [Database test harness](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/tree/master/rifDatabase/TestHarness/db_test_harness)
+* [Database test harness](/rifDatabase/TestHarness/db_test_harness)
 * [General RIF Installation Notes for the Middleware and the Data Loader Tool](/General-RIF-Installation-Notes-for-the-Middleware-and-the-Data-Loader-Tool)
 * [Kevs Suggested Road Map with the Middleware](/Kevs-Suggested-Road-Map-with-the-Middleware)
 * [Middleware Code Road Map](/Kev-Code-Road-Map)
