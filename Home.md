@@ -240,37 +240,37 @@ This section is a series of links to howto guides on the Postgres databas
 
 ### 6.1.1 Building the RIF Postgres database
 
-See: [Building the RIF Postgres database from github](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifDatabase/Postgres/docs/BUILD.md)
+See: [Building the RIF Postgres database from github](/rifDatabase/Postgres/docs/BUILD.md)
 
 Port specific install notes:
 
-  * [Windows install notes](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifDatabase/Postgres/docs/windows.md)
-  * [Linux install from repository notes](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifDatabase/Postgres/docs/linux_repo.md)
-  * [MACoS install from repository notes](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifDatabase/Postgres/docs/macos_repo.md)
-  * [Linux install from source notes](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifDatabase/Postgres/docs/linux_source.md)
+  * [Windows install notes](/rifDatabase/Postgres/docs/windows.md)
+  * [Linux install from repository notes](/rifDatabase/Postgres/docs/linux_repo.md)
+  * [MACoS install from repository notes](/rifDatabase/Postgres/docs/macos_repo.md)
+  * [Linux install from source notes](/rifDatabase/Postgres/docs/linux_source.md)
 
 Detailed build instructions for Postgres:
 
-  * [Postgres build process detail](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifDatabase/Postgres/README.md)
+  * [Postgres build process detail](/rifDatabase/Postgres/README.md)
 
 
 ### 6.1.2 Installing the RIF Postgres Database
 
-See: [Installing a Windows RIF database from a SAHSU supplied pg_dump (Postgres database dump) file](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifDatabase/Postgres/production/windows_install_from_pg_dump.md)
+See: [Installing a Windows RIF database from a SAHSU supplied pg_dump (Postgres database dump) file](/rifDatabase/Postgres/production/windows_install_from_pg_dump.md)
 
 ## 6.2 Microsoft SQL Server
 
 ### 6.2.1 Building the RIF SQL Server Database
 
-See: [Building the RIF SQL Server database from github](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifDatabase/SQLserver/installation/README.md)
+See: [Building the RIF SQL Server database from github](/rifDatabase/SQLserver/installation/README.md)
 
 ### 6.2.2 Installing the RIF SQL Server Database
 
-See: [Installing the RIF SQL Server database from a SAHSU supplied database export](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifDatabase/SQLserver/production/INSTALL.md)
+See: [Installing the RIF SQL Server database from a SAHSU supplied database export](/rifDatabase/SQLserver/production/INSTALL.md)
 
 ## 6.3 Web Services
 
-See: [Building RIF web services from github and installing securely in Tomcat](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifWebApplication/Readme.md)
+See: [Building RIF web services from github and installing securely in Tomcat](/rifWebApplication/Readme.md)
 
 ### 6.3.1 Taxonomy Services
 
@@ -280,24 +280,24 @@ See: [RIF Taxonomy Services](/Taxonomy-Services)
 
 ### 6.4.1 Manual Data Loading
 
-See: [Manual data loading](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifDatabase/DataLoaderData/DataLoading.md)
+See: [Manual data loading](/rifDatabase/DataLoaderData/DataLoading.md)
 
 ### 6.4.2 Using the Data Loading Tool
 
-See: [RIF Data Loader Manual](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/Documentation/RIF%20Data%20Loader%20Manual.pdf)
+See: [RIF Data Loader Manual](/Documentation/RIF%20Data%20Loader%20Manual.pdf)
 
 # 7. Manuals
 
 Currently there are eight manuals:
 
-- [RIF 4.0 Manual](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/Documentation/RIF%20v4%200%20Manual.pdf)
-- [RIF 4.0 Data Loader Manual](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/Documentation/RIF%20Data%20Loader%20Manual.pdf)
-- [RIF Web Application and Middleware Installation](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifWebApplication/Readme.md)
-- [Windows Postgres Install using pg_dump and scripts](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifDatabase/Postgres/production/windows_install_from_pg_dump.md)
-- [SQL Server Production Database Installation](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifDatabase/SQLserver/production/INSTALL.md)
-- [Manual data loading](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifDatabase/DataLoaderData/DataLoading.md)
-- [Tile maker Manual](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifNodeServices/tileMaker.md)
-- [Database Management Manual](https://github.com/smallAreaHealthStatisticsUnit/rapidInquiryFacility/blob/master/rifDatabase/databaseManagementManual.md)
+- [RIF 4.0 Manual](/Documentation/RIF%20v4%200%20Manual.pdf)
+- [RIF 4.0 Data Loader Manual](/Documentation/RIF%20Data%20Loader%20Manual.pdf)
+- [RIF Web Application and Middleware Installation](/rifWebApplication/Readme.md)
+- [Windows Postgres Install using pg_dump and scripts](/rifDatabase/Postgres/production/windows_install_from_pg_dump.md)
+- [SQL Server Production Database Installation](/rifDatabase/SQLserver/production/INSTALL.md)
+- [Manual data loading](/rifDatabase/DataLoaderData/DataLoading.md)
+- [Tile maker Manual](/rifNodeServices/tileMaker.md)
+- [Database Management Manual](/rifDatabase/databaseManagementManual.md)
 
 # 8. For Developers
 
