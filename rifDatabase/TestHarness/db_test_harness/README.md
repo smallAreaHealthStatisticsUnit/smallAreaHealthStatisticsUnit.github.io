@@ -309,6 +309,8 @@ These are all Postgres examples.
 a) SELECT statements:
 
 Actual test INSERT code:
+
+{% raw %}
 ```
 	PERFORM rif40_sql_pkg._rif40_sql_test_register(
                  'SELECT level1, level2, level3, level4 FROM sahsuland_geography WHERE level3 IN (''01.015.016900'', ''01.015.016200'') ORDER BY level4',
@@ -358,8 +360,10 @@ Actual test INSERT code:
    <level4>01.015.016900.3</level4>
  </row>'::XML);
 ```
-
+{% endraw %}
 Example runtime code:
+
+{% raw %}
 ```
 IF NOT (rif40_sql_pkg.rif40_sql_test(
 	'SELECT level1, level2, level3, level4 FROM sahsuland_geography WHERE level3 IN (''01.015.016900'', ''01.015.016200'') ORDER BY level4',
@@ -375,6 +379,7 @@ IF NOT (rif40_sql_pkg.rif40_sql_test(
 	errors:=errors+1;
 END IF;
 ```
+{% endraw %}
 
 Example output:
 ```
@@ -403,6 +408,7 @@ ii)  Add ORDER BY clause, expand * (This becomes the test case SQL)
 iii) Convert results to array form (Cast to text, string )
 	[the function rif40_sql_pkg._rif40_test_sql_template() will automate this]
 
+{% raw %}
 ```
 	SELECT ''''||
 		   REPLACE(ARRAY_AGG(
@@ -422,9 +428,11 @@ iii) Convert results to array form (Cast to text, string )
 	 }'::Text[][]
 	(1 row)
 ```
+{% endraw %}
 
 Example call:
 
+{% raw %}
 ```
 	PERFORM rif40_sql_pkg.rif40_sql_test(
 		'SELECT level1, level2, level3, level4 FROM sahsuland_geography WHERE level3 IN (''01.015.016900'', ''01.015.016200'') ORDER BY level4',
@@ -437,9 +445,11 @@ Example call:
 		,{01,01.015,01.015.016900,01.015.016900.3}
 		}'::Text[][]);
 ```
+{% endraw %}
 
 Example expand of array to setof record
 
+{% raw %}
 ```
 		WITH a AS (
 			SELECT '{{01,01.015,01.015.016200,01.015.016200.2}
@@ -488,6 +498,7 @@ Example expand of array to setof record
 	SELECT rif40_sql_pkg._rif40_reduce_dim(a.res)
 	  FROM a;
 ```
+{% endraw %}
 
 b) TRIGGERS
 
@@ -648,6 +659,7 @@ Options:
 
 ## Example: rif40_create_disease_mapping_example
 
+{% raw %}
 ``` node
 C:\Users\pch\Documents\GitHub\rapidInquiryFacility\rifDatabase\TestHarness\db_test_harness>make rif40_create_disease_mapping_example
 Debug level set to default: 1
@@ -954,6 +966,7 @@ PASSED expected result = actual (true)
 *
 *****************************************************************************
 ```
+{% endraw %}
 
 Peter Hambly, 2nd September 2015
 
