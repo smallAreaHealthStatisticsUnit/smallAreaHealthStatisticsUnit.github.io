@@ -2,8 +2,8 @@
 
 Installs:
 
-* pg 
-* pg-native 
+* pg
+* pg-native
 * topojson
 
 Uses pg_native (i.e. .psqlrc) to connect to database. Finally tests topojon.
@@ -90,6 +90,6 @@ node_modules\topojson\bin\topojson --version
 1.6.18
 node_modules\topojson\bin\topojson -q 1e6 -o test_6_geojson_test_01.json ../psql_scripts/test_scripts/data/test_6_geojson_test_01.json
 bounds: -6.68852598 54.6456466 -6.32507059 55.01219818 (spherical)
-pre-quantization: 0.0404m (3.63e-7°) 0.0408m (3.67e-7°)
+pre-quantization: 0.0404m (3.63e-7ï¿½) 0.0408m (3.67e-7ï¿½)
 
 ```
