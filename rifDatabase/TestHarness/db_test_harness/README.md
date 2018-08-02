@@ -1,6 +1,6 @@
 # README for RIF node.js database test harness
 
-* node.js is required to build to geoJSON to topoJSON converter by Mike Bostock 
+* node.js is required to build to geoJSON to topoJSON converter by Mike Bostock
   at: https://github.com/mbostock/topojson/wiki/Installation
 * node.js is available from: http://nodejs.org/
 
@@ -20,16 +20,16 @@ Then install topojson through npm: *npm install topojson*
 ```topojson
 C:\Users\pch\AppData\Roaming\npm\topojson.cmd -q 1e6 -o test_6_geojson_test_01.json ..\psql_scripts\test_scripts\data\test_6_geojson_test_01.json
 bounds: -6.68852598 54.6456466 -6.32507059 55.01219818 (spherical)
-pre-quantization: 0.0404m (3.63e-7°) 0.0408m (3.67e-7°)
+pre-quantization: 0.0404m (3.63e-7ï¿½) 0.0408m (3.67e-7ï¿½)
 topology: 160 arcs, 3502 points
 prune: retained 160 / 160 arcs (100%)
 ```
 
 ### Install Postgres connectors pg and pg-native
 
-Checks: 
+Checks:
 
-* Postgres must be installed. 
+* Postgres must be installed.
 * Type: pg_config to test if Postgres extensibility is installed, pg-native requires MS Visual Studio.
 * check you can connect to psql without a password (i.e. using pgass/Kerberos). pg-native must be able to connect to the database to install!
 
@@ -97,7 +97,7 @@ The Makefile will building the requiored Node.js modules
 
 * *all*: Build modules, run the complete database test harness
 * *modules*: Build required Node.js modules using *npm install --save* to update dependencies in *package.json*
-* *update*: Update required Node.js modules using *npm update --save* to update dependencies in *package.json* 
+* *update*: Update required Node.js modules using *npm update --save* to update dependencies in *package.json*
 * *db_test_harness*: Run the complete database test harness (same as target test)
 * *rif40_create_disease_mapping_example*: Run *rif40_create_disease_mapping_example* test (standard test 1)
 * *test*: Run the complete database test harness
@@ -111,8 +111,8 @@ The dsatabase layer test harness is driven by two tables:
 * RIF40_TEST_RUNS: Test runs
 * RIF40_TEST_HARNESS: Tests
 
-The *rif40_test_harness.parent_test_id* column is used to create a series of chained tests within a single transaction. 
-Tests cannot be shared by multiple transactions; this would require the *rif40_test_harness* to be split into a further 
+The *rif40_test_harness.parent_test_id* column is used to create a series of chained tests within a single transaction.
+Tests cannot be shared by multiple transactions; this would require the *rif40_test_harness* to be split into a further
 *rif40_test_harness_runs*.
 
 ## RIF40_TEST_HARNESS Table
@@ -149,7 +149,7 @@ Referenced by:
 * TABLE "rif40_test_harness" CONSTRAINT "rif40_test_harness_parent_test_id_fk" FOREIGN KEY (parent_test_id) REFERENCES rif40_test_harness( test_id)
 
 ## RIF40_TEST_RUNS Table
-Column | Type | Modifiers | Description 
+Column | Type | Modifiers | Description
 -------|------|-----------|------------
 test_run_id | integer | not null default (nextval( 'rif40_test_run_id_seq'::regclass ))::integer | Unique investigation index: test_run_id. Created by SEQUENCE rif40_test_run_id_seq
 test_run_title | character varying | not null | Test run title
@@ -161,7 +161,7 @@ number_passed | integer | not null default 0 | Number of tests passed
 number_failed | integer | not null default 0 | Number of tests failed
 number_test_cases_registered | integer | not null default 0 | Number of test cases registered [OBSOLETE]
 number_messages_registered | integer | not null default 0 | Number of error and informational messages registered
- 
+
 Indexes:
 * "rif40_test_runs_pk" PRIMARY KEY, btree (test_run_id)
 
@@ -172,48 +172,48 @@ Referenced by:
 
 ### Function: rif40_sql_pkg.rif40_sql_test()
 
-Parameters:	
+Parameters:
 
-* SQL test (SELECT or INSERT/UPDATE/DELETE with RETURNING clause) statement, 
-* Test case title, 
+* SQL test (SELECT or INSERT/UPDATE/DELETE with RETURNING clause) statement,
+* Test case title,
 * Results 3d text array,
 * Results as XML,
-* [negative] error SQLSTATE expected [as part of an exception]; the first negative 
-  number in the message is assumed to be the number; 
-  NULL means it is expected to NOT raise an exception, 
+* [negative] error SQLSTATE expected [as part of an exception]; the first negative
+  number in the message is assumed to be the number;
+  NULL means it is expected to NOT raise an exception,
 * Raise exception on failure (true/false),
 * Test id,
 * Array of Postgres functions for test harness to enable debug on,
-* Expected result (true/false); pass is true 
+* Expected result (true/false); pass is true
 
-Returns:	
+Returns:
 
 Pass (true)/Fail (false) unless raise_exception_on_failure is TRUE
 
-Description:	
+Description:
 
-Calls _rif40_sql_test() to log and execute dynamic SQL SELECT statement 
+Calls _rif40_sql_test() to log and execute dynamic SQL SELECT statement
 or INSERT/UPDATE/DELETE with RETURNING clause
 
 Checks expected results against actual; pass if they match, fail if they do not.
-			
+
 Exception behaviour controlled by _rif40_sql_test()
-			
+
 ### Function: rif40_sql_pkg._rif40_sql_test()
 
-Parameters:	
+Parameters:
 
-* SQL test (SELECT or INSERT/UPDATE/DELETE with RETURNING clause) statement, 
+* SQL test (SELECT or INSERT/UPDATE/DELETE with RETURNING clause) statement,
 * test case title,
 * Results 3d text array,
 * Results as XML,
-* [negative] error SQLSTATE expected [as part of an exception]; the first 
-  negative number in the message is assumed to be the number; 
+* [negative] error SQLSTATE expected [as part of an exception]; the first
+  negative number in the message is assumed to be the number;
   NULL means it is expected to NOT raise an exception, raise exception on failure,
 * Test id,
 * Array of Postgres functions for test harness to enable debug on [default NULL]
 
-Returns:	
+Returns:
 
 Pass (true)/Fail (false) unless raise_exception_on_failure is TRUE.
 Note that this is the result of the test and is not influenced by the expected result:
@@ -223,8 +223,8 @@ Note that this is the result of the test and is not influenced by the expected r
   * Exception as expected
 
 * Everything else is a fail.
-			
-Description:	
+
+Description:
 
 Log and execute dynamic SQL SELECT statement or INSERT/UPDATE/DELETE with RETURNING clause.
 Used to check test SQL statements and triggers
@@ -234,56 +234,56 @@ Used to check test SQL statements and triggers
 The test harness runs with two connections with independent transactions:
 
 * Connection 1: query up the test list; updates list with results, creates run summary.
-* Connection 2: runs each tests, or set of linked tests as a single transaction and rolls 
+* Connection 2: runs each tests, or set of linked tests as a single transaction and rolls
   back the transaction at the end. Does NOT effect the database.
 
 ## Linked Tests, Inheritance
 
-The *rif40_test_harness.parent_test_id* column is used to create a series of chained tests within a single transaction. 
-Tests cannot be shared by multiple transactions; this would require the *rif40_test_harness* to be split into a further 
+The *rif40_test_harness.parent_test_id* column is used to create a series of chained tests within a single transaction.
+Tests cannot be shared by multiple transactions; this would require the *rif40_test_harness* to be split into a further
 *rif40_test_harness_runs*.
 
 Inheritance is therefore not permitted.
 
 ## Use of Async
 
-Node.js is highly asynchronous; as is the Postgres driver (pg). Executing SQL statements results in the 
+Node.js is highly asynchronous; as is the Postgres driver (pg). Executing SQL statements results in the
 statement becoming queued up and not necessarily running in the same order as submitted to the queue. For loops
 have the same effect. This obviously is not good for tranactionaal control. Originally the SQL statements were chained
-using the the *cursor.on('end', function(result) {}* functionality; this results in a recursive large stack that grows linearly 
+using the the *cursor.on('end', function(result) {}* functionality; this results in a recursive large stack that grows linearly
 per test. To avoid stack issues a Mutux was used so that the for loop could execute in a synchronous manner:
 
 ```
 //
 // This is no longer recursive, replaced with a for loop and a Mutex lock
-//						
+//
 
 var k = 1;
-for (; k <= row_count; k++) { 	
+for (; k <= row_count; k++) {
 	(function(p_k) {
-		process.nextTick(function() {						
+		process.nextTick(function() {
 			try {
 				if (p_k > row_count) {
-					console.error('1: run_test_harness_tests() p_k (' + p_k + ') > row_count (' + row_count + ')');				
+					console.error('1: run_test_harness_tests() p_k (' + p_k + ') > row_count (' + row_count + ')');
 					process.exit(1);
 				}
 				var p_mutex_id;
-				var mutex_name = 'db_test_harness.js-test';								
+				var mutex_name = 'db_test_harness.js-test';
 				p_mutexjs.lock(mutex_name, function(id) {
 					p_mutex_id=id;
-					rif40_sql_test(p_conString, p_mutexjs, p_client1, p_client2, p_k, p_tests, 
+					rif40_sql_test(p_conString, p_mutexjs, p_client1, p_client2, p_k, p_tests,
 						p_passed_or_failed, p_failed_flag, p_rif40_test_harness, start_time, p_mutex_id,
-						p_rif40_test_harness_results); 
+						p_rif40_test_harness_results);
 				});
 			}
 			catch(err) {
-				console.error('1: _rif40_sql_test_end() Could not acquire Mutex: ' + mutex_name, err);				
+				console.error('1: _rif40_sql_test_end() Could not acquire Mutex: ' + mutex_name, err);
 				process.exit(1);
-			}					
-		});	
-	})(k);							
-}	
-``` 
+			}
+		});
+	})(k);
+}
+```
 Note:
 
 * Use of process.nextTick() to slow big loops and reduce stack stress
@@ -297,11 +297,11 @@ The following are issues with code portability to Microsoft SQL Server:
 * Use of unnest() and array type functionality in the standard SAHSULAND test exmaple
 * No support for SQL server debugging functions
 * Use of RETURNING in _end_test_harness() INSERT INTO rif40_tests_runs SQL.
-* Potential fix (use of RETURNING) to rif40_sql_pkg._rif40_sql_test() so the SQL runs once (i.e. use capture the results). This avoids issues with functions 
+* Potential fix (use of RETURNING) to rif40_sql_pkg._rif40_sql_test() so the SQL runs once (i.e. use capture the results). This avoids issues with functions
   (e.g. rif40_run)_study() that errors if run more than once.
-* Node.js drivers (Azure/Tedious) and Postgres have differing interface. There is no common DB abstraction 
+* Node.js drivers (Azure/Tedious) and Postgres have differing interface. There is no common DB abstraction
   (apart from any-db for Postgres, MySQL and SQLLite3) as in Perl, PGP etc.
-  
+
 ## Test Examples
 
 These are all Postgres examples.
@@ -312,7 +312,7 @@ Actual test INSERT code:
 ```
 	PERFORM rif40_sql_pkg._rif40_sql_test_register(
                  'SELECT level1, level2, level3, level4 FROM sahsuland_geography WHERE level3 IN (''01.015.016900'', ''01.015.016200'') ORDER BY level4',
-				 'test_8_triggers.sql',	
+				 'test_8_triggers.sql',
                  'T8--07: test_8_triggers.sql: Display SAHSULAND hierarchy for level 3: 01.015.016900, 01.015.016200',
  '{{01,01.015,01.015.016200,01.015.016200.2}
  ,{01,01.015,01.015.016200,01.015.016200.3}
@@ -360,20 +360,20 @@ Actual test INSERT code:
 ```
 
 Example runtime code:
-```			
+```
 IF NOT (rif40_sql_pkg.rif40_sql_test(
 	'SELECT level1, level2, level3, level4 FROM sahsuland_geography WHERE level3 IN (''01.015.016900'', ''01.015.016200'') ORDER BY level4',
 	'Display SAHSULAND hierarchy for level 3: 01.015.016900, 01.015.016200',
 	'{{01,01.015,01.015.016200,01.015.016200.2}
-	,{01,01.015,01.015.016200,01.015.016200.3} 
-	,{01,01.015,01.015.016200,01.015.016200.4} 
-	,{01,01.015,01.015.016900,01.015.016900.1} 
-	,{01,01.015,01.015.016900,01.015.016900.2} 
-	,{01,01.015,01.015.016900,01.015.016900.3} 
+	,{01,01.015,01.015.016200,01.015.016200.3}
+	,{01,01.015,01.015.016200,01.015.016200.4}
+	,{01,01.015,01.015.016900,01.015.016900.1}
+	,{01,01.015,01.015.016900,01.015.016900.2}
+	,{01,01.015,01.015.016900,01.015.016900.3}
 	}'::Text[][]
 	/* Use defaults */)) THEN
 	errors:=errors+1;
-END IF;				
+END IF;
 ```
 
 Example output:
@@ -395,19 +395,19 @@ psql:test_scripts/test_8_triggers.sql:276: INFO:  rif40_sql_test(): [71152] PASS
 psql:test_scripts/test_8_triggers.sql:276: INFO:  rif40_sql_test(): [71155] PASSED: no missing rows for test: Display SAHSULAND hierarchy for level 3: 01.015.016900, 01.015.016200
 psql:test_scripts/test_8_triggers.sql:276: INFO:  rif40_sql_test(): [71158] PASSED: Test case: Display SAHSULAND hierarchy for level 3: 01.015.016900, 01.015.016200 no exceptions, no errors, no missing or extra data
 ```
-				
+
 i)   Original SQL statement:
 	SELECT * FROM sahsuland_geography WHERE level3 IN ('01.015.016900', '01.015.016200');
 ii)  Add ORDER BY clause, expand * (This becomes the test case SQL)
-	SELECT level1, level2, level3, level4 FROM sahsuland_geography WHERE level3 IN ('01.015.016900', '01.015.016200') ORDER BY level4;			   
-iii) Convert results to array form (Cast to text, string ) 
+	SELECT level1, level2, level3, level4 FROM sahsuland_geography WHERE level3 IN ('01.015.016900', '01.015.016200') ORDER BY level4;
+iii) Convert results to array form (Cast to text, string )
 	[the function rif40_sql_pkg._rif40_test_sql_template() will automate this]
 
 ```
 	SELECT ''''||
 		   REPLACE(ARRAY_AGG(
-				(ARRAY[level1::Text, level2::Text, level3::Text, level4::Text]::Text||E'\n')::Text ORDER BY level4)::Text, 
-				'"'::Text, ''::Text)||'''::Text[][]' AS res 
+				(ARRAY[level1::Text, level2::Text, level3::Text, level4::Text]::Text||E'\n')::Text ORDER BY level4)::Text,
+				'"'::Text, ''::Text)||'''::Text[][]' AS res
 	  FROM sahsuland_geography
 	 WHERE level3 IN ('01.015.016900', '01.015.016200');
 
@@ -422,90 +422,90 @@ iii) Convert results to array form (Cast to text, string )
 	 }'::Text[][]
 	(1 row)
 ```
-	
+
 Example call:
-	
-```	
+
+```
 	PERFORM rif40_sql_pkg.rif40_sql_test(
 		'SELECT level1, level2, level3, level4 FROM sahsuland_geography WHERE level3 IN (''01.015.016900'', ''01.015.016200'') ORDER BY level4',
 		'Display SAHSULAND hierarchy for level 3: 01.015.016900, 01.015.016200',
 		'{{01,01.015,01.015.016200,01.015.016200.2}
-		,{01,01.015,01.015.016200,01.015.016200.3} 
-		,{01,01.015,01.015.016200,01.015.016200.4} 
-		,{01,01.015,01.015.016900,01.015.016900.1} 
-		,{01,01.015,01.015.016900,01.015.016900.2} 
-		,{01,01.015,01.015.016900,01.015.016900.3} 
+		,{01,01.015,01.015.016200,01.015.016200.3}
+		,{01,01.015,01.015.016200,01.015.016200.4}
+		,{01,01.015,01.015.016900,01.015.016900.1}
+		,{01,01.015,01.015.016900,01.015.016900.2}
+		,{01,01.015,01.015.016900,01.015.016900.3}
 		}'::Text[][]);
 ```
 
 Example expand of array to setof record
-	
-```	
+
+```
 		WITH a AS (
 			SELECT '{{01,01.015,01.015.016200,01.015.016200.2}
-		,{01,01.015,01.015.016200,01.015.016200.3} 
-		,{01,01.015,01.015.016200,01.015.016200.4} 
-		,{01,01.015,01.015.016900,01.015.016900.1} 
-		,{01,01.015,01.015.016900,01.015.016900.2} 
-		,{01,01.015,01.015.016900,01.015.016900.3} 
+		,{01,01.015,01.015.016200,01.015.016200.3}
+		,{01,01.015,01.015.016200,01.015.016200.4}
+		,{01,01.015,01.015.016900,01.015.016900.1}
+		,{01,01.015,01.015.016900,01.015.016900.2}
+		,{01,01.015,01.015.016900,01.015.016900.3}
 		}'::Text[][] AS res
 		), row AS (
 			SELECT generate_series(1,array_upper(a.res, 1)) AS series
 			  FROM a
 		)
-		SELECT  row.series, 
-				(a.res)[row.series][1] AS level1, 
-				(a.res)[row.series][2] AS level2, 
-				(a.res)[row.series][3] AS level3, 
+		SELECT  row.series,
+				(a.res)[row.series][1] AS level1,
+				(a.res)[row.series][2] AS level2,
+				(a.res)[row.series][3] AS level3,
 				(a.res)[row.series][4] AS level4
 		  FROM row, a;
-		
-	WITH a AS ( /* Test data */ 
+
+	WITH a AS ( /* Test data */
 		SELECT '{{01,01.015,01.015.016200,01.015.016200.2}
-			,{01,01.015,01.015.016200,01.015.016200.3} 
-			,{01,01.015,01.015.016200,01.015.016200.4} 
-			,{01,01.015,01.015.016900,01.015.016900.1} 
-			,{01,01.015,01.015.016900,01.015.016900.2} 
-			,{01,01.015,01.015.016900,01.015.016900.3} 
+			,{01,01.015,01.015.016200,01.015.016200.3}
+			,{01,01.015,01.015.016200,01.015.016200.4}
+			,{01,01.015,01.015.016900,01.015.016900.1}
+			,{01,01.015,01.015.016900,01.015.016900.2}
+			,{01,01.015,01.015.016900,01.015.016900.3}
 			}'::Text[][] AS res
 	), b AS ( /* Test SQL */
-		SELECT level1, level2, level3, level4 
-		  FROM sahsuland_geography WHERE level3 IN ('01.015.016900', '01.015.016200') 
+		SELECT level1, level2, level3, level4
+		  FROM sahsuland_geography WHERE level3 IN ('01.015.016900', '01.015.016200')
 		 ORDER BY level4
 	), c AS ( /* Convert to 2D array via record */
 		SELECT REPLACE(
 					REPLACE(
 						REPLACE(
-								ARRAY_AGG(b.*)::Text, 
-								'"'::Text, ''::Text), 
-							'('::Text, '{'::Text), 
+								ARRAY_AGG(b.*)::Text,
+								'"'::Text, ''::Text),
+							'('::Text, '{'::Text),
 						')'::Text, '}'::Text)::Text[][] AS res
 		FROM b
 	)
 	SELECT rif40_sql_pkg._rif40_reduce_dim(c.res) AS missing_data
 	  FROM c
-	EXCEPT 
+	EXCEPT
 	SELECT rif40_sql_pkg._rif40_reduce_dim(a.res)
 	  FROM a;
 ```
 
 b) TRIGGERS
-			
-These use INSERT/UPDATE OR DELETE statements. RETURNING is supported, but it must be a single 
-text value (test_value). The results array should should also be  single value. Beware that the 
-INSERTed data from the table is not in scope, so you can return a sequence, an input value, but not trigger modified data 
+
+These use INSERT/UPDATE OR DELETE statements. RETURNING is supported, but it must be a single
+text value (test_value). The results array should should also be  single value. Beware that the
+INSERTed data from the table is not in scope, so you can return a sequence, an input value, but not trigger modified data
 
 Example code:
 ```
-	IF NOT (rif40_sql_pkg.rif40_sql_test(	
+	IF NOT (rif40_sql_pkg.rif40_sql_test(
 		'INSERT INTO rif40_studies(geography, project, study_name, extract_table, map_table, study_type, comparison_geolevel_name, study_geolevel_name, denom_tab, suppression_value)
 VALUES (''SAHSU'', ''TEST'', ''TRIGGER TEST #1'', ''EXTRACT_TRIGGER_TEST_1'', ''MAP_TRIGGER_TEST_1'', 1 /* Disease mapping */, ''LEVEL1'', ''LEVEL4'', NULL /* FAIL HERE */, 0)',
 		'TRIGGER TEST #1: rif40_studies.denom_tab IS NULL',
 		NULL::Text[][] 	/* No results for trigger */,
-		'P0001' 		/* Expected SQLCODE (P0001 - PGpsql raise_exception (from rif40_error) */, 
+		'P0001' 		/* Expected SQLCODE (P0001 - PGpsql raise_exception (from rif40_error) */,
 		FALSE 			/* Do not RAISE EXCEPTION on failure */)) THEN
 		errors:=errors+1;
-    END IF;	 
+    END IF;
 ```
 
 Example output:
@@ -595,21 +595,21 @@ Detail:   -20211
 
 Success or failure is determined by *rif40_test_harness.pass*; the expected result:
 
-* TRUE - The test ran ok: :+1: or *rif40_test_harness.pg_error_code_expected* [negative] matches the Postgres 
+* TRUE - The test ran ok: :+1: or *rif40_test_harness.pg_error_code_expected* [negative] matches the Postgres
           error SQLSTATE expected [as part of an exception]; passed as PG_EXCEPTION_DETAIL in Postgres.
 * FALSE - The test failed: :-1: either the test ran OK when it was expected to raise an exception or it
           it raised a different exception to that expected. **Tests are allowed to deliberately fail!**. This
 		  is used to test the test harness.
 
 ## To do
-	
+
 * Per test logging to separate files.
 * Remove *rif40_test_runs_.number_test_cases_registered*.
 * Add *rif40_test_harness.port_specific_test*; either: P (Postgres only) or: S (SQL Server only).
 
 ## Bugs
 
-* Fix rif40_sql_pkg._rif40_sql_test() so the SQL runs once (i.e. use capture the results). This avoids issues with functions 
+* Fix rif40_sql_pkg._rif40_sql_test() so the SQL runs once (i.e. use capture the results). This avoids issues with functions
   (e.g. rif40_run)_study() that errors if run more than once.
 
 ## Potential future enhancements; lowest priority
@@ -622,9 +622,9 @@ Success or failure is determined by *rif40_test_harness.pass*; the expected resu
     c) Primary key i) correct; ii) duplicate iii) missing parent
 
 * Access control:
-  
+
     d) notarifuser access
-  
+
 # Usage
 
 ``` node
@@ -955,5 +955,5 @@ PASSED expected result = actual (true)
 *****************************************************************************
 ```
 
-Peter Hambly, 2nd September 2015 
+Peter Hambly, 2nd September 2015
 
